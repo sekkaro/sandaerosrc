@@ -7,13 +7,13 @@ import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.service.UserService;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -51,8 +51,28 @@ public class UserController {
 	@GetMapping("/add/{id}")
 	public String detail(@PathVariable Long id, Model model) {
 		UserDetailDto userDetailDTO = mUserService.getUser(id);
+
 		model.addAttribute("userInfo", userDetailDTO);
 
 		return "html/user/detail.html";
+	}
+
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable Long id, Model model) {
+		UserDetailDto userDetailDTO = mUserService.getUser(id);
+		List<InterestDto> allInterest = mInterestService.getInterestList();
+
+		model.addAttribute("userInfo", userDetailDTO);
+		model.addAttribute("allInterest", allInterest);
+
+		return "html/user/update.html";
+	}
+
+	@PutMapping("/edit/{id}")
+	public String update(@RequestParam(value = "interest", required = false) List<String> interest, UserDto userDto) {
+		userDto.setUserInterestList(interest.toArray(new String[0]));
+
+		mUserService.addUser(userDto);
+		return "redirect:/user";
 	}
 }

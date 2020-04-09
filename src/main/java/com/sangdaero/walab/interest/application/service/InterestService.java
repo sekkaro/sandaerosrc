@@ -1,6 +1,5 @@
 package com.sangdaero.walab.interest.application.service;
 
-
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.interest.application.dto.InterestDto;
 import com.sangdaero.walab.interest.application.dto.InterestName;

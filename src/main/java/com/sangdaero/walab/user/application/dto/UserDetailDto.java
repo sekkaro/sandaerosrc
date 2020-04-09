@@ -1,5 +1,6 @@
 package com.sangdaero.walab.user.application.dto;
 
+import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.User;
 import lombok.*;
 
@@ -18,7 +19,9 @@ public class UserDetailDto {
     private String phone;
     private Byte userType;
     private Integer volunteerTime;
+    private String[] userInterestList;
     private Set<String> interestName = new HashSet<>();
+    private Set<InterestCategory> interests = new HashSet<>();
 
     public User toEntity() {
         User user = User.builder()
