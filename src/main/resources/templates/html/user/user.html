@@ -40,7 +40,8 @@
         <span th:text="${userInfo.nickname}"></span>
       </td>
       <td>
-        <span th:text="${userInfo.userType}"></span>
+        <span th:if="${userInfo.userType==1}" th:text="관제사"></span>
+        <span th:if="${userInfo.userType==2}" th:text="이용자"></span>
       </td>
     </tr>
     </tbody>

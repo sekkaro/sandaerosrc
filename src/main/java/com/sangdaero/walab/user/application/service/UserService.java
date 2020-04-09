@@ -1,11 +1,8 @@
 package com.sangdaero.walab.user.application.service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
@@ -18,7 +15,6 @@ import com.sangdaero.walab.user.domain.repository.UserRepository;
 import com.sangdaero.walab.common.entity.User;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -43,7 +39,6 @@ public class UserService extends OidcUserService {
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
         Map attributes = oidcUser.getAttributes();
-        
         UserDto userDto = new UserDto();
         userDto.setName((String) attributes.get("name"));
         userDto.setNickname((String) attributes.get("nickname"));
@@ -89,6 +84,8 @@ public class UserService extends OidcUserService {
 
     public void addUser(UserDto userDTO) {
 
+        mUserInterestRepository.deleteByUser_Id(userDTO.getId());
+
         for (String e :userDTO.getUserInterestList()) {
             InterestCategory interestList = mInterestRepository.findByNameEquals(e);
             userDTO.getInterests().add(interestList);
@@ -111,7 +108,6 @@ public class UserService extends OidcUserService {
         List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
         return simpleUserList;
     }
-
 
     public UserDetailDto getUser(Long id) {
         Optional<User> userWrapper = mUserRepository.findById(id);

@@ -12,7 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findBySocialId(String socialId);
 
-	User findByNameContaining(String keyword);
-
 	
 }

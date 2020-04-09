@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{'/user/edit/' + ${userInfo.id}}" method="post">
+    <input type="hidden" name="_method" value="put"/>
+    <input type="hidden" name="id" th:value="${userInfo.id}"/>
+
+    이름: <h3 th:text="${userInfo.name}" th:value="${userInfo.name}"></h3>
+    <input type="hidden" name="name" th:value="${userInfo.name}"/>
+    <hr>
+    <div th:contenteditable="false">
+        닉네임: <input type="text" name="nickname" th:value="${userInfo.nickname}">
+    </div>
+    <hr>
+    소셜 로그인 정보: <h3 th:text="${userInfo.socialId}" th:value="${userInfo.socialId}"></h3>
+    <input type="hidden" name="socialId" th:value="${userInfo.socialId}"/>
+    <hr>
+    <div th:contenteditable="false">
+        연락처: <input type="text" name="phone" th:value="${userInfo.phone}">
+    </div>
+    <hr>
+    타입:
+    <select name="userType">
+        <option th:value="1" th:selected="${userInfo.userType==1}">관제사</option>
+        <option th:value="2" th:selected="${userInfo.userType==2}">이용자</option>
+    </select>
+    <hr>
+    <div th:contenteditable="false">
+        봉사 시간: <h3 th:text="${userInfo.volunteerTime}" name="volunteerTime" th:value="${userInfo.volunteerTime}"></h3>
+    </div>
+    <hr>
+    관심사:
+<!--    <span th:each="interestName : ${allInterest}">-->
+<!--        <span th:each="interest : ${userInfo.interestName}">-->
+<!--            <input type="checkbox"-->
+<!--                   name="eachUserInterest"-->
+<!--                   th:value="${interestName.name}"-->
+<!--                   th:checked="${interestName.name.equals(interest)}"/>-->
+<!--            <label th:text="${interestName.name}"></label>-->
+<!--        </span>-->
+<!--    </span>-->
+
+<!--    <th:block th:each="interest: ${allInterest}">-->
+<!--        <input type="checkbox"-->
+<!--               name="eachUserInterest"-->
+<!--               th:value="${interest.name}"-->
+<!--               th:checked="${userInfo.interestName.contains(interest.name)}" />-->
+<!--        <label th:text="${interest.}"></label>-->
+<!--    </th:block>-->
+
+    <span th:each="interestName  : ${allInterest}" >
+        <input type="checkbox"
+               th:value="${interestName.name}"
+               name="interest"
+               th:checked="${userInfo.interestName.contains(interestName.name)}"/>
+        <label th:text="${interestName.name}"></label>
+    </span>
+
+    <hr>
+    봉사 항목: <h3 th:text="${userInfo.nickname}"></h3>
+    <hr>
+    커뮤니티: <h3 th:text="${userInfo.nickname}"></h3>
+    <hr>
+
+    <input type="submit" value="수정">
+</form>
+
+</body>
+</html>

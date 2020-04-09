@@ -7,29 +7,37 @@
 <body>
     이름: <h3 th:text="${userInfo.name}"></h3>
     <hr>
-    닉네임: <h3 th:text="${userInfo.nickname}"></h3>
+    <div th:contenteditable="false">
+        닉네임: <h3 th:text="${userInfo.nickname}"></h3>
+    </div>
     <hr>
     소셜 로그인 정보: <h3 th:text="${userInfo.socialId}"></h3>
     <hr>
-    연락처: <h3 th:text="${userInfo.phone}"></h3>
+    <div th:contenteditable="false">
+        연락처: <h3 th:text="${userInfo.phone}"></h3>
+    </div>
     <hr>
     타입:
-    <h3 th:if="${userInfo.userType==1}" th:text="관제사"></h3>
-    <h3 th:if="${userInfo.userType==2}" th:text="이용자"></h3>
+    <div th:contenteditable="false">
+        <h3 th:if="${userInfo.userType==1}" th:text="관제사"></h3>
+        <h3 th:if="${userInfo.userType==2}" th:text="이용자"></h3>
+    </div>
     <hr>
-    봉사 시간: <h3 th:text="${userInfo.volunteerTime}"></h3>
+    <div th:contenteditable="false">
+        봉사 시간: <h3 th:text="${userInfo.volunteerTime}"></h3>
+    </div>
     <hr>
     관심사:
     <span th:each="interestName : ${userInfo.interestName}">
-        <input type="checkbox"
-               name="eachUserInterest"
-               th:value="${interestName}" checked/>
-        <label th:text="${interestName}"></label>
+        <span th:text="${interestName}"></span>
     </span>
     <hr>
     봉사 항목: <h3 th:text="${userInfo.nickname}"></h3>
     <hr>
     커뮤니티: <h3 th:text="${userInfo.nickname}"></h3>
-
+    <hr>
+    <a th:href="@{'/user/edit/' + ${userInfo.id}}">
+        <button>수정</button>
+    </a>
 </body>
 </html>

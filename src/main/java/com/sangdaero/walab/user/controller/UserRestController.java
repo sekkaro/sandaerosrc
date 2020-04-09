@@ -32,7 +32,7 @@ public class UserRestController {
 		
 		Map<String, Object> result = new HashMap<>();
 		
-		result.put("name", userDto.getName());
+		result.put("name", principal.getAttribute("name"));
 		result.put("status", userDto.getStatus());
 		result.put("userType", userDto.getUserType());
 		

@@ -7,6 +7,6 @@ public interface SimpleUser {
     String getName();
 
     String getNickname();
-    
+
     Byte getUserType();
 }
