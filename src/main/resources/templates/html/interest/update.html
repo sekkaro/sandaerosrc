@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{'/interest/edit/' + ${interestDTO.id}}" method="post">
+    <input type="hidden" name="_method" value="put"/>
+    <input type="hidden" name="id" th:value="${interestDTO.id}"/>
+
+    제목 : <input type="text" name="name" th:value="${interestDTO.name}"> <br>
+
+    <input type="submit" value="수정">
+</form>
+
+</body>
+</html>

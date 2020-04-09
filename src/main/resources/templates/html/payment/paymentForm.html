@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>소액 결제 내역 추가 폼</h1>
+			</div>
+		</div>
+
+
+		<div class="w3-container">
+
+			<form action="paymentForm" method="post">
+
+				제목 : <input type="text" name="title" value="title"> <br>
+				입금자 : <input type="text" name="donator" value="donator"> <br>
+				전화번호 : <input type="text" name="donatorPhone" value="010-1234-5678">
+				<br> 금액 : <input type="text" name="donationPrice" value=1000>
+				<br> 지정후원/비지정후원 : <input type="radio" name="selectSupport"
+					value=1>지정후원 <input type="radio" name="selectSupport"
+					value=0 checked="checked">비지정후원 <br> 사업자영수증 : <input
+					type="radio" name="billType" value=1>발행 <input type="radio"
+					name="billType" value=0 checked="checked">미발행 <br> 사업체
+				이름 : <input type="text" name="donatorName" value="company">
+				<br> 책임자 : <input type="text" name="manager" value=5> <br>
+				메모 : <br>
+				<textarea name="content"></textarea>
+				<br> 입금확인 : <input type="radio" name="paymentCheck" value=1>입금완료
+				<input type="radio" name="paymentCheck" value=0 checked="checked">미입금
+
+				<br> <input type="submit" value="등록">
+			</form>
+
+		</div>
+		<a th:href="@{/payment}">
+			<button>뒤로가기</button>
+		</a>
+
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>

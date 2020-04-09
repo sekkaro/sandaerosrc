@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+    <div class="w3-teal">
+        <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+        <div class="w3-container">
+            <h1>관심사 페이지</h1>
+        </div>
+    </div>
+
+    <div id="wrap1">
+
+        <br>
+
+        <!--<form action="/interest" method="get">
+            <input type='radio' name='type' value=1 checked/> 자원봉사자
+            <input type='radio' name='type' value=2 /> 이용자
+            <input type="submit" value="테스트">
+        </form>-->
+        <br><br>
+        <table>
+            <thead>
+            <tr>
+                <th class="ten wide">관심사</th>
+                <th class="two wide">수정</th>
+                <th class="two wide">삭제(비활성화)</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- CONTENTS !-->
+            <tr th:each="interest : ${interestList}">
+                <td>
+                    <a th:href="@{'/interest/add/' + ${interest.id}}">
+                        <span th:text="${interest.name}"></span>
+                        <span th:text="${interest.count}"></span>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/interest/edit/' + ${interest.id}}">
+                        <button>수정</button>
+                    </a>
+                </td>
+                <td>
+                    <!--<form id="delete-form" th:action="@{'/interest/' + ${interest.id}}" method="post">-->
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button id="delete-btn">삭제</button>
+                    <!--</form>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <form action="/interest/add" method="post">
+            관심사 : <input type="text" name="name"> <br>
+            <!--type <br>
+            <input type='radio' name='type' value=1 checked/> 자원봉사자
+            <input type='radio' name='type' value=2 /> 이용자
+            <input type='radio' name='type' value=3 /> 나눔-->
+            <input type="submit" value="관심사 추가">
+        </form>
+    </div>
+
+    <div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+</body>
+</html>

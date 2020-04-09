@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+	<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>요청 상세 페이지</h1>
+			</div>
+		</div>
+		<div class="w3-container"></div>
+
+		<!-- show details -->
+		<!-- data from controller -->
+		<h2 th:text="${requestDto.title}"></h2>
+	
+		카테고리 :
+		<p th:text="${requestDto.interestCategory.name}"></p>
+		이용자:
+		<p th:text="${requestDto.userName}"></p>
+		<p th:text="${requestDto.userTaker.phone}"></p>
+		봉사자 :
+		<table>
+    <tr>
+        <th>이름</th>
+        <th>전화번호</th>
+    </tr>
+    <tr th:each="volunteer : ${requestDto.volunteers}">
+        <td th:text="${volunteer.userId.name}"></td>
+        <td th:text="${volunteer.userId.phone}"></td>
+    </tr>
+</table>
+		<p></p>
+		
+		봉사시간/장소:
+		<p>[[${#temporals.format(requestDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ [[${#temporals.format(requestDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
+		
+		관리자: 
+		<p th:text="${requestDto.manager}"></p>
+		세부내용:
+		<p th:text="${requestDto.content}"></p>
+
+		<a th:href="@{/request}">
+			<button>뒤로가기</button>
+		</a>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var requestDto = /*[[${requestDto}]]*/ "";
+        /*]]>*/
+    </script>
+    <script th:inline="javascript"></script>
+    
+    
+</div>
+
+<div lang="en" th:replace="common/footer :: footer"></div>
+
+</body>
+</html>

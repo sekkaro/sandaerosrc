@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>소액 결제 안내문 보기</h1>
+			</div>
+		</div>
+
+		<div class="w3-container">
+
+			<br>
+			
+			<h2>소액결제 안내문</h2>
+			<br></br> 안내문 내용 :
+			<p th:text="${paymentNoticeDto.content}"></p>
+			<br> 수정일 :
+			<p th:text="${paymentNoticeDto.modDate}"></p>
+
+			<a th:href="@{/paymentNoticeUpdate}">내용 수정</a> <br></br>
+
+
+		</div>
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>

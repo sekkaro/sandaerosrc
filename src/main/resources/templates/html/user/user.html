@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>회원 페이지</h1>
+  </div>
+</div>
+
+  <a th:href="@{/user/add}">
+    <button>유저추가</button>
+  </a>
+  <hr>
+  <table>
+    <thead>
+    <tr>
+      <th class="ten wide">유저 이름</th>
+      <th class="two wide">닉네임</th>
+      <th class="two wide">유저타입</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <!-- CONTENTS !-->
+    <tr th:each="userInfo : ${simpleUserList}">
+      <td>
+        <a th:href="@{'/user/add/' + ${userInfo.id}}">
+          <span th:text="${userInfo.name}"></span>
+        </a>
+      </td>
+      <td>
+        <span th:text="${userInfo.nickname}"></span>
+      </td>
+      <td>
+        <span th:text="${userInfo.userType}"></span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+<div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+</body>
+</html>

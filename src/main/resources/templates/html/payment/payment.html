@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>소액 결제 페이지</h1>
+			</div>
+		</div>
+
+		<div class="w3-container">
+
+			<div>
+				<form action="/payment/search" method="GET">
+					<!-- sort -->
+					<input name="keyword" type="text" placeholder="검색어를 입력하세요.">
+					<select name="sortBy">
+						<option value=2>전체</option>
+						<option value=0>미입금</option>
+						<option value=1>입금완료</option>
+					</select>
+					<button id="searchBtn">검색</button>
+				</form>
+			</div>
+			<br>
+
+			<!-- payment list  -->
+			<form action="/payment/paymentUpdateChecked" method="GET">
+				<!-- update checked record's 'paymentCheck' status. -->
+
+				<table>
+					<thead>
+						<tr>
+							<th class="one wide">id(번호)</th>
+							<th class="one wide">상태</th>
+							<th class="one wide">제목</th>
+							<th class="ten wide">입금자</th>
+							<th class="two wide">전화번호</th>
+							<th class="two wide">금액</th>
+							<th class="two wide">지정/비지정</th>
+							<th class="two wide">사업자영수증</th>
+							<th class="two wide">책임자</th>
+							<th class="three wide">메모</th>
+							<th class="three wide">등록 날짜</th>
+							<th class="three wide">수정 날짜</th>
+							<!-- <th><input type="checkbox" name="paymentCheckBox"></th> -->
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<!-- CONTENTS !-->
+						<tr th:each="payment : ${paymentList}">
+							<td><span th:text="${payment.id}"></span></td>
+							<td><span th:if="${payment.paymentCheck == 0}">미입금</span> <span
+								th:if="${payment.paymentCheck == 1}">입금완료</span></td>
+							<td><a th:href="@{'/paymentDetail/' + ${payment.id}}"> <span
+									th:text="${payment.title}"></span>
+							</a></td>
+							<td><span th:text="${payment.donator}"></span></td>
+							<td><span th:text="${payment.donatorPhone}"></span></td>
+							<td><span th:text="${payment.donationPrice}"></span></td>
+							<td><span th:if="${payment.selectSupport==0}">비지정후원</span> <span
+								th:if="${payment.selectSupport==1}">지정후원</span></td>
+							<td><span th:if="${payment.billType==0}">미발급</span> <span
+								th:if="${payment.billType==1}">발급</span></td>
+							<td><span th:text="${payment.manager}"></span></td>
+							<td><span th:text="${payment.content}"></span></td>
+							<td><span
+								th:text="${#temporals.format(payment.regDate, 'yyyy-MM-dd HH:mm')}"></span>
+							</td>
+							<td><span
+								th:text="${#temporals.format(payment.modDate, 'yyyy-MM-dd HH:mm')}"></span>
+							</td>
+							<td><input type="checkbox" name="paymentCheckBox"
+								th:value="${payment.id}"></td>
+						</tr>
+					</tbody>
+				</table>
+				<button id="paymentCheckBoxBtn">체크항목 입금상태 변환</button>
+
+			</form>
+
+			<!-- paging -->
+			<div>
+				<span th:each="pageNum : ${pageList}" th:inline="text"> <a
+					th:href="@{'/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+				</span>
+			</div>
+			<!-- paging end -->
+
+			<br> <a th:href="@{/paymentForm}"><button>글쓰기</button></a> <br></br> 
+
+
+		</div>
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>

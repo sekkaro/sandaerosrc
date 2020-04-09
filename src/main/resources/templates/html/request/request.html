@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>요청 페이지</h1>
+			</div>
+		</div>
+
+		<div class="w3-container">
+
+			<form action="/request" method="GET">
+        		<div class="search">
+            		<input name="keyword" type="text" placeholder="검색어를 입력해주세요" th:value="${keyword}">
+        		</div>
+				<select name="type">
+					<option th:selected="${type==1}" value="1">제목</option>
+					<option th:selected="${type==2}" value="2">사용자</option>
+				</select>
+        		<button>검색하기</button>
+        		<select onchange="this.form.submit()" name="sort">
+					<option th:selected="${sort==1}" value="1">최신순</option>
+					<option th:selected="${sort==2}" value="2">이름</option>
+				</select>
+    		</form>
+
+			<!-- payment list  -->
+			<form action="/request" method="GET">
+				<!-- update checked record's 'paymentCheck' status. -->
+
+				<table>
+					<thead>
+						<tr>
+							<th class="one wide">id(번호)</th>
+							<th class="one wide">제목</th>
+							<th class="three wide">등록 날짜</th>
+							<th class="one wide">상태</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+						<!-- CONTENTS !-->
+						<tr th:each="request : ${requestList}">
+							<td><span th:text="${request.id}"></span></td>
+							<td><a th:href="@{'/request/' + ${request.id}}"> <span
+									th:text="${request.title}"></span>
+							</a></td>
+							<td><span
+								th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
+							</td>
+							<td><span th:if="${request.status == 0}">대기</span> <span
+								th:if="${request.status == 1}">진행중</span><span
+								th:if="${request.status == 2}">완료</span><span
+								th:if="${request.status == 3}">모집 마감</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+
+			<!-- paging -->
+			 <div>
+	    		<span th:each="pageNum : ${pageList}" th:inline="text">
+	        		<a th:href="@{'/request?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
+	    		</span>
+    		</div>
+			<!-- paging end --> 
+
+		</div>
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>

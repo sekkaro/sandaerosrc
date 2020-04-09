@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>소액 결제 개별항목 상세 페이지</h1>
+			</div>
+		</div>
+		<div class="w3-container"></div>
+
+		<!-- show details -->
+		<!-- data from controller -->
+		<h2 th:text="${paymentDto.title}"></h2>
+
+		<!-- inline for interleaving variable into a sentence, with [[variable]] -->
+		<p th:inline="text">작성일 :
+			[[${#temporals.format(paymentDto.regDate, 'yyyy-MM-dd HH:mm')}]]</p>
+		책임자id(매칭을위해 int형으로 해놨음) :
+		<p th:text="${paymentDto.manager}"></p>
+		후원자명 :
+		<p th:text="${paymentDto.donator}"></p>
+		입금자 전화번호 :
+		<p th:text="${paymentDto.donatorPhone}"></p>
+		후원금액 :
+		<p th:text="${paymentDto.donationPrice}"></p>
+
+		입금상태 :
+		<p th:if="${paymentDto.paymentCheck == 1}">입금완료</p>
+		<p th:if="${paymentDto.paymentCheck == 0}">미입금</p>
+
+		지정/비지정후원 :
+		<p th:if="${paymentDto.selectSupport == 0}">미지정후원</p>
+		<p th:if="${paymentDto.selectSupport == 1}">지정후원</p>
+
+		사업자영수증발급 :
+		<p th:if="${paymentDto.billType == 0}">미발급</p>
+		<p th:if="${paymentDto.billType == 1}">발급</p>
+
+		메모 :
+		<p th:text="${paymentDto.content}"></p>
+
+
+		<!-- Update & Delete -->
+		<div>
+			<!-- Update -->
+			<a th:href="@{'/payment/paymentUpdate/' + ${paymentDto.id}}">
+				<button>수정</button>
+			</a> <br>
+
+			<!--  Delete -->
+			<form id="payment-delete-form"
+				th:action="@{'/payment/' + ${paymentDto.id}}" method="post">
+				<!-- by sending hidden data with name '_method' and value 'delete', it will search for delete method in controller. -->
+				<input type="hidden" name="_method" value="delete" />
+				<button id="delete-btn">삭제</button>
+			</form>
+		</div>
+
+		<a th:href="@{/payment}">
+			<button>뒤로가기</button>
+		</a>
+
+
+
+		<!-- for debugging -->
+		<script th:inline="javascript">
+			var boardDto = /*[[${paymentDto}]]*/"";
+		</script>
+		<script th:inline="javascript" th:src="@{/payment/paymentDebugLog.js}"></script>
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+
+
+	</div>
+</body>
+</html>
