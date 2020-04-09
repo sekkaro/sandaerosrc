@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -44,14 +45,14 @@ public class EventEntity extends TimeEntity {
 	@Column(name="event_category", nullable=false)
 	private Integer eventCategory;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="interest_category", nullable=true)
 	private InterestCategory interestCategory;
 	
-	@Column(length = 255, nullable = false)
+	@Column(length = 255, nullable = true)
 	private String userName;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="user_taker", nullable=true)
 	private User userTaker;
 

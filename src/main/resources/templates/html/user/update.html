@@ -26,7 +26,7 @@
     타입:
     <select name="userType">
         <option th:value="1" th:selected="${userInfo.userType==1}">관제사</option>
-        <option th:value="2" th:selected="${userInfo.userType==2}">이용자</option>
+        <option th:value="0" th:selected="${userInfo.userType==0}">이용자</option>
     </select>
     <hr>
     <div th:contenteditable="false">

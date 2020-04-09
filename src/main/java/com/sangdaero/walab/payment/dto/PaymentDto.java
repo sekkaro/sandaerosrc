@@ -20,12 +20,14 @@ public class PaymentDto {
 	private Integer donationPrice;
 	private String content;
 	private Integer manager;
+	private Byte selectSupport; // entertainment, support
+	private Byte billType; // business receipt y/n
+	private String donatorPhone; // personal or company phone number
+	private String businessPicture; // business registration certificate
+	private Byte paymentCheck; // payment waiting, payment fulfilled
 	
-	private Byte selectSupport; // 지정후원, 비지정후원
-	private Byte billType; // 사업자영수증 y/n
-	private String donatorPhone; // 개인/사업체 연락번호
-	private String businessPicture; // 사업자등록증
-	private Byte paymentCheck; // 대기중, 입금완료
+	private Byte status; // opened fundraising or closed fundraising
+	private Integer eventCategory;
 	
 	private LocalDateTime regDate;
 	private LocalDateTime modDate;
@@ -35,7 +37,7 @@ public class PaymentDto {
 	@Builder
 	public PaymentDto(Long id, String title, String donator, Integer donationPrice, String content, Integer manager,
 			Byte selectSupport, Byte billType, String donatorPhone, String businessPicture,
-			Byte paymentCheck, LocalDateTime regDate, LocalDateTime modDate) {
+			Byte paymentCheck, Byte status, Integer eventCategory, LocalDateTime regDate, LocalDateTime modDate) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -48,8 +50,11 @@ public class PaymentDto {
 		this.donatorPhone = donatorPhone;
 		this.businessPicture = businessPicture;
 		this.paymentCheck = paymentCheck;
+		this.status = status;
 		this.regDate = regDate;
+		this.eventCategory = eventCategory;
 		this.modDate = modDate;
+		this.status = status;
 	}
 	
 	// payment uses 'event' table.
@@ -59,6 +64,7 @@ public class PaymentDto {
 				.id(id)
 				.title(title)
 				.status(null)
+				//.userTaker(null)
 				.userVolunteer(null)
 				.manager(manager)
 				.place(null)
@@ -67,13 +73,16 @@ public class PaymentDto {
 				.content(content)
 				.deliveryFlag(null)
 				.phoneAgree(null)
+				.userName(null)
 				.donator(donator)
 				.selectSupport(selectSupport)
 				.donationPrice(donationPrice)
 				.billType(billType)
 				.paymentCheck(paymentCheck)
+				.status(status)
 				.donatorPhone(donatorPhone)
 				.businessPicture(businessPicture)
+				.eventCategory(2)
 				.evaluate(null)
 				.deadline(null)
 				.build();

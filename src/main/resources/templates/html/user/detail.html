@@ -20,7 +20,7 @@
     타입:
     <div th:contenteditable="false">
         <h3 th:if="${userInfo.userType==1}" th:text="관제사"></h3>
-        <h3 th:if="${userInfo.userType==2}" th:text="이용자"></h3>
+        <h3 th:if="${userInfo.userType==0}" th:text="이용자"></h3>
     </div>
     <hr>
     <div th:contenteditable="false">

@@ -26,6 +26,9 @@
 			[[${#temporals.format(paymentDto.regDate, 'yyyy-MM-dd HH:mm')}]]</p>
 		책임자id(매칭을위해 int형으로 해놨음) :
 		<p th:text="${paymentDto.manager}"></p>
+		공개상태 :
+		<p th:if="${paymentDto.status == 1}">닫힘</p>
+		<p th:if="${paymentDto.status == 0}">열림</p>
 		후원자명 :
 		<p th:text="${paymentDto.donator}"></p>
 		입금자 전화번호 :
@@ -52,7 +55,7 @@
 		<!-- Update & Delete -->
 		<div>
 			<!-- Update -->
-			<a th:href="@{'/payment/paymentUpdate/' + ${paymentDto.id}}">
+			<a th:href="@{'/payment/paymentUpdate/' + ${paymentDto.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
 				<button>수정</button>
 			</a> <br>
 
@@ -65,7 +68,7 @@
 			</form>
 		</div>
 
-		<a th:href="@{/payment}">
+		<a th:href="@{'/payment/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
 			<button>뒤로가기</button>
 		</a>
 

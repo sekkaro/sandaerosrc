@@ -19,9 +19,8 @@
 
 		<div class="w3-container">
 
-			<form th:action="@{'/payment/paymentUpdate/' + ${paymentDto.id}}"
-				method="post">
-
+			<form th:action="@{'/payment/paymentUpdate/' + ${paymentDto.id} }" method="post">
+				
 				<!-- mapped to 'put' method in controller. -->
 				<input type="hidden" name="_method" value="put" />
 
@@ -50,11 +49,16 @@
 				<input type="radio" name="selectSupport" value=1>지정후원
 				<input type="radio" name="selectSupport" value=0 checked="checked">비지정후원<br> 
 				
-				사업자영수증 : <input type="radio" name="billType" value=1>발행
+				사업자영수증 : 
+				<input type="radio" name="billType" value=1>발행
 				<input type="radio" name="billType" value=0 checked="checked">미발행 <br> 
 				
+				공개상태 : 
+				<input type="radio" name="status" value=1 checked="checked">닫힘
+				<input type="radio" name="status" value=0>열림				
+				<br>
 				메모 : <br>
-				<textarea name="content"></textarea>
+				<textarea name="content" th:value=${paymentDto.content}></textarea>
 				
 				
 				<input type="submit" value="수정">

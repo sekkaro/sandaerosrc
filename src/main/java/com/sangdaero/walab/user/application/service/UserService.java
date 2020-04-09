@@ -41,9 +41,8 @@ public class UserService extends OidcUserService {
         Map attributes = oidcUser.getAttributes();
         UserDto userDto = new UserDto();
         userDto.setName((String) attributes.get("name"));
-        userDto.setNickname((String) attributes.get("nickname"));
         userDto.setSocialId((String) attributes.get("sub"));
-        userDto.setPhone((String) attributes.get("phone_number"));
+        
         
         updateUser(userDto);
         return oidcUser;
@@ -52,7 +51,14 @@ public class UserService extends OidcUserService {
     private void updateUser(UserDto userDto) {
         User user = mUserRepository.findBySocialId(userDto.getSocialId());
         if(user == null) {
-            user = userDto.toEntity();   
+        	userDto.setNickname("닉네임");
+        	userDto.setPhone("010-XXXX-XXXX");
+            userDto.setUserType((byte) 0);
+            userDto.setStatus((byte) 1);
+            user = userDto.toEntity(); 
+            user.setLocationAgree((byte) 0);
+            user.setPhoneAgree((byte) 0);
+            user.setVolunteerTime(0);
         }
         
         user.setLastLogin(LocalDateTime.now());
