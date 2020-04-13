@@ -3,7 +3,9 @@ package com.sangdaero.walab.user.application.dto;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.User;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,9 +15,15 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserDetailDto {
     private Long id;
+
     private String name;
+
+    @NotBlank
+    @Length(min = 2)
     private String nickname;
     private String socialId;
+
+    @NotBlank
     private String phone;
     private Byte userType;
     private Integer volunteerTime;

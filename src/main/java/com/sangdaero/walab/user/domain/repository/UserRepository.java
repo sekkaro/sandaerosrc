@@ -10,6 +10,10 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     List<SimpleUser> findAllByOrderByName();
 
+    List<SimpleUser> findTop5ByOrderByVolunteerTimeDesc();
+
+    List<SimpleUser> findAllByOrderByVolunteerTimeDesc();
+
 	User findBySocialId(String socialId);
 
 	
