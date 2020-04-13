@@ -92,9 +92,12 @@ public class UserService extends OidcUserService {
 
         mUserInterestRepository.deleteByUser_Id(userDTO.getId());
 
-        for (String e :userDTO.getUserInterestList()) {
-            InterestCategory interestList = mInterestRepository.findByNameEquals(e);
-            userDTO.getInterests().add(interestList);
+        if(userDTO.getUserInterestList()!=null) {
+
+            for (String e :userDTO.getUserInterestList()) {
+                InterestCategory interestList = mInterestRepository.findByNameEquals(e);
+                userDTO.getInterests().add(interestList);
+            }
         }
 
         User user = mUserRepository.save(userDTO.toEntity());
@@ -113,6 +116,13 @@ public class UserService extends OidcUserService {
     public List<SimpleUser> getSimpleUserList() {
         List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
         return simpleUserList;
+    }
+
+    public List<SimpleUser> getUserRankingList() {
+//        List<SimpleUser> userRankingList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
+        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+
+        return userRankingList;
     }
 
     public UserDetailDto getUser(Long id) {
@@ -154,5 +164,6 @@ public class UserService extends OidcUserService {
                 .status(user.getStatus())
                 .build();
     }
+
 
 }

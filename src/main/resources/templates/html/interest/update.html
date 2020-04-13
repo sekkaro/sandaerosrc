@@ -1,18 +1,72 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head lang="en" th:replace="common/header :: header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>상대로 프로젝트</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
-<form th:action="@{'/interest/edit/' + ${interestDTO.id}}" method="post">
-    <input type="hidden" name="_method" value="put"/>
-    <input type="hidden" name="id" th:value="${interestDTO.id}"/>
+    <div lang="en" th:replace="common/menu :: menu"></div>
 
-    제목 : <input type="text" name="name" th:value="${interestDTO.name}"> <br>
+    <div id="main" style="margin-left: 15%"></div>
 
-    <input type="submit" value="수정">
-</form>
+    <div class="container">
+        <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+        <div class="py-5 text-center">
+            <h2>관심사 이름 수정</h2>
+        </div>
+
+        <div class="row justify-content-center">
+            <form class="needs-validation col-sm-6" th:action="@{'/interest/edit/' + ${interestDTO.id}}" th:object="${interestDTO}" method="post" novalidate>
+                <input type="hidden" name="_method" value="put"/>
+                <input type="hidden" name="id" th:value="${interestDTO.id}"/>
+
+                <div class="form-group">
+                    <label for="name">관심사 이름</label>
+                    <input id="name" type="text" name="name" th:value="${interestDTO.name}" placeholder="관심사 이름을 입력하세요." aria-describedby="nameHelp" required minlength="2"> <br>
+                    <small id="nameHelp">
+                        2글자 이상 입력해주세요.
+                    </small>
+                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
+                </div>
+
+                <div>
+                    <input type="submit" value="수정">
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script type="application/javascript">
+        (function () {
+            'use strict';
+
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+
+                // Loop over them and prevent submission
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            }, false)
+        }())
+    </script>
 
 </body>
 </html>

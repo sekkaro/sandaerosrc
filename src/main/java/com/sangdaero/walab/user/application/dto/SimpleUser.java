@@ -9,4 +9,6 @@ public interface SimpleUser {
     String getNickname();
 
     Byte getUserType();
+
+    Integer getVolunteerTime();
 }

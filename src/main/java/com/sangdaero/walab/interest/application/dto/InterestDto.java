@@ -2,7 +2,9 @@ package com.sangdaero.walab.interest.application.dto;
 
 import com.sangdaero.walab.common.entity.InterestCategory;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,7 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class InterestDto {
     private Long id;
+
+    @NotBlank
+    @Length(min = 2)
     private String name;
+
     private Byte type;
     private Byte on_off;
     private Long count;
