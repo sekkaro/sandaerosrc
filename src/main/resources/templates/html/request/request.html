@@ -12,7 +12,7 @@
 			<button id="openNav" style="display: none"
 				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 			<div class="w3-container">
-				<h1>요청 페이지</h1>
+				<h1>활동 관리 페이지</h1>
 			</div>
 		</div>
 
@@ -73,7 +73,9 @@
 	        		<a th:href="@{'/request?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
 	    		</span>
     		</div>
-			<!-- paging end --> 
+			<!-- paging end -->
+			
+			<a th:href="@{/request/requestForm}">활동 등록</a> 
 
 		</div>
 

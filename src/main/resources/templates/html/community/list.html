@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>커뮤니티 페이지</h1>
+  </div>
+</div>
+
+<div id="wrap">
+
+
+	<a th:href="@{/community/category?topCategory=2}">카테고리</a>
+	
+
+	<form action="/community" method="GET">
+		<select name="category">
+			<option value="1" th:selected="1 == ${category}">전체</option>
+			<option th:each="categoryOption : ${categoryList}"
+			th:text="${categoryOption.memo}"
+			th:value="${categoryOption.id}"
+			th:selected="${categoryOption.id} == ${category}"/>
+			<option value="0" th:selected="0 == ${category}">삭제된 글</option>
+		</select>
+		<button>확인</button>
+	</form>
+	
+
+
+    <form action="/community" method="GET">
+        <div class="search">
+            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+        </div>
+		<select name="type">
+			<option value="1">제목</option>
+			<option value="2">내용</option>
+			<option value="3">작성자</option>
+		</select>
+        <button>검색하기</button>
+    </form>
+
+    <table style="border:1px solid;">
+        <thead>
+        <tr>
+            <th class="one wide">번호</th>
+            <th class="ten wide">글제목</th>
+            <th class="two wide">작성자</th>
+            <th class="three wide">조회수</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- CONTENTS !-->
+        <tr th:each="community : ${communityList}">
+            <td>
+                <span th:text="${community.id}"></span>
+            </td>
+            <td>
+                <a th:href="@{'/community/post/' + ${community.id}}">
+                    <span th:text="${community.title}"></span>
+                </a>
+            </td>
+            <td>
+                <span th:text="${community.writer}"></span>
+            </td>
+            <td>
+                <span th:text="${community.view}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+	    <span th:each="pageNum : ${pageList}" th:inline="text">
+	        <a th:href="@{'/community/?category=' + ${category} + '&page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
+	    </span>
+    </div>
+    
+    <a th:href="@{/community/post}">글쓰기</a>
+</div>
+
+<div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+</body>
+</html>

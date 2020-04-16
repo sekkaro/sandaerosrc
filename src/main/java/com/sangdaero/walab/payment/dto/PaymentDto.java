@@ -19,7 +19,7 @@ public class PaymentDto {
 	private String donator;
 	private Integer donationPrice;
 	private String content;
-	private Integer manager;
+	private Long manager;
 	private Byte selectSupport; // entertainment, support
 	private Byte billType; // business receipt y/n
 	private String donatorPhone; // personal or company phone number
@@ -35,7 +35,7 @@ public class PaymentDto {
 
 
 	@Builder
-	public PaymentDto(Long id, String title, String donator, Integer donationPrice, String content, Integer manager,
+	public PaymentDto(Long id, String title, String donator, Integer donationPrice, String content, Long manager,
 			Byte selectSupport, Byte billType, String donatorPhone, String businessPicture,
 			Byte paymentCheck, Byte status, Integer eventCategory, LocalDateTime regDate, LocalDateTime modDate) {
 		super();
@@ -65,7 +65,7 @@ public class PaymentDto {
 				.title(title)
 				.status(null)
 				//.userTaker(null)
-				.userVolunteer(null)
+				//.userVolunteer(null)
 				.manager(manager)
 				.place(null)
 				.startTime(null)

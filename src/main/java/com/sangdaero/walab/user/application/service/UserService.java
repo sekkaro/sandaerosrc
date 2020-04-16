@@ -14,6 +14,8 @@ import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 import com.sangdaero.walab.common.entity.User;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -41,7 +43,7 @@ public class UserService extends OidcUserService {
         Map attributes = oidcUser.getAttributes();
         UserDto userDto = new UserDto();
         userDto.setName((String) attributes.get("name"));
-        userDto.setSocialId((String) attributes.get("sub"));
+        userDto.setSocialId((String) attributes.get("email"));
         
         
         updateUser(userDto);
@@ -67,7 +69,7 @@ public class UserService extends OidcUserService {
     }
     
     public UserDto getUser(@AuthenticationPrincipal OAuth2User principal) {
-    	User user = mUserRepository.findBySocialId(principal.getAttribute("sub"));
+    	User user = mUserRepository.findBySocialId(principal.getAttribute("email"));
     	
     	UserDto userDto = convertEntityToDto(user);
     	
@@ -75,7 +77,7 @@ public class UserService extends OidcUserService {
     }
     
     public void setStatus(@AuthenticationPrincipal OAuth2User principal, Boolean isOn) {
-    	User user = mUserRepository.findBySocialId(principal.getAttribute("sub"));
+    	User user = mUserRepository.findBySocialId(principal.getAttribute("email"));
     	
     	if(isOn) {
     		user.setStatus((byte) 1);
@@ -92,9 +94,12 @@ public class UserService extends OidcUserService {
 
         mUserInterestRepository.deleteByUser_Id(userDTO.getId());
 
-        for (String e :userDTO.getUserInterestList()) {
-            InterestCategory interestList = mInterestRepository.findByNameEquals(e);
-            userDTO.getInterests().add(interestList);
+        if(userDTO.getUserInterestList()!=null) {
+
+            for (String e :userDTO.getUserInterestList()) {
+                InterestCategory interestList = mInterestRepository.findByNameEquals(e);
+                userDTO.getInterests().add(interestList);
+            }
         }
 
         User user = mUserRepository.save(userDTO.toEntity());
@@ -109,10 +114,43 @@ public class UserService extends OidcUserService {
         }
     }
 
+    public Page<User> getSimpleUserPageList(Pageable pageable, String keyword, Integer condition) {
+        Page<User> simpleUserPage;
+
+        if(condition==1) {
+            simpleUserPage = mUserRepository.findAllByNameContaining(keyword, pageable);
+        } else if(condition==2) {
+            simpleUserPage = mUserRepository.findAllByNicknameContaining(keyword, pageable);
+        } else {
+            simpleUserPage = mUserRepository.findAll(pageable);
+        }
+
+        return simpleUserPage;
+    }
 
     public List<SimpleUser> getSimpleUserList() {
         List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
         return simpleUserList;
+    }
+    
+    public List<SimpleUser> getSimpleUserList(String type){
+    	List<SimpleUser> simpleUserList = new ArrayList<>();
+    	
+    	if(type=="manager") {
+    		simpleUserList = mUserRepository.findAllByUserTypeOrderByName((byte) 1);
+    	}
+    	else {
+    		simpleUserList = mUserRepository.findAllByUserTypeOrderByName((byte) 0);
+    	}
+    	
+    	return simpleUserList;
+    }
+
+    public List<SimpleUser> getUserRankingList() {
+//        List<SimpleUser> userRankingList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
+        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+
+        return userRankingList;
     }
 
     public UserDetailDto getUser(Long id) {
@@ -154,5 +192,6 @@ public class UserService extends OidcUserService {
                 .status(user.getStatus())
                 .build();
     }
+
 
 }
