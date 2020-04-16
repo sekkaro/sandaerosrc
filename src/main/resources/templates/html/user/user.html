@@ -24,11 +24,21 @@
     </div>
 
     <div style="margin-left: 15%">
-      <div>
+
+      <div style="float: right">
         <a th:href="@{/user/add}">
           <button>유저추가</button>
         </a>
       </div>
+
+      <form class="well form-search" th:action="@{'/user'}" method="GET">
+        <select name="condition">
+          <option value="1">유저이름</option>
+          <option value="2">닉네임</option>
+        </select>
+        <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+        <button>검색하기</button>
+      </form>
 
       <table class="table">
         <thead>
@@ -42,9 +52,9 @@
 
         <tbody>
 
-        <tr th:each="userInfo : ${simpleUserList}">
+        <tr th:each="userInfo, iterState : ${simpleUserList}">
           <th scope="row">
-            <span th:text="${userInfoStat.index}+1"></span>
+            <span th:text="${iterState.count}"></span>
           </th>
           <td>
             <a th:href="@{'/user/detail/' + ${userInfo.id}}">
@@ -61,6 +71,21 @@
         </tr>
         </tbody>
       </table>
+
+      <div>
+        <ul class="pagination">
+          <span th:if="${!simpleUserList.first}">
+            <li class="page-item">
+              <a class="page-link" th:href="'?page='+${simpleUserList.number-1}+'&keyword='+${keyword}+'&condition='+${condition}">&larr; Previous</a>
+            </li>
+          </span>
+          <span th:if="${!simpleUserList.last}">
+            <li class="page-item">
+              <a class="page-link" th:href="'?page='+${simpleUserList.number+1}+'&keyword='+${keyword}+'&condition='+${condition}">Next &rarr;</a>
+            </li>
+          </span>
+        </ul>
+      </div>
     </div>
   </div>
 

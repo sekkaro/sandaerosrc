@@ -14,6 +14,8 @@ import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 import com.sangdaero.walab.common.entity.User;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -112,6 +114,19 @@ public class UserService extends OidcUserService {
         }
     }
 
+    public Page<User> getSimpleUserPageList(Pageable pageable, String keyword, Integer condition) {
+        Page<User> simpleUserPage;
+
+        if(condition==1) {
+            simpleUserPage = mUserRepository.findAllByNameContaining(keyword, pageable);
+        } else if(condition==2) {
+            simpleUserPage = mUserRepository.findAllByNicknameContaining(keyword, pageable);
+        } else {
+            simpleUserPage = mUserRepository.findAll(pageable);
+        }
+
+        return simpleUserPage;
+    }
 
     public List<SimpleUser> getSimpleUserList() {
         List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();

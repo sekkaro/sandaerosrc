@@ -21,7 +21,7 @@
             <h2>유저 정보 수정</h2>
         </div>
         <div class="row justify-content-center">
-            <form class="needs-validation col-sm-6" th:action="@{'/user/edit/' + ${userInfo.id}}" th:object="${userInfo}" method="post" novalidate>
+            <form id="form" class="needs-validation col-sm-6" th:action="@{'/user/edit/' + ${userInfo.id}}" th:object="${userInfo}" method="post" novalidate>
                 <input type="hidden" name="_method" value="put"/>
                 <input type="hidden" name="id" th:value="${userInfo.id}"/>
 
@@ -67,7 +67,13 @@
                 <hr>
                 <div class="form-group">
                     <label for="volunteerTime">봉사 시간</label>
-                    <h4 id="volunteerTime" th:text="${userInfo.volunteerTime}" name="volunteerTime" th:value="${userInfo.volunteerTime}"></h4>
+                    <span id="volunteerTime" th:text="${userInfo.volunteerTime}+'시간'" th:value="${userInfo.volunteerTime}"></span>
+                    <input type="hidden" id="currentTime" name="volunteerTime" th:value="${userInfo.volunteerTime}"/>
+
+                    <input id="time" type="text" size="5px" placeholder="시간"/>
+                    <button type="button" name="action" value="plus" onclick="plus()">증가</button>
+                    <button type="button" name="action" value="minus" onclick="minus()">감소</button>
+
                 </div>
                 <hr>
                 <div class="form-group">
@@ -118,6 +124,22 @@
                 })
             }, false)
         }())
+
+        function plus() {
+            var testValue = document.getElementById("currentTime").value;
+            var addTime = document.getElementById("time").value;
+            document.getElementById("volunteerTime").innerHTML = String(Number(testValue)+Number(addTime));
+            document.getElementById("currentTime").value=Number(testValue)+Number(addTime);
+            document.getElementById("time").value=null;
+        }
+
+        function minus() {
+            var testValue = document.getElementById("currentTime").value;
+            var addTime = document.getElementById("time").value;
+            document.getElementById("volunteerTime").innerHTML = String(Number(testValue)-Number(addTime));
+            document.getElementById("currentTime").value=Number(testValue)-Number(addTime);
+            document.getElementById("time").value=null;
+        }
     </script>
 </body>
 </html>
