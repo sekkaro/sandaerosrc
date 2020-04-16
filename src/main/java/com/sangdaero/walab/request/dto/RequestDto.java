@@ -2,6 +2,7 @@ package com.sangdaero.walab.request.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.sangdaero.walab.common.entity.EventEntity;
@@ -11,12 +12,14 @@ import com.sangdaero.walab.common.entity.UserEventMapper;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class RequestDto {
 	
 	private Long id;
@@ -28,7 +31,7 @@ public class RequestDto {
 	private User userTaker;
 	private Integer userVolunteer;
 	private List<UserEventMapper> volunteers;
-	private Integer manager;
+	private Long manager;
 	private String place;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
@@ -42,7 +45,7 @@ public class RequestDto {
 	private LocalDateTime modDate;
 	
 	@Builder
-	public RequestDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, List<UserEventMapper> volunteers, String userName, User userTaker, Integer userVolunteer, Integer manager,
+	public RequestDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, List<UserEventMapper> volunteers, String userName, User userTaker, Long manager,
 			String place, LocalDateTime startTime, LocalDateTime endTime, String content, Byte deliveryFlag,
 			Byte phoneAgree, String evaluate, LocalDateTime deadline, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
@@ -53,7 +56,6 @@ public class RequestDto {
 		this.volunteers = volunteers;
 		this.userName = userName;
 		this.userTaker = userTaker;
-		this.userVolunteer = userVolunteer;
 		this.manager = manager;
 		this.place = place;
 		this.startTime = startTime;
@@ -74,9 +76,8 @@ public class RequestDto {
 					.id(id)
 					.title(title)
 					.status(status)
-					.eventCategory(eventCategory)
+					.eventCategory(0)
 					.userName(userName)
-					.userVolunteer(userVolunteer)
 					.manager(manager)
 					.place(place)
 					.startTime(startTime)
@@ -97,5 +98,5 @@ public class RequestDto {
 			
 			return eventEntity;
 		}
-	
+		
 }

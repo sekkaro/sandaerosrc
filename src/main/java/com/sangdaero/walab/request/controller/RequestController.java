@@ -1,16 +1,23 @@
 package com.sangdaero.walab.request.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sangdaero.walab.interest.application.dto.InterestDto;
+import com.sangdaero.walab.interest.application.service.InterestService;
 import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.request.service.RequestService;
+import com.sangdaero.walab.user.application.dto.SimpleUser;
+import com.sangdaero.walab.user.application.dto.UserDto;
+import com.sangdaero.walab.user.application.service.UserService;
 
 
 @Controller
@@ -18,10 +25,14 @@ import com.sangdaero.walab.request.service.RequestService;
 public class RequestController {
 	
 	private RequestService mRequestService;
+	private InterestService mInterestService;
+	private UserService mUserService;
 	
 	// constructor
-	public RequestController(RequestService mRequestService) {
-		this.mRequestService = mRequestService;
+	public RequestController(RequestService requestService, InterestService interestService, UserService userService) {
+		mRequestService = requestService;
+		mInterestService = interestService;
+		mUserService = userService;
 	}
 	
 	@GetMapping("")
@@ -51,5 +62,27 @@ public class RequestController {
         
         return "html/request/requestDetail.html";
     }
+	
+	@GetMapping("/requestForm")
+    public String getRequestForm(Model model) {
+		List<InterestDto> interestList = mInterestService.getInterestList();
+		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
+		List<SimpleUser> userList = mUserService.getSimpleUserList();
+		
+		model.addAttribute("interests", interestList);
+		model.addAttribute("managers", managerList);
+		model.addAttribute("users", userList);
+		
+        return "html/request/requestForm.html";
+    }
+	
+	
+	@PostMapping("/requestForm") 
+	public String setRequestForm(String title, Long interestCategoryId, Long userId, Byte delivery, Long managerId, String startTime, String endTime, String place, String deadline, String content) {
+		
+		mRequestService.saveRequest(title,interestCategoryId, userId, delivery, managerId, startTime, endTime, place, deadline, content);
+			
+		return "redirect:/request";
+	}
 
 }

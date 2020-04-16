@@ -4,7 +4,7 @@ package com.sangdaero.walab.notice.dto;
 
 import java.time.LocalDateTime;
 
-import com.sangdaero.walab.common.entity.Notice;
+import com.sangdaero.walab.common.entity.Board;
 
 import lombok.*;
 
@@ -20,32 +20,32 @@ public class NoticeDto {
     private String writer;
     private Long view;
     private Byte topCategory;
-    private Long subCategory;  
+    private Long categoryId;  
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public Notice toEntity() {
-        Notice notice = Notice.builder()
+    public Board toEntity() {
+        Board notice = Board.builder()
                 .id(id)
                 .title(title)
                 .content(content)
                 .writer(writer)
                 .view(view)
                 .topCategory(topCategory)
-                .subCategory(subCategory)
+                .categoryId(categoryId)
                 .build();
         return notice;
     }
 
     @Builder
-    public NoticeDto(Long id, String title, String content, String writer, Long view, Byte topCategory, Long subCategory, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public NoticeDto(Long id, String title, String content, String writer, Long view, Byte topCategory, Long categoryId, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.view = view;
         this.topCategory = topCategory;
-        this.subCategory = subCategory;
+        this.categoryId = categoryId;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

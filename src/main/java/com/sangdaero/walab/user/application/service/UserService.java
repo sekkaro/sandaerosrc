@@ -43,7 +43,7 @@ public class UserService extends OidcUserService {
         Map attributes = oidcUser.getAttributes();
         UserDto userDto = new UserDto();
         userDto.setName((String) attributes.get("name"));
-        userDto.setSocialId((String) attributes.get("sub"));
+        userDto.setSocialId((String) attributes.get("email"));
         
         
         updateUser(userDto);
@@ -69,7 +69,7 @@ public class UserService extends OidcUserService {
     }
     
     public UserDto getUser(@AuthenticationPrincipal OAuth2User principal) {
-    	User user = mUserRepository.findBySocialId(principal.getAttribute("sub"));
+    	User user = mUserRepository.findBySocialId(principal.getAttribute("email"));
     	
     	UserDto userDto = convertEntityToDto(user);
     	
@@ -77,7 +77,7 @@ public class UserService extends OidcUserService {
     }
     
     public void setStatus(@AuthenticationPrincipal OAuth2User principal, Boolean isOn) {
-    	User user = mUserRepository.findBySocialId(principal.getAttribute("sub"));
+    	User user = mUserRepository.findBySocialId(principal.getAttribute("email"));
     	
     	if(isOn) {
     		user.setStatus((byte) 1);
@@ -131,6 +131,26 @@ public class UserService extends OidcUserService {
     public List<SimpleUser> getSimpleUserList() {
         List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
         return simpleUserList;
+    }
+    
+    public List<SimpleUser> getSimpleUserList(String type){
+    	List<SimpleUser> simpleUserList = new ArrayList<>();
+    	
+    	if(type=="manager") {
+    		simpleUserList = mUserRepository.findAllByUserTypeOrderByName((byte) 1);
+    	}
+    	else {
+    		simpleUserList = mUserRepository.findAllByUserTypeOrderByName((byte) 0);
+    	}
+    	
+    	return simpleUserList;
+    }
+
+    public List<SimpleUser> getUserRankingList() {
+//        List<SimpleUser> userRankingList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
+        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+
+        return userRankingList;
     }
 
     public List<SimpleUser> getUserRankingList() {
