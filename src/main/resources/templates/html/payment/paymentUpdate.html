@@ -27,40 +27,33 @@
 				<!-- JPA uses same method for insert & update. Without id value, it inserts, and with id value, it updates. -->
 				<input type="hidden" name="id" th:value="${paymentDto.id}" /> 
 				
-				제목 : 
-				<input type="text" name="title" th:value="${paymentDto.title}"> <br> 
+				제목 : <input type="text" name="title" th:value="${paymentDto.title}"> <br>
 				
-				책임자 : <input type="text" name="manager" th:value=${paymentDto.manager}> <br> 
+				공개 상태 : 
+				<input type="radio" name="status" value=0 >열림
+				<input type="radio" name="status" value=1 checked="checked">닫힘 <br>
 				
-				입금자명 : 
-				<input type="text" name="donator" th:value="${paymentDto.donator}"> <br> 
-					
-				입금자 전화번호 : 
-				<input type="text" name="donatorPhone" th:value="${paymentDto.donatorPhone}"> <br> 
+				모금 목표 금액 : <input type="text" name="donationPrice" th:value="${paymentDto.donationPrice}"> <br>
 				
-				금액 :
-				<input type="text" name="donationPrice" th:value=${paymentDto.donationPrice}> <br>
-
-				입금상태 : 
-				<input type="radio" name="paymentCheck" value=1>입금완료
-				<input type="radio" name="paymentCheck" value=0 checked="checked">미입금<br> 
-
-				지정후원/비지정후원 : 
-				<input type="radio" name="selectSupport" value=1>지정후원
-				<input type="radio" name="selectSupport" value=0 checked="checked">비지정후원<br> 
+				후원목적/오락목적 : 
+				<input type="radio" name="selectSupport" value=1>후원목적 
+				<input type="radio" name="selectSupport" value=0 checked="checked">오락목적 <br> 
 				
-				사업자영수증 : 
-				<input type="radio" name="billType" value=1>발행
-				<input type="radio" name="billType" value=0 checked="checked">미발행 <br> 
+				<br> 책임자 : 
+        		<select th:name="managerId">
+    				<option value="0">관리자를 선택하세요</option>
+    				<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" selected="selected"></option>
+    			</select>
+    			<br>
 				
-				공개상태 : 
-				<input type="radio" name="status" value=1 checked="checked">닫힘
-				<input type="radio" name="status" value=0>열림				
-				<br>
 				메모 : <br>
-				<textarea name="content" th:value=${paymentDto.content}></textarea>
+				<textarea name="content">[[${paymentDto.content}]]</textarea> <br> 
 				
+				목표금액 입금확인 : 
+				<input type="radio" name="paymentCheck" value=1>입금완료
+				<input type="radio" name="paymentCheck" value=0 checked="checked">미입금
 				
+				<br>
 				<input type="submit" value="수정">
 			</form>
 
