@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%;">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>커뮤니티 디테일</h1>
+  </div>
+</div>
+
+<div id="wrap" style="padding-left:10px;">
+
+	<h2 th:text="'커뮤니티사항 ID - ' + ${communityDto.id}"></h2>
+    <h2 th:text="'커뮤니티사항 제목 - ' + ${communityDto.title}"></h2>
+    <h2 th:text="'작성자 - ' + ${communityDto.writer}"></h2>
+    <h2 th:text="'조회수 - ' + ${communityDto.view}"></h2>
+    <h2 th:text="'이미지 - ' + ${communityDto.topCategory}"></h2>
+    <h2 th:text="'카테고리 - ' + ${category}"></h2>
+    <p th:inline="text">작성일 : [[${#temporals.format(communityDto.modifiedDate, 'yyyy-MM-dd HH:mm')}]]</p>
+
+    <p th:text="${communityDto.content}"></p>
+
+    <!-- 수정/삭제 -->
+    <div>
+        <a th:href="@{'/community/post/edit/' + ${communityDto.id}}">
+            <button>수정</button>
+        </a>
+
+        <form id="delete-form" th:action="@{'/community/post/' + ${communityDto.id}}" method="post">
+            <input type="hidden" name="_method" value="delete"/>
+            <button id="delete-btn">삭제</button>
+        </form>
+        
+        <a th:href="@{'/community/?category=' + ${communityDto.categoryId}}">
+            <button>목록</button>
+        </a>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var communityDto = /*[[${communityDto}]]*/ "";
+        /*]]>*/
+    </script>
+    <script th:inline="javascript" th:src="@{/js/community.js}"></script>
+    
+    
+</div>
+
+<div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+</body>
+</html>

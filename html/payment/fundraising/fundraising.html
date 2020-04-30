@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>모금활동 페이지</h1>
+			</div>
+		</div>
+
+		<div class="w3-container">
+			
+			
+			메인
+			
+			<br> <a
+				th:href="@{'/fundraisingForm'}"><button>글쓰기</button></a>
+			<br>
+			
+
+		</div>
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>
+
