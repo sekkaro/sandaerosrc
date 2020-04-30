@@ -11,17 +11,17 @@
 <div class="w3-teal">
   <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
   <div class="w3-container">
-    <h1>공지 페이지</h1>
+    <h1>커뮤니티 페이지</h1>
   </div>
 </div>
 
 <div id="wrap">
 
 
-	<a th:href="@{/notice/category?topCategory=1}">카테고리 관리</a>
+	<a th:href="@{/community/category?topCategory=2}">카테고리 관리</a>
 	
 
-	<form action="/notice" method="GET">
+	<form action="/community" method="GET">
 		<select name="category">
 			<option value="0" th:selected="0 == ${category}">전체</option>
 			<option th:each="categoryOption : ${categoryList}"
@@ -35,7 +35,7 @@
 	
 
 
-    <form action="/notice" method="GET">
+    <form action="/community" method="GET">
         <div class="search">
             <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
         </div>
@@ -59,20 +59,20 @@
 
         <tbody>
         <!-- CONTENTS !-->
-        <tr th:each="notice : ${noticeList}">
+        <tr th:each="community : ${communityList}">
             <td>
-                <span th:text="${notice.id}"></span>
+                <span th:text="${community.id}"></span>
             </td>
             <td>
-                <a th:href="@{'/notice/post/' + ${notice.id}}">
-                    <span th:text="${notice.title}"></span>
+                <a th:href="@{'/community/post/' + ${community.id}}">
+                    <span th:text="${community.title}"></span>
                 </a>
             </td>
             <td>
-                <span th:text="${notice.writer}"></span>
+                <span th:text="${community.writer}"></span>
             </td>
             <td>
-                <span th:text="${notice.view}"></span>
+                <span th:text="${community.view}"></span>
             </td>
         </tr>
         </tbody>
@@ -80,12 +80,11 @@
 
     <div>
 	    <span th:each="pageNum : ${pageList}" th:inline="text">
-	        <a th:href="@{'/notice/?category=' + ${category} + '&page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
+	        <a th:href="@{'/community/?category=' + ${category} + '&page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
 	    </span>
     </div>
     
-    <a th:href="@{/notice/post}">글쓰기</a>
-
+    <a th:href="@{/community/post}">글쓰기</a>
 </div>
 
 <div lang="en" th:replace="common/footer :: footer"></div>
