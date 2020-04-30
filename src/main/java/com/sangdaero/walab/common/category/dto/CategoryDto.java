@@ -17,8 +17,8 @@ public class CategoryDto {
 	private Byte status;
 	private String memo;
 	private String communityManager;
-	private LocalDateTime createdDate;
-	private LocalDateTime modifiedDate;
+	private LocalDateTime regDate;
+	private LocalDateTime modDate;
 
 	public BoardCategory toEntity() {
 		BoardCategory boardCategory = BoardCategory.builder()
@@ -32,13 +32,13 @@ public class CategoryDto {
 	}
 	
 	@Builder
-	public CategoryDto(Long id, Byte topCategory, Byte status, String memo, String communityManager, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+	public CategoryDto(Long id, Byte topCategory, Byte status, String memo, String communityManager, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.topCategory = topCategory;
 		this.status = status;
 		this.memo = memo;
 		this.communityManager = communityManager;
-		this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
+		this.regDate = regDate;
+        this.modDate = modDate;
 	}
 }

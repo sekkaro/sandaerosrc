@@ -18,17 +18,17 @@
 <div id="wrap">
 
 
-	<a th:href="@{/community/category?topCategory=2}">카테고리</a>
+	<a th:href="@{/community/category?topCategory=2}">카테고리 관리</a>
 	
 
 	<form action="/community" method="GET">
 		<select name="category">
-			<option value="1" th:selected="1 == ${category}">전체</option>
+			<option value="0" th:selected="0 == ${category}">전체</option>
 			<option th:each="categoryOption : ${categoryList}"
 			th:text="${categoryOption.memo}"
 			th:value="${categoryOption.id}"
 			th:selected="${categoryOption.id} == ${category}"/>
-			<option value="0" th:selected="0 == ${category}">삭제된 글</option>
+			<option value="-1" th:selected="-1 == ${category}">삭제된 글</option>
 		</select>
 		<button>확인</button>
 	</form>

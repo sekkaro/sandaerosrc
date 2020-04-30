@@ -40,8 +40,8 @@ public class NoticeService extends CategoryService {
                 .view(notice.getView())
                 .topCategory(notice.getTopCategory())
                 .categoryId(notice.getCategoryId())
-                .createdDate(notice.getCreatedDate())
-                .modifiedDate(notice.getModifiedDate())
+                .regDate(notice.getRegDate())
+                .modDate(notice.getModDate())
                 .build();
     }
 
@@ -57,57 +57,55 @@ public class NoticeService extends CategoryService {
     
     // Delete
     public void deletePost(Long id) {
-    	Long deleteCategory = (long) 0;
+    	Long deleteCategory = (long) -1;
     	mNoticeRepository.updateNoticeCategoryId(deleteCategory, id);
     }
 
     // getNoticelist -> convertEntitytoDto
     public List<NoticeDto> getNoticelist(Integer pageNum, Long categoryId, String keyword, Integer searchType) {
     	Page<Board> page;
+    	
+    	Long deleted = (long) -1;
 
    		switch(searchType) {
    			// Search by Title
     		case 1:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mNoticeRepository.findAllByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mNoticeRepository.findAllByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Content
     		case 2:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mNoticeRepository.findAllByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mNoticeRepository.findAllByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Writer
     		case 3:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mNoticeRepository.findAllByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mNoticeRepository.findAllByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Notices without search
     		default:
-    			if (categoryId == 1) {
-            		Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mNoticeRepository.findAllByCategoryIdNotAndTopCategoryEquals(deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	} else {
             		page = mNoticeRepository.findAllByCategoryIdAndTopCategoryEquals(categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	}
     			break;
     	}
@@ -151,31 +149,29 @@ public class NoticeService extends CategoryService {
     
 
     public Long getNoticeCount(Long categoryId, String keyword, Integer searchType) {
+    	Long deleted = (long) -1;
+    	
     	switch(searchType) {
     		case 1:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mNoticeRepository.countByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mNoticeRepository.countByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 2:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mNoticeRepository.countByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mNoticeRepository.countByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 3:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mNoticeRepository.countByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mNoticeRepository.countByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		default:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mNoticeRepository.countByCategoryIdNotAndTopCategoryEquals(deleted, topCategory);
     	    	} else {
     	    		return mNoticeRepository.countByCategoryIdAndTopCategoryEquals(categoryId, topCategory);
@@ -198,8 +194,8 @@ public class NoticeService extends CategoryService {
                 .view(notice.getView()+ 1)
                 .topCategory(notice.getTopCategory())
                 .categoryId(notice.getCategoryId())
-                .createdDate(notice.getCreatedDate())
-                .modifiedDate(notice.getModifiedDate())
+                .regDate(notice.getRegDate())
+                .modDate(notice.getModDate())
                 .build();
 
         return noticeDto;

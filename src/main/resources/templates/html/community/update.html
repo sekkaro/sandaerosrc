@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <head lang="en" th:replace="common/header :: header"></head>
 <body>
-
+<script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
 <div lang="en" th:replace="common/menu :: menu"></div>
 
 <div id="main" style="margin-left: 15%">
@@ -22,18 +22,19 @@
 
 	       제목 : <input type="text" name="title" th:value="${communityDto.title}"> <br>
 	       작성자 : <input type="text" name="writer" th:value="${communityDto.writer}"> <br>
-	    <input type="hidden" value="1" name="topCategory">
+	    <input type="hidden" value="2" name="topCategory">
 	    Sub: 
         <select name="categoryId">
         	<option th:each="category : ${categoryDto}"
         			th:text="${category.memo}"
         			th:value="${category.id}"
         			th:selected="${category.id} == ${communityDto.categoryId}"/> 
-        	<option value="0" th:selected="0 == ${communityDto.categoryId}">삭제</option>
+        	<option value="-1" th:selected="-1 == ${communityDto.categoryId}">삭제</option>
         </select><br> 
         
-    
-        <textarea name="content" th:text="${communityDto.content}"></textarea><br>
+        <div class="editor_wrap">
+		   <textarea name="content" id="content" th:text="${communityDto.content}"></textarea>
+		</div><br>
 
         <input type="submit" value="수정">
         <a th:href="@{/community}">목록</a>
@@ -41,6 +42,13 @@
     <div lang="en" th:replace="common/footer :: footer"></div>
 
 </div>
-
+	<!-- CKEditor -->
+	<script type="text/javascript">
+		ClassicEditor
+		    .create( document.querySelector( '#content' ) )
+		    .catch( error => {
+		        console.error( error );
+		    } );
+	</script>
 </body>
 </html>

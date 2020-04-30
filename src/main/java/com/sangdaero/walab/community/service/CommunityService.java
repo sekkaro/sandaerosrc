@@ -42,8 +42,8 @@ public class CommunityService extends CategoryService {
                 .view(community.getView())
                 .topCategory(community.getTopCategory())
                 .categoryId(community.getCategoryId())
-                .createdDate(community.getCreatedDate())
-                .modifiedDate(community.getModifiedDate())
+                .regDate(community.getRegDate())
+                .modDate(community.getModDate())
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class CommunityService extends CategoryService {
     
     // Delete post
     public void deletePost(Long id) {
-    	Long deleteCategory = (long) 0;
+    	Long deleteCategory = (long) -1;
     	mCommunityRepository.updateCommunityCategoryId(deleteCategory, id);
     }
 
@@ -67,49 +67,47 @@ public class CommunityService extends CategoryService {
     public List<CommunityDto> getCommunitylist(Integer pageNum, Long categoryId, String keyword, Integer searchType) {
     	Page<Board> page;
 
+    	Long deleted = (long) -1;
+    	
    		switch(searchType) {
    			// Search by Title
     		case 1:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mCommunityRepository.findAllByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mCommunityRepository.findAllByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Content
     		case 2:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mCommunityRepository.findAllByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mCommunityRepository.findAllByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Writer
     		case 3:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mCommunityRepository.findAllByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
     				page = mCommunityRepository.findAllByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Communities without search
     		default:
-    			if (categoryId == 1) {
-            		Long deleted = (long) 0;
+    			if (categoryId == 0) {
             		page = mCommunityRepository.findAllByCategoryIdNotAndTopCategoryEquals(deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	} else {
             		page = mCommunityRepository.findAllByCategoryIdAndTopCategoryEquals(categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "createdDate")));
+            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	}
     			break;
     	}
@@ -153,31 +151,29 @@ public class CommunityService extends CategoryService {
     
 
     public Long getCommunityCount(Long categoryId, String keyword, Integer searchType) {
+    	Long deleted = (long) -1;
+    	
     	switch(searchType) {
     		case 1:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mCommunityRepository.countByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mCommunityRepository.countByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 2:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mCommunityRepository.countByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mCommunityRepository.countByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 3:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mCommunityRepository.countByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
     	    		return mCommunityRepository.countByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		default:
-    			if (categoryId == 1) {
-    				Long deleted = (long) 0;
+    			if (categoryId == 0) {
     	    		return mCommunityRepository.countByCategoryIdNotAndTopCategoryEquals(deleted, topCategory);
     	    	} else {
     	    		return mCommunityRepository.countByCategoryIdAndTopCategoryEquals(categoryId, topCategory);
@@ -200,8 +196,8 @@ public class CommunityService extends CategoryService {
                 .view(community.getView()+ 1)
                 .topCategory(community.getTopCategory())
                 .categoryId(community.getCategoryId())
-                .createdDate(community.getCreatedDate())
-                .modifiedDate(community.getModifiedDate())
+                .regDate(community.getRegDate())
+                .modDate(community.getModDate())
                 .build();
 
         return communityDto;

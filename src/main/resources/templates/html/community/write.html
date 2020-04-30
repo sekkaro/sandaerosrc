@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <head lang="en" th:replace="common/header :: header"></head>
 <body>
-
+<script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
 <div lang="en" th:replace="common/menu :: menu"></div>
 
 <div id="main" style="margin-left: 15%">
@@ -27,7 +27,9 @@
         			th:value="${categoryOption.id}"/>
         </select><br>
         
-        <textarea name="content"></textarea><br>
+        <div class="editor_wrap">
+		   <textarea name="content" id="content"></textarea>
+		</div><br>
 
         <input type="submit" value="등록">
         <a th:href="@{/community}">목록</a>
@@ -36,6 +38,13 @@
     <div lang="en" th:replace="common/footer :: footer"></div>
 
 </div>
-
+	<!-- CKEditor -->
+	<script type="text/javascript">
+		ClassicEditor
+		    .create( document.querySelector( '#content' ) )
+		    .catch( error => {
+		        console.error( error );
+		    } );
+	</script>
 </body>
 </html>

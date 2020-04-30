@@ -15,7 +15,7 @@
   </div>
 </div>
 
-    <form th:action="@{'/community/category/edit/' + ${categoryDto.id}}" method="post">
+    <form th:action="@{'/'+${path}+'/category/edit/' + ${categoryDto.id}}" method="post">
         <input type="hidden" name="_method" value="put"/>
         <input type="hidden" name="id" th:value="${categoryDto.id}"/>
 
@@ -35,10 +35,10 @@
        	<select name="status">
        		<option value="1" th:selected="1 == ${categoryDto.status}">정상</option>
        		<option value="0" th:selected="0 == ${categoryDto.status}">삭제</option>
-       	</select>
+       	</select><br>
 
-        <input type="submit" value="수정">
-        <a th:href="@{/community/category}">목록</a>
+        <input type="submit" value="수정"><br>
+        <a th:href="@{/'+${path}+'/category}">목록</a>
     </form>
     <div lang="en" th:replace="common/footer :: footer"></div>
 

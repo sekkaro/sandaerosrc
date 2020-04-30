@@ -22,10 +22,36 @@
     <h2 th:text="'작성자 - ' + ${communityDto.writer}"></h2>
     <h2 th:text="'조회수 - ' + ${communityDto.view}"></h2>
     <h2 th:text="'이미지 - ' + ${communityDto.topCategory}"></h2>
-    <h2 th:text="'카테고리 - ' + ${category}"></h2>
-    <p th:inline="text">작성일 : [[${#temporals.format(communityDto.modifiedDate, 'yyyy-MM-dd HH:mm')}]]</p>
+    <h2 th:text="'카테고리 - ' + ${communityDto.categoryId}"></h2>
+    <p th:inline="text">작성일 : [[${#temporals.format(communityDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
 
-    <p th:text="${communityDto.content}"></p>
+    <span th:utext="${communityDto.content}"></span>
+    
+    <table>
+    	<thead>
+    		<tr>
+    			<td>Content</td>
+    			<td>Writer</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+	    	<tr th:each="comment : ${commentDtoList}">
+	    		<td>
+	    			<span th:text="${comment.content}"></span>
+				</td>
+	    		<td>
+	    			<span th:text="${comment.writer}"></span>
+				</td>
+	    	</tr>
+    	</tbody>
+    </table>
+    <form action="/community/addComment" method="post">
+    	<input type="hidden" name="boardId" th:value="${communityDto.id}">
+    	<input type="hidden" name="isDeleted" value="1">
+    	댓글 : <input type="text" name="content"><br>
+    	작성자 : <input type="text" name="writer"><br>
+    	<input type="submit" value="댓글 등록"><br>
+    </form>
 
     <!-- 수정/삭제 -->
     <div>

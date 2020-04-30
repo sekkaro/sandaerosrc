@@ -18,12 +18,17 @@
 <div id="wrap">
 
 
+	<a th:href="@{/notice/category?topCategory=1}">카테고리 관리</a>
+	
+
 	<form action="/notice" method="GET">
 		<select name="category">
-			<option value="1">전체</option>
-			<option value="2">자원봉사자</option>
-			<option value="3">이용자</option>
-			<option value="0">삭제된 공지</option>
+			<option value="0" th:selected="0 == ${category}">전체</option>
+			<option th:each="categoryOption : ${categoryList}"
+			th:text="${categoryOption.memo}"
+			th:value="${categoryOption.id}"
+			th:selected="${categoryOption.id} == ${category}"/>
+			<option value="-1" th:selected="-1 == ${category}">삭제된 글</option>
 		</select>
 		<button>확인</button>
 	</form>
@@ -80,6 +85,7 @@
     </div>
     
     <a th:href="@{/notice/post}">글쓰기</a>
+
 </div>
 
 <div lang="en" th:replace="common/footer :: footer"></div>

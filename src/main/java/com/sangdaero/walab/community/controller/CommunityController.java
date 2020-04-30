@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sangdaero.walab.common.category.controller.CategoryController;
 import com.sangdaero.walab.common.category.dto.CategoryDto;
+import com.sangdaero.walab.common.comment.dto.CommentDto;
+import com.sangdaero.walab.common.comment.service.CommentService;
 import com.sangdaero.walab.community.dto.CommunityDto;
 import com.sangdaero.walab.community.service.CommunityService;
 
@@ -23,10 +25,12 @@ public class CommunityController extends CategoryController {
 	
 	
 	private CommunityService mCommunityService;
+	private CommentService mCommentService;
 	
-	public CommunityController(CommunityService communityService) {
+	public CommunityController(CommunityService communityService, CommentService commentService) {
 		super(communityService);
 		this.mCommunityService = communityService;
+		this.mCommentService = commentService;
 	}
 	// Community list page
 	
@@ -34,7 +38,7 @@ public class CommunityController extends CategoryController {
 	public String list(
 			Model model,
 			@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
-			@RequestParam(value = "category", defaultValue = "1") Long category,
+			@RequestParam(value = "category", defaultValue = "0") Long category,
 			@RequestParam(value = "keyword", defaultValue = "") String keyword,
 			@RequestParam(value = "type", defaultValue = "0") Integer searchType) {
 		
@@ -74,29 +78,10 @@ public class CommunityController extends CategoryController {
     @GetMapping("/post/{no}")
     public String detail(@PathVariable("no") Long id, Model model) {
         CommunityDto communityDto = mCommunityService.getPost(id);
-        
-        // Category with Korean which shows to detail page
-        String category;
-        
-        // 수정 필요
-        switch(communityDto.getCategoryId().toString()) {
-	        case "1":
-	        	category = "전체";
-	        	break;
-	        case "2":
-	        	category = "자원봉사자";
-	        	break;
-	        case "3":
-	        	category = "이용자";
-	        	break;
-	        default:
-	        	category = "에러";
-	        	break;
-        }
+        List<CommentDto> commentDtoList = mCommentService.getComment(id);
 
         model.addAttribute("communityDto", communityDto);
-        model.addAttribute("category", category);
-        
+        model.addAttribute("commentDtoList", commentDtoList);
         
         return "html/community/detail.html";
     }
@@ -125,5 +110,11 @@ public class CommunityController extends CategoryController {
         mCommunityService.deletePost(id);
 
         return "redirect:/community";
+    }
+    
+    @PostMapping("addComment")
+    public String addComment(CommentDto commentDto) {
+    	mCommentService.saveComment(commentDto);
+    	return "redirect:/community/post/" + commentDto.getBoardId();
     }
 }

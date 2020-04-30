@@ -22,10 +22,10 @@
     <h2 th:text="'작성자 - ' + ${noticeDto.writer}"></h2>
     <h2 th:text="'조회수 - ' + ${noticeDto.view}"></h2>
     <h2 th:text="'이미지 - ' + ${noticeDto.topCategory}"></h2>
-    <h2 th:text="'카테고리 - ' + ${category}"></h2>
-    <p th:inline="text">작성일 : [[${#temporals.format(noticeDto.modifiedDate, 'yyyy-MM-dd HH:mm')}]]</p>
+    <h2 th:text="'카테고리 - ' + ${noticeDto.categoryId}"></h2>
+    <p th:inline="text">작성일 : [[${#temporals.format(noticeDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
 
-    <p th:text="${noticeDto.content}"></p>
+    <span th:utext="${noticeDto.content}"></span>
 
     <!-- 수정/삭제 -->
     <div>
