@@ -1,6 +1,7 @@
 package com.sangdaero.walab.request.dto;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,11 +28,11 @@ public class RequestDto {
 	private Byte status;
 	private Integer eventCategory;
 	private InterestCategory interestCategory;
-	private String userName;
-	private User userTaker;
-	private Integer userVolunteer;
-	private List<UserEventMapper> volunteers;
-	private Long manager;
+	private Set<User> users;
+	private Set<Long> userIds;
+	private Set<User> volunteers;
+	private Set<Long> volunteerIds;
+	private User manager;
 	private String place;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
@@ -45,17 +46,19 @@ public class RequestDto {
 	private LocalDateTime modDate;
 	
 	@Builder
-	public RequestDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, List<UserEventMapper> volunteers, String userName, User userTaker, Long manager,
-			String place, LocalDateTime startTime, LocalDateTime endTime, String content, Byte deliveryFlag,
-			Byte phoneAgree, String evaluate, LocalDateTime deadline, LocalDateTime regDate, LocalDateTime modDate) {
+	public RequestDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, 
+			Set<User> users, Set<Long> userIds, Set<User> volunteers, Set<Long> volunteerIds, User manager, String place, LocalDateTime startTime, 
+			LocalDateTime endTime, String content, Byte deliveryFlag, Byte phoneAgree, String evaluate, 
+			LocalDateTime deadline, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.title = title;
 		this.status = status;
 		this.eventCategory = eventCategory;
 		this.interestCategory = interestCategory;
+		this.users = users;
+		this.userIds = userIds;
 		this.volunteers = volunteers;
-		this.userName = userName;
-		this.userTaker = userTaker;
+		this.volunteerIds = volunteerIds;
 		this.manager = manager;
 		this.place = place;
 		this.startTime = startTime;
@@ -69,7 +72,7 @@ public class RequestDto {
 		this.modDate = modDate;
 	}
 	
-	// payment uses 'event' table.
+	// request uses 'event' table.
 		public EventEntity toEntity() {
 
 			EventEntity eventEntity = EventEntity.builder()
@@ -77,8 +80,6 @@ public class RequestDto {
 					.title(title)
 					.status(status)
 					.eventCategory(0)
-					.userName(userName)
-					.manager(manager)
 					.place(place)
 					.startTime(startTime)
 					.endTime(endTime)

@@ -3,6 +3,7 @@ package com.sangdaero.walab.payment.dto;
 import java.time.LocalDateTime;
 
 import com.sangdaero.walab.common.entity.FundraisingEntity;
+import com.sangdaero.walab.common.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FundraisingDto {
+	
+	private User user;
 	
 	private String title;
 	private String memo;
@@ -28,11 +31,12 @@ public class FundraisingDto {
 	
 	
 	@Builder
-	public FundraisingDto(String title, String memo, Integer personalPayAmount,
+	public FundraisingDto(User user, String title, String memo, Integer personalPayAmount,
 			String donator, Byte billType, Byte paymentStatus, String donatorPhone, String businessPicture,
 			LocalDateTime regDate, LocalDateTime modDate) {
 		super();
 		
+		this.user = user;
 		this.title = title;
 		this.memo = memo;
 		this.personalPayAmount = personalPayAmount;
@@ -49,7 +53,7 @@ public class FundraisingDto {
 		
 		FundraisingEntity fundraisingEntity = FundraisingEntity.builder()
 //				.eventId()
-//				.userId()
+				.userId(user)
 				.title(title)
 				.memo(memo)
 				.personalPayAmount(personalPayAmount)

@@ -16,12 +16,12 @@ import com.sangdaero.walab.common.entity.User;
 public interface FundraisingRepository extends JpaRepository<FundraisingEntity, FundraisingId> {
 	
 	@Query(nativeQuery = true, value="SELECT * FROM fundraising WHERE event_id = :eventId AND user_id = :userId")
-	List<EventEntity> findByEventIdAndUserId(@Param("eventId")Long eventId, @Param("userId")User userId, Pageable pageable);
+	List<EventEntity> findByEventIdAndUserId(@Param("eventId")Long eventId, @Param("userId")User userId);
 	
 	// find all
 	List<FundraisingEntity> findAll();
 	
 	// find specific with only event_id
-	List<FundraisingEntity> findByEventId(EventEntity EventId); // doesn't work
+	List<FundraisingEntity> findAllByEventId(EventEntity eventId);
 	
 }

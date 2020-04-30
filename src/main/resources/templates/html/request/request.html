@@ -20,16 +20,23 @@
 
 			<form action="/request" method="GET">
         		<div class="search">
-            		<input name="keyword" type="text" placeholder="검색어를 입력해주세요" th:value="${keyword}">
+            		<input name="keyword" type="text" placeholder="제목으로 검색" th:value="${keyword}">
+        			<button>검색하기</button>
         		</div>
-				<select name="type">
-					<option th:selected="${type==1}" value="1">제목</option>
-					<option th:selected="${type==2}" value="2">사용자</option>
-				</select>
-        		<button>검색하기</button>
+        		카테고리: <select onchange="this.form.submit()" name="interestType">
+    						<option value="0">관심사를 선택하세요</option>
+    						<option th:selected="${interestType==interest.id}" th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}"></option>
+    					</select>
+    			상태: <select onchange="this.form.submit()" name="status">
+    					<option value="0">상태를 선택하세요</option>
+						<option th:selected="${status==1}" value="1">매칭 전</option>
+						<option th:selected="${status==2}" value="2">진행중</option>
+						<option th:selected="${status==3}" value="3">매칭 완료</option>
+						<option th:selected="${status==4}" value="4">모집 마감</option>
+					</select>
         		<select onchange="this.form.submit()" name="sort">
 					<option th:selected="${sort==1}" value="1">최신순</option>
-					<option th:selected="${sort==2}" value="2">이름</option>
+					<option th:selected="${sort==2}" value="2">오래된순</option>
 				</select>
     		</form>
 
@@ -40,10 +47,11 @@
 				<table>
 					<thead>
 						<tr>
-							<th class="one wide">id(번호)</th>
-							<th class="one wide">제목</th>
-							<th class="three wide">등록 날짜</th>
-							<th class="one wide">상태</th>
+							<th>id(번호)</th>
+							<th>제목</th>
+							<th>카테고리</th>
+							<th>상태</th>
+							<th>등록 날짜</th>
 						</tr>
 					</thead>
 
@@ -55,13 +63,14 @@
 							<td><a th:href="@{'/request/' + ${request.id}}"> <span
 									th:text="${request.title}"></span>
 							</a></td>
+							<td><span th:text="${request.interestCategory.name}"></span></td>
+							<td><span th:if="${request.status == 0}">매칭 전</span> <span
+								th:if="${request.status == 1}">진행중</span><span
+								th:if="${request.status == 2}">매칭 완료</span><span
+								th:if="${request.status == 3}">모집 마감</span></td>
 							<td><span
 								th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
 							</td>
-							<td><span th:if="${request.status == 0}">대기</span> <span
-								th:if="${request.status == 1}">진행중</span><span
-								th:if="${request.status == 2}">완료</span><span
-								th:if="${request.status == 3}">모집 마감</span></td>
 						</tr>
 					</tbody>
 				</table>

@@ -27,27 +27,35 @@
     						<option value="0">관심사를 선택하세요</option>
     						<option th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}"></option>
     					</select><br><br>
-    			이용자: <select name="userId">
-    						<option value="0">이용자를 선택하세요</option>
-    						<option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
-    					</select><br><br>
+    			이용자: <ul>
+    					<li th:each="user : ${users}">
+    						<input type="checkbox" th:id="${user.id}" th:value="${user.id}" name="userId"/>
+        					<label th:for="${user.id}" th:text="${user.name}"></label>
+    					</li>
+					  </ul>
     			<input type="radio" id="direct" name="delivery" value="0" checked>
     			<label for="direct">직접 수령</label>
     			<input type="radio" id="through" name="delivery" value="1"> 
     			<label for="through">봉사사 통해 전달</label><br> <br>
-    			<!-- 봉사자: <select name="volunteerId">
-    						<option value="0">봉사자를 선택하세요</option>
-    						<option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
-    					</select> <button class="addVolunteer">+</button><br><br> -->
+    			봉사자: <ul>
+    					<li th:each="volunteer : ${users}">
+    						<input type="checkbox" th:id="${volunteer.id}" th:value="${volunteer.id}" name="volunteerId"/>
+        					<label th:for="${volunteer.id}" th:text="${volunteer.name}"></label>
+    					</li>
+					  </ul>
+				<input type="checkbox" id="phoneAgree" name="phoneAgree" />
+				<label for="phoneAgree">전화번호 공유 동의</label> <br>
+				<input type="checkbox" id="locationAgree" name="locationAgree" />
+				<label for="locationAgree">위치 공유 동의</label> <br>
     			관리자: <select name="managerId">
     						<option value="0">관리자를 선택하세요</option>
     						<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}"></option>
     					</select><br><br>
-    			시작 시간: <input type="datetime-local" name="startTime"> <br><br>
-    			끝 시간: <input type="datetime-local" name="endTime"> <br><br>
+    			시작 시간: <input type="date" name="startDate"> <input type="time" name="startTime"> <br><br>
+    			끝 시간: <input type="date" name="endDate"> <input type="time" name="endTime"> <br><br>
     			장소: 
     			<textarea name="place"></textarea> <br><br>
-    			마감 시간: <input type="datetime-local" name="deadline"> <br><br>
+    			마감 시간: <input type="date" name="deadlineDate"> <input type="time" name="deadlineTime"> <br><br>
 				세부내용: 
 				<textarea name="content"></textarea>
 				<br><br> <input type="submit" value="등록">

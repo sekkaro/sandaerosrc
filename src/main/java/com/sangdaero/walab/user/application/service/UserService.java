@@ -7,7 +7,7 @@ import java.util.*;
 
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
-import com.sangdaero.walab.mapper.repository.UserEventRepository;
+import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
 import com.sangdaero.walab.request.domain.repository.RequestRepository;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
@@ -34,7 +34,7 @@ public class UserService extends OidcUserService {
     private final UserRepository mUserRepository;
     private final UserInterestRepository mUserInterestRepository;
     private final RequestRepository mRequestRepository;
-    private final UserEventRepository mUserEventRepository;
+    private final UserEventMapperRepository mUserEventRepository;
 	
 	@Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -230,5 +230,13 @@ public class UserService extends OidcUserService {
 
     public List<SimpleUser> getWeeklyRanking(Integer scope) {
         return getUserRankingList();
+    }
+    
+    // added
+    public User findUserEntity(Long id) {
+       Optional<User> userData = mUserRepository.findById(id);
+       User user = userData.get();
+       
+       return user;
     }
 }
