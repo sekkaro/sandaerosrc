@@ -2,18 +2,20 @@ package com.sangdaero.walab.user.application.service;
 
 import java.time.LocalDateTime;
 
+import java.time.LocalTime;
 import java.util.*;
 
-import com.sangdaero.walab.common.entity.InterestCategory;
+import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
-import com.sangdaero.walab.common.entity.UserInterest;
+import com.sangdaero.walab.mapper.repository.UserEventRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
+import com.sangdaero.walab.request.domain.repository.RequestRepository;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
-import com.sangdaero.walab.common.entity.User;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,17 +27,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService extends OidcUserService {
 	
-	private InterestRepository mInterestRepository;
-    private UserRepository mUserRepository;
-    private UserInterestRepository mUserInterestRepository;
-
-    public UserService(UserRepository mUserRepository, InterestRepository mInterestRepository, UserInterestRepository mUserInterestRepository) {
-        this.mUserRepository = mUserRepository;
-        this.mInterestRepository = mInterestRepository;
-        this.mUserInterestRepository = mUserInterestRepository;
-    }
+	private final InterestRepository mInterestRepository;
+    private final UserRepository mUserRepository;
+    private final UserInterestRepository mUserInterestRepository;
+    private final RequestRepository mRequestRepository;
+    private final UserEventRepository mUserEventRepository;
 	
 	@Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -55,7 +54,7 @@ public class UserService extends OidcUserService {
         if(user == null) {
         	userDto.setNickname("닉네임");
         	userDto.setPhone("010-XXXX-XXXX");
-            userDto.setUserType((byte) 0);
+            userDto.setUserType((byte) 1); // TODO 나중에 0(이용자)로 바꿔야 함
             userDto.setStatus((byte) 1);
             user = userDto.toEntity(); 
             user.setLocationAgree((byte) 0);
@@ -146,20 +145,6 @@ public class UserService extends OidcUserService {
     	return simpleUserList;
     }
 
-    public List<SimpleUser> getUserRankingList() {
-//        List<SimpleUser> userRankingList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
-        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
-
-        return userRankingList;
-    }
-
-    public List<SimpleUser> getUserRankingList() {
-//        List<SimpleUser> userRankingList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
-        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
-
-        return userRankingList;
-    }
-
     public UserDetailDto getUser(Long id) {
         Optional<User> userWrapper = mUserRepository.findById(id);
 
@@ -200,5 +185,50 @@ public class UserService extends OidcUserService {
                 .build();
     }
 
+    public List<SimpleUser> getUserRankingList() {
+        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
 
+        return userRankingList;
+    }
+
+    public List<SimpleUser> getMonthlyRanking(int scope) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now().plusDays(7);
+
+        List<EventEntity> list = mRequestRepository.findAllByStatusAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual((byte)scope, currentDate, endDate);
+        Map<Long, Integer> map = new HashMap<>();
+
+        for(EventEntity event : list) {
+            // TODO 이벤트 아이디로 -> 봉사자 리스트 가져오기
+            Long id = event.getId();
+
+            List<UserEventMapper> eventList = mUserEventRepository.findAllByUserTypeAndEvent_id((byte) 1, id);
+
+            // TODO 가져온 봉사자 리스트 없는 유저면 map에 추가
+            // TODO 있는 유저면 누적합
+            for(UserEventMapper a : eventList) {
+                LocalTime start = a.getEvent().getStartTime().toLocalTime();
+                LocalTime end = a.getEvent().getEndTime().toLocalTime();
+                Integer plus = end.getHour()-start.getHour();
+
+                map.computeIfPresent(a.getUser().getId(), (k, v)-> map.get(a.getUser().getId())+plus);
+                map.putIfAbsent(a.getUser().getId(), plus);
+            }
+        }
+
+        List<SimpleUser> result = new ArrayList<>();
+
+//        for(Long id : map.keySet()) {
+//            SimpleUser simpleUser = new SimpleUser();
+//            simpleUser.setVolunteerTime(map.get(id));
+//            simpleUser.setId(id);
+//            result.add(simpleUser);
+//        }
+
+        return result;
+    }
+
+    public List<SimpleUser> getWeeklyRanking(Integer scope) {
+        return getUserRankingList();
+    }
 }

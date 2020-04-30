@@ -52,9 +52,9 @@
 
         <tbody>
 
-        <tr th:each="userInfo, iterState : ${simpleUserList}">
+        <tr th:each="userInfo: ${simpleUserList}">
           <th scope="row">
-            <span th:text="${iterState.count}"></span>
+                <span th:text="${totalNum}-10*${simpleUserList.number}-${userInfoStat.count}+1"></span>
           </th>
           <td>
             <a th:href="@{'/user/detail/' + ${userInfo.id}}">

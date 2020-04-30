@@ -48,9 +48,11 @@ public class UserController {
 						   @RequestParam(value = "keyword", defaultValue = "") String keyword,
 						   @RequestParam(value = "condition", defaultValue = "0") Integer condition) {
 		Page<User> userPageList = mUserService.getSimpleUserPageList(pageable, keyword, condition);
+		Long totalNum = userPageList.getTotalElements();
 		model.addAttribute("simpleUserList", userPageList);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("condition",condition);
+		model.addAttribute("totalNum", totalNum);
 //		List<SimpleUser> simpleUsers = mUserService.getSimpleUserList();
 //		model.addAttribute("simpleUserList", simpleUsers);
 		return "html/user/user";
@@ -114,22 +116,22 @@ public class UserController {
 		return "redirect:/user/detail/{id}";
 	}
 
-//	@GetMapping("/data")
-//	public String generateTestData() {
-//		for(int i=0;i<100;i++) {
-//			String randomName = RandomString.make(3);
-//			String randomNickname = RandomString.make(5);
-//			double r = Math.random();
-//			Integer randomTime=(int)(r*100)+1;
-//
-//			User user = User.builder()
-//					.name(randomName)
-//					.nickname(randomNickname)
-//					.userType((byte) 1)
-//					.volunteerTime(randomTime)
-//					.build();
-//			userRepository.save(user);
-//		}
-//		return "redirect:/";
-//	}
+	@GetMapping("/data")
+	public String generateTestData() {
+		for(int i=0;i<35;i++) {
+			String randomName = RandomString.make(3);
+			String randomNickname = RandomString.make(5);
+			double r = Math.random();
+			Integer randomTime=(int)(r*100)+1;
+
+			User user = User.builder()
+					.name(randomName)
+					.nickname(randomNickname)
+					.userType((byte) 1)
+					.volunteerTime(randomTime)
+					.build();
+			userRepository.save(user);
+		}
+		return "redirect:/";
+	}
 }

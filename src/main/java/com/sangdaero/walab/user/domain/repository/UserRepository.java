@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     List<SimpleUser> findAllByUserTypeOrderByName(byte userType);
 
+    SimpleUser findByIdOrderById(Long id);
+
 	User findBySocialId(String socialId);
 	
 	Page<User> findAllByNameContaining(String name, Pageable pageable);

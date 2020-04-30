@@ -10,5 +10,10 @@ public class HomeController {
 	public String homePage() {
 		return "html/index.html";
 	}
+
+	@GetMapping("/test/map")
+	public String naverMap() {
+		return "html/request/naverMap";
+	}
 	
 }
