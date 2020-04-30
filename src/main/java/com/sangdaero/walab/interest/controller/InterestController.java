@@ -7,9 +7,11 @@ import com.sangdaero.walab.user.application.dto.SimpleUser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -27,17 +29,21 @@ public class InterestController {
 //		List<InterestDTO> interestDTOList = mInterestService.getInterestList(type);
 		List<InterestDto> interestDTOList = mInterestService.getInterestList();
 		model.addAttribute("interestList", interestDTOList);
-		return "html/interest/interest.html";
+		model.addAttribute(new InterestDto());
+		return "html/interest/interest";
 	}
 
-	@GetMapping("/add")
-	public String add() {
-		return "html/interest/add.html";
-	}
+//	@GetMapping("/add")
+//	public String add() {
+//		return "html/interest/interest";
+//	}
 
 	@PostMapping("/add")
-	public String addInterest(InterestDto interestDto) {
-		System.out.println(interestDto);
+	public String addInterest(@Valid InterestDto interestDto, Errors errors) {
+
+		if(errors.hasErrors()) {
+			return "redirect:/interest";
+		}
 		mInterestService.addInterest(interestDto);
 		return "redirect:/interest";
 	}
@@ -47,7 +53,7 @@ public class InterestController {
 		InterestDto interestDTO = mInterestService.getInterest(id);
 
 		model.addAttribute("interestDTO", interestDTO);
-		return "html/interest/update.html";
+		return "html/interest/update";
 	}
 
 	@PutMapping("/edit/{id}")

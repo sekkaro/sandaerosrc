@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
+
+<script type="text/javascript" th:inline="javascript">
+	var isChecked = false;
+</script>
+
 <head lang="en" th:replace="common/header :: header"></head>
 <body>
 
@@ -12,7 +17,7 @@
 			<button id="openNav" style="display: none"
 				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 			<div class="w3-container">
-				<h1>소액 결제 페이지</h1>
+				<h1>모금활동 생성 페이지</h1>
 			</div>
 		</div>
 
@@ -24,16 +29,10 @@
 					
 					<select name="sortBy">
 						<option value=2>전체</option>
-						<option value=0>미입금</option>
-						<option value=1>입금완료</option>
-					</select> 
-					<!--   
-					<select name="status">
-						<option value=2>전체</option>
-						<option value=0>열림</option>
 						<option value=1>닫힘</option>
-					</select> 		
-					-->		
+						<option value=0>열림</option>
+					</select> 
+
 					<input type="hidden" name="pageNum">
 					
 					<button id="searchBtn">검색</button>
@@ -42,48 +41,33 @@
 			<br>
 
 			<!-- payment list  -->
-			<form action="/payment/paymentUpdateChecked" method="GET">
+			<form action="/payment/paymentUpdateChecked" method="GET" name="form1">
 				<!-- update checked record's 'paymentCheck' status. -->
 
 				<table>
 					<thead>
 						<tr>
 							<th class="one wide">id(번호)</th>
-							<th class="one wide">공개상태</th>
-							<th class="one wide">입금상태</th>
+							<th class="one wide">열림/닫힘</th>
 							<th class="one wide">제목</th>
-							<th class="ten wide">입금자</th>
-							<th class="two wide">전화번호</th>
-							<th class="two wide">금액</th>
+							<th class="two wide">모금 총 금액</th>
 							<th class="two wide">후원/오락</th>
-							<th class="two wide">사업자영수증</th>
 							<th class="two wide">책임자</th>
 							<th class="three wide">메모</th>
-							<th class="three wide">등록 날짜</th>
-							<th class="three wide">수정 날짜</th>
-							<!-- <th><input type="checkbox" name="paymentCheckBox"></th> -->
+							<th class="three wide">최종 수정일</th>
+							<th><input type="checkbox" name="paymentCheckBox" th:onclick="'javascript:checkAll('form1',true);'"></th>
 						</tr>
 					</thead>
 
 					<tbody>
 
 						<!-- CONTENTS !-->
-						<tr th:each="payment : ${paymentList}">
-							<td><span th:text="${payment.id}"></span></td>
+						<tr th:each="payment, iterState : ${paymentList}">
+							<td><span th:text="${(pageNum-1)*5 + iterState.count}"></span></td>
 							
 							<td>
-							<a th:href="@{'/paymentStatusUpdate/' + ${payment.id} }">
-							<button>
 							<span th:if="${payment.status == 0}">열림</span> 
-							<span th:if="${payment.status == 1}">닫힘</span>
-							</button>
-							</a>
-
-							</td>
-							
-							<td>
-							<span th:if="${payment.paymentCheck == 0}">미입금</span> 
-							<span th:if="${payment.paymentCheck == 1}">입금완료</span></td>
+							<span th:if="${payment.status == 1}">닫힘</span></td>
 							
 							<td>
 							<a th:href="@{'/paymentDetail/' + ${payment.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
@@ -91,25 +75,18 @@
 							</a>
 							</td>
 							
-							<td><span th:text="${payment.donator}"></span></td>
-							<td><span th:text="${payment.donatorPhone}"></span></td>
 							<td><span th:text="${payment.donationPrice}"></span></td>
 							
 							<td>
-							<span th:if="${payment.selectSupport==0}">후원</span> 
-							<span th:if="${payment.selectSupport==1}">오락</span>
+							<span th:if="${payment.selectSupport==1}">후원</span> 
+							<span th:if="${payment.selectSupport==0}">오락</span>
 							</td>
-							
-							<td>
-							<span th:if="${payment.billType==0}">미발급</span> 
-							<span th:if="${payment.billType==1}">발급</span></td>
-							<td><span th:text="${payment.manager}"></span></td>
+			
+							<!-- <td><span th:text="${payment.manager}"></span></td> -->
+							<td><span th:each="manager : ${payment.manager}" th:text="${manager.name}"></span></td>
 							<td><span th:text="${payment.content}"></span></td>
 							<td><span
-								th:text="${#temporals.format(payment.regDate, 'yyyy-MM-dd HH:mm')}"></span>
-							</td>
-							<td><span
-								th:text="${#temporals.format(payment.modDate, 'yyyy-MM-dd HH:mm')}"></span>
+								th:text="${#temporals.format(payment.modDate, 'yyyy-MM-dd')}"></span>
 							</td>
 							<td><input type="checkbox" name="paymentCheckBox"
 								th:value="${payment.id}"></td>
@@ -120,7 +97,7 @@
 				<!-- When list is empty, show a message -->
 				<div th:if="${#lists.isEmpty(paymentList)}"><br><br><h3>조건에 맞는 항목이 없습니다.</h3><br><br></div>
 				
-				<button id="paymentCheckBoxBtn">체크항목 입금상태 변환</button>
+				<button id="paymentCheckBoxBtn">체크 열림/닫힘 변환</button>
 
 			</form>
 
@@ -132,7 +109,7 @@
 			</div>
 			<!-- paging end -->
 			<br> <a
-				th:href="@{'/paymentForm/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy} }"><button>글쓰기</button></a>
+				th:href="@{'/paymentForm/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy} }"><button>모금활동 생성</button></a>
 			<br>
 
 
@@ -142,4 +119,26 @@
 
 	</div>
 </body>
+
+<script type="text/javascript" th:inline="javascript">
+	
+	function test(){
+		console.print("clicked");
+	}
+	
+	function checkAll(formName, checkToggle) {
+
+		test();
+		console.log("clicked");
+		var checkBoxes = new Array();
+		checkBoxes = document[formName].getElementByTagName('input');
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (checkboxes[i].type == 'paymentCheckbox') {
+				checkboxes[i].checked = checktoggle;
+			}
+		}
+	}
+</script>
 </html>
+

@@ -12,7 +12,7 @@
 			<button id="openNav" style="display: none"
 				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 			<div class="w3-container">
-				<h1>소액 결제 개별항목 상세 페이지</h1>
+				<h1>모금활동 상세 페이지</h1>
 			</div>
 		</div>
 		<div class="w3-container"></div>
@@ -22,34 +22,119 @@
 		<h2 th:text="${paymentDto.title}"></h2>
 
 		<!-- inline for interleaving variable into a sentence, with [[variable]] -->
-		<p th:inline="text">작성일 :
-			[[${#temporals.format(paymentDto.regDate, 'yyyy-MM-dd HH:mm')}]]</p>
-		책임자id(매칭을위해 int형으로 해놨음) :
-		<p th:text="${paymentDto.manager}"></p>
-		공개상태 :
-		<p th:if="${paymentDto.status == 1}">닫힘</p>
+		공개 상태 : 
 		<p th:if="${paymentDto.status == 0}">열림</p>
-		후원자명 :
-		<p th:text="${paymentDto.donator}"></p>
-		입금자 전화번호 :
-		<p th:text="${paymentDto.donatorPhone}"></p>
-		후원금액 :
+		<p th:if="${paymentDto.status == 1}">닫힘</p>
+		
+		책임자 :
+		<p><span th:each="manager : ${paymentDto.manager}" th:text="${manager.name}"></span><p>
+		
+		모금 목표 금액 :
 		<p th:text="${paymentDto.donationPrice}"></p>
 
-		입금상태 :
-		<p th:if="${paymentDto.paymentCheck == 1}">입금완료</p>
-		<p th:if="${paymentDto.paymentCheck == 0}">미입금</p>
+		등록시킬 후원자 목록 : <br>
+		<form th:action="@{'/payment/paymentUserMatching/' + ${paymentDto.id} }" method="GET">
+		
+        <tr th:each="userInfo, iterState : ${simpleUserList}">
+          <td th:text="|${userInfo.name} (${userInfo.nickname})|"/>
+          <td><input type="checkbox" name="userMatchingCheckBox" th:value="${userInfo.id}"></td>
+          <span th:if=${iterState.count%5==5}><br></span>
+        </tr>
+        <br>
+        <button>체크된 유저 등록</button>
+		</form>
+		
+		<br>
+		등록된 유저 리스트 : <br>
+		
+		
+		<!-- 수정중  시작  -->
+		
+		<!-- fundraising list  -->
+			<form action="/payment/fundraisingStatusToggle" method="GET">
+				<!-- toggle 'payment_status' attribute. -->
 
-		지정/비지정후원 :
-		<p th:if="${paymentDto.selectSupport == 0}">미지정후원</p>
-		<p th:if="${paymentDto.selectSupport == 1}">지정후원</p>
+				<table>
+					<thead>
+						<tr>
+							<th class="one wide">id(번호)</th>
+							<th class="one wide">이름</th>
+							<th class="one wide">후원자명</th>
+							<th class="two wide">후원금액</th>
+							<th class="two wide">입금확인</th>
+							<th class="two wide">연락처</th>
+							<th class="three wide">사업자영수증</th>
+							<th class="three wide">메모</th>
+							<th><input type="checkbox" name="fundraisingCheckBox" ></th>
+						</tr>
+					</thead>
 
-		사업자영수증발급 :
-		<p th:if="${paymentDto.billType == 0}">미발급</p>
-		<p th:if="${paymentDto.billType == 1}">발급</p>
+					<tbody>
+
+						<!-- CONTENTS !-->
+						<tr th:each="fundraising, iterState : ${fundraisingList}">
+							<!-- <td><span th:text="${(pageNum-1)*5 + iterState.count}"></span></td> -->
+							
+							<td>
+							<span th:text="${iterState.index}"></span> 
+							</td>
+							
+							<!-- 
+							<td><span th:each="user : ${fundraising.user_id}" th:text="${user.name}"></span></td>
+							 -->
+							
+							<td><span th:text="${fundraising.donator}"></span></td>
+							
+							<td><span th:text="${fundraising.personalPayAmount}"></span></td>
+							
+							<td>
+							<span th:if="${fundraising.payment_status == 0}">미입금</span> 
+							<span th:if="${fundraising.payment_status == 1}">입금완료</span></td>
+							
+							<td><span th:text="${fundraising.donator_phone}"></span></td>
+							
+							<td>
+							<span th:if="${fundraising.bill_type == 0}">미발급</span> 
+							<span th:if="${fundraising.bill_type == 1}">발급 희망</span></td>
+							
+							<td><span th:text="${fundraising.memo}"></span></td>
+							
+							<!-- 
+							<td><input type="checkbox" name="fundraisingCheckBox"
+								th:value="${fundraisingId}"></td>
+								 -->
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- When list is empty, show a message -->
+				<div th:if="${#lists.isEmpty(fundraisingList)}"><br><br><h3>조건에 맞는 항목이 없습니다.</h3><br><br></div>		
+				<button id="fundraisingCheckBoxBtn">체크 항목 입금완료/미입금 변환</button>
+
+			</form>
+		
+		
+		
+		
+		<!-- 수정중 끝 -->
+		
+		<br>
+		
+		
+		
+		<br>
+		모금 종류 :
+		<p th:if="${paymentDto.selectSupport == 1}">후원</p>
+		<p th:if="${paymentDto.selectSupport == 0}">오락</p>
 
 		메모 :
 		<p th:text="${paymentDto.content}"></p>
+		
+		<p th:inline="text">작성일 :
+			[[${#temporals.format(paymentDto.regDate, 'yyyy-MM-dd HH:mm')}]]</p>
+			
+		<p th:inline="text">최종 수정일 :
+			[[${#temporals.format(paymentDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
 
 
 		<!-- Update & Delete -->
@@ -81,8 +166,6 @@
 		<script th:inline="javascript" th:src="@{/payment/paymentDebugLog.js}"></script>
 
 		<div lang="en" th:replace="common/footer :: footer"></div>
-
-
 
 	</div>
 </body>

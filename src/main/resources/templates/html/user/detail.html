@@ -1,43 +1,77 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head lang="en" th:replace="common/header :: header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>상대로 프로젝트</title>
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
-    이름: <h3 th:text="${userInfo.name}"></h3>
-    <hr>
-    <div th:contenteditable="false">
-        닉네임: <h3 th:text="${userInfo.nickname}"></h3>
+    <div lang="en" th:replace="common/menu :: menu"></div>
+
+    <div id="main" style="margin-left: 15%"></div>
+
+    <div class="container">
+        <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+        <div class="py-5 text-center">
+            <h2>회원 상세 정보 페이지</h2>
+        </div>
+        <div class="justify-content-center" style="margin-left: 20%">
+            <div>
+                <label for="name">유저 이름</label>
+                <h4 id="name" th:text="${userInfo.name}"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="nickname">닉네임</label>
+                <h4 id="nickname" th:text="${userInfo.nickname}"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="socialId">이메일</label>
+                <h4 id="socialId" th:text="${userInfo.socialId}"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="phone">연락처</label>
+                <h4 id="phone" th:text="${userInfo.phone}"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="userType">유저 타입</label>
+                <h4 id="userType" th:text="${userInfo.userType==1} ? '관제사' : '이용자'"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="volunteerTime">봉사 시간</label>
+                <h4 id="volunteerTime" th:text="${userInfo.volunteerTime}+' 시간'"></h4>
+            </div>
+            <hr>
+            <div>
+                <label for="interest">관심사</label>
+                <span id="interest" th:each="interestName : ${userInfo.interestName}">
+                    <h4 th:text="${interestName}"></h4>
+                </span>
+            </div>
+            <hr>
+            <div>
+                봉사 항목:
+            </div>
+            <hr>
+            <div>
+                커뮤니티:
+            </div>
+            <hr>
+            <div>
+                <a th:href="@{'/user/edit/' + ${userInfo.id}}">
+                    <button>수정</button>
+                </a>
+            </div>
+        </div>
     </div>
-    <hr>
-    소셜 로그인 정보: <h3 th:text="${userInfo.socialId}"></h3>
-    <hr>
-    <div th:contenteditable="false">
-        연락처: <h3 th:text="${userInfo.phone}"></h3>
-    </div>
-    <hr>
-    타입:
-    <div th:contenteditable="false">
-        <h3 th:if="${userInfo.userType==1}" th:text="관제사"></h3>
-        <h3 th:if="${userInfo.userType==0}" th:text="이용자"></h3>
-    </div>
-    <hr>
-    <div th:contenteditable="false">
-        봉사 시간: <h3 th:text="${userInfo.volunteerTime}"></h3>
-    </div>
-    <hr>
-    관심사:
-    <span th:each="interestName : ${userInfo.interestName}">
-        <span th:text="${interestName}"></span>
-    </span>
-    <hr>
-    봉사 항목: <h3 th:text="${userInfo.nickname}"></h3>
-    <hr>
-    커뮤니티: <h3 th:text="${userInfo.nickname}"></h3>
-    <hr>
-    <a th:href="@{'/user/edit/' + ${userInfo.id}}">
-        <button>수정</button>
-    </a>
+
 </body>
 </html>

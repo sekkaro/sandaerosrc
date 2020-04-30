@@ -1,33 +1,45 @@
 package com.sangdaero.walab.payment.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.sangdaero.walab.common.entity.EventEntity;
+import com.sangdaero.walab.common.entity.FundraisingEntity;
+import com.sangdaero.walab.common.entity.User;
+import com.sangdaero.walab.payment.domain.repository.FundraisingRepository;
 import com.sangdaero.walab.payment.domain.repository.PaymentRepository;
+import com.sangdaero.walab.payment.dto.FundraisingDto;
 import com.sangdaero.walab.payment.dto.PaymentDto;
+import com.sangdaero.walab.user.application.service.UserService;
+import com.sangdaero.walab.user.domain.repository.UserRepository;
 
 @Service
 public class PaymentService {
 
 	private PaymentRepository mPaymentRepository;
+	private FundraisingRepository mFundraisingRepository;
+	private UserService mUserService;
 
 	// for paging
 	private static final int NUMBER_OF_CONTENTS_IN_ONE_PAGE = 5; // 6 contents are shown, per page.
 	private static final int PAGE_NUMBERS_PER_BLOCK = 5; // ex) 1 2 3 4 5 
+	
+	// payment category == 2
+	private static final int PAYMENT_CATEGORY = 2;
 
 	// constructor
-	public PaymentService(PaymentRepository mPaymentRepository) {
+	public PaymentService(PaymentRepository mPaymentRepository, UserService mUserService, FundraisingRepository mFundraisingRepository) {
 		this.mPaymentRepository = mPaymentRepository;
+		this.mUserService = mUserService;
+		this.mFundraisingRepository = mFundraisingRepository;
 	}
 
 	// Count All
@@ -73,9 +85,9 @@ public class PaymentService {
 		List<PaymentDto> paymentDtoList = new ArrayList<>();
 
 		if (sortBy == (byte)2) { // select all status
-			eventEntitiyList = mPaymentRepository.findByTitleContainingIgnoreCaseOrDonatorContainingIgnoreCase(keyword, keyword, pageable);
+			eventEntitiyList = mPaymentRepository.findByEventCategoryAndTitleContainingIgnoreCase(PAYMENT_CATEGORY, keyword, pageable);
 		} else {
-			eventEntitiyList = mPaymentRepository.findByPaymentCheckAndTitleOrDonator(sortBy, keyword, keyword, pageable); 
+			eventEntitiyList = mPaymentRepository.findByEventCategoryAndStatusAndTitle(PAYMENT_CATEGORY, sortBy, keyword, pageable); 
 		}
 		// no matching records in DB
 		if(eventEntitiyList.isEmpty()) return paymentDtoList;
@@ -93,9 +105,9 @@ public class PaymentService {
 		Long searchCount = (long)0;
 
 		if (sortBy == (byte)2) { // select all status
-			searchCount = mPaymentRepository.countByTitleContainingIgnoreCaseOrDonatorContainingIgnoreCase(keyword, keyword);
-		} else {
-			searchCount = mPaymentRepository.countByPaymentCheckAndTitleOrDonator(sortBy, keyword, keyword); 
+			searchCount = mPaymentRepository.countByEventCategoryAndTitleContainingIgnoreCase(PAYMENT_CATEGORY, keyword);
+		} else { 
+			searchCount = mPaymentRepository.countByEventCategoryAndStatusAndTitle(PAYMENT_CATEGORY, sortBy, keyword); 
 		}
 		return searchCount;
 	}
@@ -127,14 +139,9 @@ public class PaymentService {
 				.title(eventEntity.getTitle())
 				.donationPrice(eventEntity.getDonationPrice())
 				.eventCategory(eventEntity.getEventCategory())
-				.donator(eventEntity.getDonator())
 				.content(eventEntity.getContent())
 				.manager(eventEntity.getManager())
 				.selectSupport(eventEntity.getSelectSupport())
-				.billType(eventEntity.getBillType())
-				.donatorPhone(eventEntity.getDonatorPhone())
-				.businessPicture(eventEntity.getBusinessPicture())
-				.paymentCheck(eventEntity.getPaymentCheck())
 				.status(eventEntity.getStatus())
 				.regDate(eventEntity.getRegDate())
 				.modDate(eventEntity.getModDate())
@@ -156,45 +163,63 @@ public class PaymentService {
 			PaymentDto checkedPaymentDto = this.getSinglePaymentById(id); // and with the id, get the data from DB
 
 			// toggle the 'paymentCheck' status. (Byte value, 0 or 1)
-			if(checkedPaymentDto.getPaymentCheck() == (byte)1) {
-				checkedPaymentDto.setPaymentCheck((byte)0);
+			if(checkedPaymentDto.getStatus() == (byte)1) {
+				checkedPaymentDto.setStatus((byte)0);
 			} else {
-				checkedPaymentDto.setPaymentCheck((byte)1);
+				checkedPaymentDto.setStatus((byte)1);
 			}
 			this.savePayment(checkedPaymentDto); // save the modified result in DB
 		}
 	}
+	
+	
+	// Read single record
+	@Transactional
+	public EventEntity getSingleEventEntityById(Long id) {
 
-	public void paymentStatusToggle(PaymentDto paymentDto) {
-		
-		Byte currentStatus = paymentDto.getStatus();
-		
-		if (currentStatus == (byte)0) {
-			paymentDto.setStatus((byte)1);
-		} else if (currentStatus == (byte)1) {
-			paymentDto.setStatus((byte)0);
-		}
-		this.savePayment(paymentDto);
+		// used Optional to pick a specific entity, by using id value
+		Optional<EventEntity> eventEntityWrapper = mPaymentRepository.findById(id); // original
+		EventEntity eventEntity = eventEntityWrapper.get();
+
+		return eventEntity;
 	}
 	
-	//	// Read all, not used
-	//	@Transactional
-	//	public List<PaymentDto> getPaymentList(Pageable pageable){
-	//
-	//		// get all 'event' records from database
-	//		Page<EventEntity> eventEntityAsPage = mPaymentRepository.findAll(pageable); 
-	//		
-	//		List<EventEntity> eventEntityList = eventEntityAsPage.getContent();
-	//
-	//		// payment DTO to save selected data from 'event' records
-	//		List<PaymentDto> paymentDtoList = new ArrayList<>();
-	//
-	//		// extract selected data from EventEntity into PaymentDto
-	//		for ( EventEntity eventEntity : eventEntityList) {
-	//
-	//			PaymentDto paymentDto = this.convertEventEntityToPaymentDto(eventEntity);
-	//			paymentDtoList.add(paymentDto);
-	//		}
-	//		return paymentDtoList;
-	//	}
+	// Fundraising part
+	public void fundraisingUserMatching (String[] userCheckBox, Long eventId) { // checked user's ids are now in String[] userMatchingCheckBox.
+
+		if (userCheckBox == null) {
+			return;
+		}
+		
+		// get matched Event entity
+		EventEntity event = this.getSingleEventEntityById(eventId);
+		
+		// when at least one user is checked,
+		for (int i=0; i<userCheckBox.length; i++) {
+			
+			// get matched User entity
+			long id = Long.parseLong(userCheckBox[i]);
+			User user = mUserService.findUserEntity(id);
+			
+			// default Fundraising Entity values. This contents will be modified later, in the detail page by administrator.
+			FundraisingEntity fund = FundraisingEntity.builder()
+					.userId(user)
+					.eventId(event)
+					.title("모금")
+					.memo("메모")
+					.personalPayAmount((int)1000)
+					.donator("기부자 이름")
+					.billType((byte)0)
+					.paymentStatus((byte)0)
+					.donatorPhone("010-xxxx-xxxx")
+					.businessPicture("")
+//					.regDate(LocalDateTime.now()) // ** LocalDateTime might not work
+//					.modDate(LocalDateTime.now())
+					.build();
+			
+			mFundraisingRepository.save(fund);
+		}
+		
+	}
+
 }

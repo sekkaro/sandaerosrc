@@ -106,3 +106,4 @@ public class NoticeController extends CategoryController {
         return "redirect:/notice";
     }
 }
+
