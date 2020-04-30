@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>커뮤니티 쓰기</h1>
+  </div>
+</div>
+
+    <form action="/community/post" method="post">
+    	제목 : <input type="text" name="title" maxlength="10"> <br>
+    	작성자 : <input type="text" name="writer"> <br>
+    	<input type="hidden" value="0" name="view">
+    	<input type="hidden" value="2" name="topCategory">
+        Sub: 
+        <select name="categoryId">
+        	<option th:each="categoryOption : ${categoryDto}"
+        			th:text="${categoryOption.memo}"
+        			th:value="${categoryOption.id}"/>
+        </select><br>
+        
+        <textarea name="content"></textarea><br>
+
+        <input type="submit" value="등록">
+        <a th:href="@{/community}">목록</a>
+    </form>
+    
+    <div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+
+</body>
+</html>
