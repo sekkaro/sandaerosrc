@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>커뮤니티 수정</h1>
+  </div>
+</div>
+
+    <form th:action="@{'/community/post/edit/' + ${communityDto.id}}" method="post">
+        <input type="hidden" name="_method" value="put"/>
+        <input type="hidden" name="id" th:value="${communityDto.id}"/>
+        <input type="hidden" name="view" th:value="${communityDto.view}"/>
+
+	       제목 : <input type="text" name="title" th:value="${communityDto.title}"> <br>
+	       작성자 : <input type="text" name="writer" th:value="${communityDto.writer}"> <br>
+	    <input type="hidden" value="1" name="topCategory">
+	    Sub: 
+        <select name="categoryId">
+        	<option th:each="category : ${categoryDto}"
+        			th:text="${category.memo}"
+        			th:value="${category.id}"
+        			th:selected="${category.id} == ${communityDto.categoryId}"/> 
+        	<option value="0" th:selected="0 == ${communityDto.categoryId}">삭제</option>
+        </select><br> 
+        
+    
+        <textarea name="content" th:text="${communityDto.content}"></textarea><br>
+
+        <input type="submit" value="수정">
+        <a th:href="@{/community}">목록</a>
+    </form>
+    <div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+
+</body>
+</html>

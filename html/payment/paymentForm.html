@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>소액 결제 내역 추가 폼</h1>
+			</div>
+		</div>
+
+
+		<div class="w3-container">
+
+			<form action="/paymentForm" method="post">
+
+				제목 : <input type="text" name="title" value="title"> <br>
+				
+				공개 상태 : 
+				<input type="radio" name="status" value=0>열림
+				<input type="radio" name="status" value=1 checked="checked">닫힘 <br>
+				
+				모금 목표 금액 : <input type="text" name="donationPrice" value=1000> <br>
+				
+				후원목적/오락목적 : 
+				<input type="radio" name="selectSupport" value=1>후원목적 
+				<input type="radio" name="selectSupport" value=0 checked="checked">오락목적 <br> 
+				
+				<br> 책임자 : 
+        		<select name="managerId">
+    				<option value="0">관리자를 선택하세요</option>
+    				<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" selected="selected"></option>
+    			</select>
+    			<br>
+				
+				메모 : <br>
+				<textarea name="content"></textarea> <br> 
+				
+				<input type="hidden" name="paymentCheck" value=0 checked="checked"> <!-- when creating, fund is not fulfilled -->
+				
+				<br> <input type="submit" value="등록">
+			</form>
+
+		</div>
+		<a th:href="@{/payment}">
+			<button>뒤로가기</button>
+		</a>
+
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>
