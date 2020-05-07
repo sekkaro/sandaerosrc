@@ -7,8 +7,12 @@ import com.sangdaero.walab.interest.application.dto.InterestDto;
 import com.sangdaero.walab.interest.application.dto.InterestName;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,5 +70,13 @@ public class InterestService {
 
     public void deleteInterest(Long id) {
         mInterestRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void update(Long id, String name) throws Exception {
+        InterestCategory interest = mInterestRepository.findById(id)
+                                                        .orElseThrow(()->new Exception());
+
+        interest.update(name);
     }
 }
