@@ -24,8 +24,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @DynamicInsert
 @Table(name = "event")
@@ -45,27 +47,25 @@ public class EventEntity extends TimeEntity {
 	@Column(name="event_category", nullable=false)
 	private Integer eventCategory;
 	
-	@ManyToOne
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, 
+			CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name="interest_category", nullable=true)
 	private InterestCategory interestCategory;
 	
 	@Column(length = 255, nullable = true)
 	private String userName;
 	
-	@ManyToOne
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, 
+			CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name="user_taker", nullable=true)
 	private User userTaker;
-
-	@Column(name="user_volunteer", nullable = true)
-	@ColumnDefault("0")
-	private Integer userVolunteer;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="event_id")
 	private List<UserEventMapper> volunteers;
 
 	@ColumnDefault("0")
-	private Integer manager;
+	private Long manager;
 
 	@Column(length = 255)
 	private String place;
@@ -117,7 +117,7 @@ public class EventEntity extends TimeEntity {
 	private LocalDateTime deadline;
 
 	@Builder
-	public EventEntity(Long id, String title, Byte status, Integer eventCategory, String userName, Integer userVolunteer, Integer manager,
+	public EventEntity(Long id, String title, Byte status, Integer eventCategory, String userName, Long manager,
 			String place, LocalDateTime startTime, LocalDateTime endTime, String content, Byte deliveryFlag,
 			Byte phoneAgree, String donator, Byte selectSupport, Integer donationPrice, Byte billType,
 			Byte paymentCheck, String donatorName, String donatorPhone, String businessPicture, String evaluate,
@@ -127,7 +127,6 @@ public class EventEntity extends TimeEntity {
 		this.status = status;
 		this.eventCategory = eventCategory;
 		this.userName = userName;
-		this.userVolunteer = userVolunteer;
 		this.manager = manager;
 		this.place = place;
 		this.startTime = startTime;
