@@ -28,6 +28,7 @@ public class NoticeController extends CategoryController {
 		this.mNoticeService = noticeService;
 	}
 	
+	
 	// Notice list page
 	@GetMapping("")
 	public String list(
@@ -105,3 +106,4 @@ public class NoticeController extends CategoryController {
         return "redirect:/notice";
     }
 }
+
