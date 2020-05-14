@@ -17,6 +17,7 @@
 
 <div id="wrap">
 
+	<!-- 
 	<form action="/community/category" method="GET">
 		<select name="topCategory">
 			<option type="number" value="0" th:selected="0 == ${topCategory}">전체</option>
@@ -26,53 +27,75 @@
         </select>
 		<button>확인</button>
 	</form>
+	 -->
+	
+	<div>
+		<p th:text="${path}"/>
+	</div>
 
-    <form action="/category" method="GET">
-        <div class="search">
-            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
-        </div>
-		<select name="type">
-			<option value="1">제목</option>
-			<option value="2">내용</option>
-			<option value="3">작성자</option>
-		</select>
-        <button>검색하기</button>
-    </form>
+	<!-- Path editing is needed -->
+	<!-- Search -->
+	<div>
+	    <form action="/noticey/category" method="GET">
+	    	<div>
+	    		<input type="hidden" name="topCategory" th:value="${topCategory}">
+	    	</div>
+	        <div class="search" style="float: left">
+	            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+	        </div>
+	        <div>
+	        <select name="type" style="float: left">
+				<option value="1">메모</option>
+				<option value="2">관리자</option>
+			</select>
+	        </div>
+			<div style="float: left">
+				<button>검색하기</button>
+			</div>
+	    </form>
+    </div><br><br>
 
-    <table style="border:1px solid;">
-        <thead>
-        <tr>
-            <th class="one wide">번호</th>
-            <th class="ten wide">Memo</th>
-            <th class="two wide">Top</th>
-            <th class="three wide">Status</th>
-        </tr>
-        </thead>
+	<div>
+	    <table style="border:1px solid;">
+	        <thead>
+	        <tr>
+	            <th class="one wide">번호</th>
+	            <th class="ten wide">Memo</th>
+	            <th class="two wide">Top</th>
+	            <th class="three wide">Status</th>
+	        </tr>
+	        </thead>
+	
+	        <tbody>
+	        <!-- CONTENTS !-->
+	        <tr th:each="category : ${categoryList}">
+	            <td>
+	                <span th:text="${category.id}"></span>
+	            </td>
+	            <td>
+	            	<a th:href="@{'/'+${path}+'/category/detail/' + ${category.id}+'?topCategory='+${topCategory}}">
+	                    <span th:text="${category.memo}"></span>
+	                </a>
+	            </td>
+	            <td>
+	                <span th:text="${category.topCategory}"></span>
+	            </td>
+	            <td>
+	                <span th:text="${category.status}"></span>
+	            </td>
+	        </tr>
+	        </tbody>
+	    </table>
+    </div>
 
-        <tbody>
-        <!-- CONTENTS !-->
-        <tr th:each="category : ${categoryList}">
-            <td>
-                <span th:text="${category.id}"></span>
-            </td>
-            <td>
-            	<a th:href="@{'/'+${path}+'/category/detail/' + ${category.id}+'?topCategory='+${topCategory}}">
-                    <span th:text="${category.memo}"></span>
-                </a>
-            </td>
-            <td>
-                <span th:text="${category.topCategory}"></span>
-            </td>
-            <td>
-                <span th:text="${category.status}"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    
-    <a th:href="@{'/'+${path}+'/category/add?path='+${path}}">카테고리 추가</a> <br>
-    <a th:href="@{'/'+${path}}">목록</a>
+    <div>
+	    <div style="float: right">
+	    	<a th:href="@{'/'+${path}}">목록</a>
+	    </div>
+	    <div style="float: left">
+	    	<a th:href="@{'/'+${path}+'/category/add?path='+${path}}">카테고리 추가</a> <br>
+	    </div>
+    </div>
 </div>
 
 <div lang="en" th:replace="common/footer :: footer"></div>

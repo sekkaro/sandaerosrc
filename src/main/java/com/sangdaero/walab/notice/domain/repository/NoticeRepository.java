@@ -15,46 +15,63 @@ import com.sangdaero.walab.common.entity.Board;
 
 public interface NoticeRepository extends JpaRepository<Board, Long> {
 	
-	// Get notices without deleted
-	Page<Board> findAllByCategoryIdNotAndTopCategoryEquals(Long subCategory, Byte topCategory, Pageable page);
-	// Get notices which fit to subCategory
-	Page<Board> findAllByCategoryIdAndTopCategoryEquals(Long subCategory, Byte topCategory, Pageable page);
-	// Searching notices without deleted
-	Page<Board> findAllByTitleContainingAndCategoryIdNotAndTopCategoryEquals(String title, Long subCategory, Byte topCategory, Pageable page);
-	// Searching notices which fit to subCategory
-	Page<Board> findAllByTitleContainingAndCategoryIdAndTopCategoryEquals(String title, Long subCategory, Byte topCategory, Pageable page);
+	// Get communities without deleted
+	Page<Board> findAllByStatusNotAndTopCategoryEquals(Byte status, Byte topCategory, Pageable page);
+	// Get communities deleted
+	Page<Board> findAllByStatusAndTopCategoryEquals(Byte status, Byte topCategory, Pageable page);
+	// Get communities which fit to categoryId
+	Page<Board> findAllByStatusNotAndCategoryIdAndTopCategoryEquals(Byte status, Long categoryId, Byte topCategory, Pageable page);
+	// Searching communities without deleted
+	Page<Board> findAllByTitleContainingAndStatusNotAndTopCategoryEquals(String title, Byte status, Byte topCategory, Pageable page);
+	// Searching communities deleted
+	Page<Board> findAllByTitleContainingAndStatusAndTopCategoryEquals(String title, Byte status, Byte topCategory, Pageable page);
+	// Searching communities which fit to categoryId
+	Page<Board> findAllByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String title, Byte status, Long categoryId, Byte topCategory, Pageable page);
 	
-	Page<Board> findAllByContentContainingAndCategoryIdNotAndTopCategoryEquals(String content, Long subCategory, Byte topCategory, Pageable page);
+	Page<Board> findAllByContentContainingAndStatusNotAndTopCategoryEquals(String content, Byte status, Byte topCategory, Pageable page);
 	
-	Page<Board> findAllByContentContainingAndCategoryIdAndTopCategoryEquals(String content, Long subCategory, Byte topCategory, Pageable page);
+	Page<Board> findAllByContentContainingAndStatusAndTopCategoryEquals(String content, Byte status, Byte topCategory, Pageable page);
 	
-	Page<Board> findAllByWriterContainingAndCategoryIdNotAndTopCategoryEquals(String writer, Long subCategory, Byte topCategory, Pageable page);
+	Page<Board> findAllByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String content, Byte status, Long categoryId, Byte topCategory, Pageable page);
 	
-	Page<Board> findAllByWriterContainingAndCategoryIdAndTopCategoryEquals(String writer, Long subCategory, Byte topCategory, Pageable page);
-	// Get count of notices without deleted
-	Long countByCategoryIdNotAndTopCategoryEquals(Long subCategory, Byte topCategory);
-	// Get count of notices which fit to subCategory
-	Long countByCategoryIdAndTopCategoryEquals(Long subCategory, Byte topCategory);
-	// Get count of searched notices without deleted
-	Long countByTitleContainingAndCategoryIdNotAndTopCategoryEquals(String title, Long subCategory, Byte topCategory);
-	// Get count of searched notices which fit to subCategory
-	Long countByTitleContainingAndCategoryIdAndTopCategoryEquals(String title, Long subCategory, Byte topCategory);
+	Page<Board> findAllByWriterContainingAndStatusNotAndTopCategoryEquals(String writer, Byte status, Byte topCategory, Pageable page);
 	
-	Long countByContentContainingAndCategoryIdNotAndTopCategoryEquals(String content, Long subCategory, Byte topCategory);
+	Page<Board> findAllByWriterContainingAndStatusAndTopCategoryEquals(String writer, Byte status, Byte topCategory, Pageable page);
 	
-	Long countByContentContainingAndCategoryIdAndTopCategoryEquals(String content, Long subCategory, Byte topCategory);
+	Page<Board> findAllByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String writer, Byte status, Long categoryId, Byte topCategory, Pageable page);
+	// Get count of communities without deleted
+	Long countByStatusNotAndTopCategoryEquals(Byte status, Byte topCategory);
+	// Get count of communities deleted
+	Long countByStatusAndTopCategoryEquals(Byte status, Byte topCategory);
+	// Get count of communities which fit to categoryId
+	Long countByStatusNotAndCategoryIdAndTopCategoryEquals(Byte status, Long categoryId, Byte topCategory);
+	// Get count of searched communities without deleted
+	Long countByTitleContainingAndStatusNotAndTopCategoryEquals(String title, Byte status, Byte topCategory);
+	// Get count of searched communities deleted
+	Long countByTitleContainingAndStatusAndTopCategoryEquals(String title, Byte status, Byte topCategory);
+	// Get count of searched communities which fit to categoryId
+	Long countByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String title, Byte status, Long categoryId, Byte topCategory);
 	
-	Long countByWriterContainingAndCategoryIdNotAndTopCategoryEquals(String writer, Long subCategory, Byte topCategory);
+	Long countByContentContainingAndStatusNotAndTopCategoryEquals(String content, Byte status, Byte topCategory);
 	
-	Long countByWriterContainingAndCategoryIdAndTopCategoryEquals(String writer, Long subCategory, Byte topCategory);
-	// Increasing view count when click notice
+	Long countByContentContainingAndStatusAndTopCategoryEquals(String content, Byte status, Byte topCategory);
+	
+	Long countByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String content, Byte status, Long categoryId, Byte topCategory);
+	
+	Long countByWriterContainingAndStatusNotAndTopCategoryEquals(String writer, Byte status, Byte topCategory);
+	
+	Long countByWriterContainingAndStatusAndTopCategoryEquals(String writer, Byte status, Byte topCategory);
+	
+	Long countByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(String writer, Byte status, Long categoryId, Byte topCategory);
+	// Increasing view count when click community
 	@Transactional
 	@Modifying
 	@Query(value="UPDATE board SET view=:view WHERE id=:id", nativeQuery = true)
 	void updateViewCount(@Param("view") Long view, @Param("id") Long id);
-	// Updating subCategory
+	
+	// Updating categoryId
 	@Transactional
 	@Modifying
-	@Query(value="UPDATE board SET category_id=:categoryId WHERE id=:id", nativeQuery = true)
-	void updateNoticeCategoryId(@Param("categoryId") Long subCategory, @Param("id") Long id);
+	@Query(value="UPDATE board SET status=:status WHERE id=:id", nativeQuery = true)
+	void updateCommunityCategoryId(@Param("status") Byte status, @Param("id") Long id);
 }

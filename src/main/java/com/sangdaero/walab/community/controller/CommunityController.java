@@ -45,7 +45,7 @@ public class CommunityController extends CategoryController {
         List<CommunityDto> communityDtoList = mCommunityService.getCommunitylist(pageNum, category, keyword, searchType);
         Integer[] pageList = mCommunityService.getPageList(pageNum, category, keyword, searchType);
         
-        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2);
+        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2, "", 0);
 
         model.addAttribute("categoryList", categoryDtoList);
         model.addAttribute("communityList", communityDtoList);
@@ -60,7 +60,7 @@ public class CommunityController extends CategoryController {
 	// Writing community page
 	@GetMapping("/post")
     public String write(Model model) {
-		List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2);
+		List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2, "", 0);
 		
 		model.addAttribute("categoryDto", categoryDtoList);
 		
@@ -69,8 +69,8 @@ public class CommunityController extends CategoryController {
 
 	// Execute when click save button
     @PostMapping("/post")
-    public String write(CommunityDto communityDto) {
-        mCommunityService.savePost(communityDto);
+    public String write(CommunityDto communityDto, @RequestParam(value="categoryId")Long categoryId) {
+        mCommunityService.savePost(communityDto, categoryId);
         return "redirect:/community";
     }
 
@@ -78,9 +78,11 @@ public class CommunityController extends CategoryController {
     @GetMapping("/post/{no}")
     public String detail(@PathVariable("no") Long id, Model model) {
         CommunityDto communityDto = mCommunityService.getPost(id);
+        String category = super.mCategoryService.getCategoryMemo(communityDto.getCategoryId());
         List<CommentDto> commentDtoList = mCommentService.getComment(id);
-
+        
         model.addAttribute("communityDto", communityDto);
+        model.addAttribute("category", category);
         model.addAttribute("commentDtoList", commentDtoList);
         
         return "html/community/detail.html";
@@ -90,8 +92,8 @@ public class CommunityController extends CategoryController {
     @GetMapping("/post/edit/{no}")
     public String edit(@PathVariable("no") Long id, Model model) {
         CommunityDto communityDto = mCommunityService.getPost(id);
-        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2);
-		
+        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2, "", 0);
+        
         model.addAttribute("communityDto", communityDto);
         model.addAttribute("categoryDto", categoryDtoList);
         return "html/community/update.html";
@@ -112,9 +114,17 @@ public class CommunityController extends CategoryController {
         return "redirect:/community";
     }
     
-    @PostMapping("addComment")
+    @PostMapping("/addComment")
     public String addComment(CommentDto commentDto) {
     	mCommentService.saveComment(commentDto);
     	return "redirect:/community/post/" + commentDto.getBoardId();
     }
+    
+    @RequestMapping("/fileupload")
+    public String fileUpload() {
+    	System.out.println("\ndo upload\n");
+    	return "do";
+    }
+    
+
 }

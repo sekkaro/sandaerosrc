@@ -1,0 +1,50 @@
+	<!-- Use at <head> tag -->
+	<script th:src="@{/summernote/summernote-lite.js}"></script>
+	<script th:src="@{/summernote/lang/summernote-ko-KR.js}"></script>
+	
+	<link rel="stylesheet" th:href="@{/summernote/summernote-lite.css}">
+	
+	<!-- Use at <body> tag -->
+	<!-- Summernote Editor -->
+	<script >
+		$(document).ready(function() {
+			$('#summernote').summernote({
+				height: 300,
+				minHeight: null,
+				maxHeight: null,
+				focus: true,
+				lang: "ko-KR",
+				placeholder: 'ÃÖ´ë 2048ÀÚ',
+				callbacks: {
+					onImageUpload: function(files) {
+						uploadSummernoteImageFile(files[0], this);
+					}
+				}
+			});
+			
+			function uploadSummernoteImageFile(file, editor) {
+				data = new FormData();
+				data.append("file", file);
+				$.ajax({
+					data : data,
+					type : "POST",
+					url : "/summernoteFileUpload/uploadSummernoteImageFile",
+					contentType : false,
+					processData : false,
+					success : function(data) {
+						console.log(data);
+						$(editor).summernote('insertImage', location.origin+data.url);
+					},
+					error : function(data) {
+						console.log(data);
+					}
+				})
+			}
+		});
+	</script>
+
+
+	<!-- Text Area Example -->
+	<div class="editor_wrap">
+		<textarea name="content" id="summernote"></textarea>
+	</div><br>

@@ -2,13 +2,11 @@ package com.sangdaero.walab.common.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.sangdaero.walab.common.entity.UserInterest;
 
@@ -23,7 +21,11 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeEntity {
-
+	
+	// 2020-05-11 added
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="userId")
+	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
+	
 	@Id @GeneratedValue
     private Long id;
 

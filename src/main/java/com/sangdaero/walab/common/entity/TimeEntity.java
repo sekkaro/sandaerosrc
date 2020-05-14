@@ -1,6 +1,7 @@
 package com.sangdaero.walab.common.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass // 테이블로 매핑하지 않고, 자식 Entity에게 매핑정보를 상속하기 위한 애노테이션
 @EntityListeners(AuditingEntityListener.class) // JPA에게 해당 Entity는 Auditing기능을 사용한다는 것을 알리는 애노테이션
+@Setter
 public class TimeEntity {
 
     @CreatedDate
