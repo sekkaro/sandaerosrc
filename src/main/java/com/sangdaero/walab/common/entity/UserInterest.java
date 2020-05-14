@@ -23,5 +23,4 @@ public class UserInterest {
     @ManyToOne
     @JoinColumn(name = "interest_id")
     private InterestCategory interest;
-
 }

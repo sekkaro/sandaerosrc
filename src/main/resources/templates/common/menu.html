@@ -6,11 +6,8 @@
     <ul class="navbar-nav mr-auto">
       
     </ul>
-      <div class="authenticated">
-      <input id="toggle-event" class="authenticated" type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> 안녕하세요, <span id="user"></span>님
-      <a onClick="logout()" class="btn btn-outline-success my-2 my-sm-0 authenticated">Logout</a>
-      </div>
-      <a th:href="@{/login}" class="btn btn-outline-success my-2 my-sm-0 unauthenticated">Login</a>
+      <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
 </nav>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" id="mySidebar" style="width: 15%; display: block">

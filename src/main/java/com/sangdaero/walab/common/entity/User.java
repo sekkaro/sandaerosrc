@@ -21,7 +21,11 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeEntity {
-
+	
+	// 2020-05-11 added
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="userId")
+	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
+	
 	@Id @GeneratedValue
     private Long id;
 

@@ -1,6 +1,7 @@
 package com.sangdaero.walab.common.category.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,12 @@ import com.sangdaero.walab.common.entity.BoardCategory;
 
 public interface CategoryRepository extends JpaRepository<BoardCategory, Long> {
 	List<BoardCategory> findAllByTopCategory(Byte topCategory);
+	
+	List<BoardCategory> findAllByTopCategoryAndMemoContaining(Byte topCategory, String memo);
+	
+	List<BoardCategory> findAllByTopCategoryAndCommunityManagerContaining(Byte topCategory, String CommunityManager);
+	
+	Optional<BoardCategory> findById(Long id);
 	
 	// Updating categoryId
 	@Transactional

@@ -44,11 +44,17 @@ public class CategoryService {
 		mCategoryRepository.updateCommunityCategoryId(delete, id);
     }
     
-    public List<CategoryDto> getCategory(Byte topCategory) {
+    public List<CategoryDto> getCategory(Byte topCategory, String keyword, Integer searchType) {
     	List<BoardCategory> boardCategories;
     	
     	if (topCategory != 0) {
-    		boardCategories = mCategoryRepository.findAllByTopCategory(topCategory);
+    		if (searchType == 1) {
+    			boardCategories = mCategoryRepository.findAllByTopCategoryAndMemoContaining(topCategory, keyword);
+    		} else if (searchType == 2) {
+    			boardCategories = mCategoryRepository.findAllByTopCategoryAndCommunityManagerContaining(topCategory, keyword);
+    		} else {
+    			boardCategories = mCategoryRepository.findAllByTopCategory(topCategory);
+    		}
     	} else {
     		boardCategories = mCategoryRepository.findAll();
     	}
@@ -80,5 +86,13 @@ public class CategoryService {
                 .build();
 
         return categoryDto;
+    }
+    
+    public String getCategoryMemo(Long categoryId) {
+        Optional<BoardCategory> CategoryWrapper = mCategoryRepository.findById(categoryId);
+
+        BoardCategory category = CategoryWrapper.get();
+    	
+    	return category.getMemo();
     }
 }
