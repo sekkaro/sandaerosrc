@@ -57,7 +57,8 @@
                 <span th:text="${totalNum}-10*${simpleUserList.number}-${userInfoStat.count}+1"></span>
           </th>
           <td>
-            <a th:href="@{'/user/detail/' + ${userInfo.id}}">
+<!--            <a th:href="@{'/user/detail/' + ${userInfo.id}}">-->
+            <a th:href="@{'/user/edit/' + ${userInfo.id}}">
               <span th:text="${userInfo.name}"></span>
             </a>
           </td>
