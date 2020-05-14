@@ -17,56 +17,91 @@
 
 <div id="wrap" style="padding-left:10px;">
 
-	<h2 th:text="'커뮤니티사항 ID - ' + ${communityDto.id}"></h2>
-    <h2 th:text="'커뮤니티사항 제목 - ' + ${communityDto.title}"></h2>
-    <h2 th:text="'작성자 - ' + ${communityDto.writer}"></h2>
-    <h2 th:text="'조회수 - ' + ${communityDto.view}"></h2>
-    <h2 th:text="'이미지 - ' + ${communityDto.topCategory}"></h2>
-    <h2 th:text="'카테고리 - ' + ${communityDto.categoryId}"></h2>
-    <p th:inline="text">작성일 : [[${#temporals.format(communityDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
-
-    <span th:utext="${communityDto.content}"></span>
+	<!-- Community Content -->
+	<div>
+		<div>
+			<div style="float: left; width: 10%;">
+				<h2 th:text="'ID '+${communityDto.id}"></h2>
+			</div>
+			<div style="float: left; width: 55%">
+				<h2 th:text="${communityDto.title}"></h2>
+			</div>
+			<div style="float: right; width: 35%;">
+				<h2 th:text="'작성자 - ' + ${communityDto.writer}"></h2>
+			</div>
+			
+		</div>
+		<div>
+			<div style="float: left; width: 10%;">
+				<p th:text="'view '+${communityDto.view}"></p>	
+			</div>
+			<div style="float: left; width: 25%;">
+		    	<p th:text="'category '+${category}"></p>
+		    </div>
+		    <div style="float: right; width: 35%;">
+				<p th:inline="text">[[${#temporals.format(communityDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
+			</div>
+		</div>
+		<div>
+			<span th:utext="${communityDto.content}"></span>
+		</div>
+		
+	    <!--
+	    <h2 th:text="'Top - ' + ${communityDto.topCategory}"></h2> 
+	     -->    		
+	</div>
+	    
+	<!-- Comment -->
+	<div>
+		<table>
+	    	<thead>
+	    		<tr>
+	    			<td>Content</td>
+	    			<td>Writer</td>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+		    	<tr th:each="comment : ${commentDtoList}">
+		    		<td>
+		    			<span th:text="${comment.content}"></span>
+					</td>
+		    		<td>
+		    			<span th:text="${comment.writer}"></span>
+					</td>
+		    	</tr>
+	    	</tbody>
+    	</table>
+    	
+    	<!-- Add comment -->
+    	<form action="/community/addComment" method="post">
+	    	<input type="hidden" name="boardId" th:value="${communityDto.id}">
+	    	<input type="hidden" name="isDeleted" value="1">
+	    	댓글 : <input type="text" name="content"><br>
+	    	작성자 : <input type="text" name="writer"><br>
+	    	<input type="submit" value="댓글 등록"><br>
+    	</form>
+    	
+	</div>
     
-    <table>
-    	<thead>
-    		<tr>
-    			<td>Content</td>
-    			<td>Writer</td>
-    		</tr>
-    	</thead>
-    	<tbody>
-	    	<tr th:each="comment : ${commentDtoList}">
-	    		<td>
-	    			<span th:text="${comment.content}"></span>
-				</td>
-	    		<td>
-	    			<span th:text="${comment.writer}"></span>
-				</td>
-	    	</tr>
-    	</tbody>
-    </table>
-    <form action="/community/addComment" method="post">
-    	<input type="hidden" name="boardId" th:value="${communityDto.id}">
-    	<input type="hidden" name="isDeleted" value="1">
-    	댓글 : <input type="text" name="content"><br>
-    	작성자 : <input type="text" name="writer"><br>
-    	<input type="submit" value="댓글 등록"><br>
-    </form>
-
-    <!-- 수정/삭제 -->
+    
+    <!-- Update / Delete / List Button -->
     <div>
-        <a th:href="@{'/community/post/edit/' + ${communityDto.id}}">
-            <button>수정</button>
-        </a>
-
-        <form id="delete-form" th:action="@{'/community/post/' + ${communityDto.id}}" method="post">
-            <input type="hidden" name="_method" value="delete"/>
-            <button id="delete-btn">삭제</button>
-        </form>
-        
-        <a th:href="@{'/community/?category=' + ${communityDto.categoryId}}">
-            <button>목록</button>
-        </a>
+    	<div style="float: right">
+			<a th:href="@{'/community/?category=' + ${communityDto.categoryId}}">
+	            <button>목록</button>
+	        </a>
+		</div>
+    	<div style="float: right">
+	        <form id="delete-form" th:action="@{'/community/post/' + ${communityDto.id}}" method="post">
+	            <input type="hidden" name="_method" value="delete"/>
+	            <button id="delete-btn">삭제</button>
+	        </form>
+        </div>
+    	<div style="float: right">
+    		<a th:href="@{'/community/post/edit/' + ${communityDto.id}}">
+            	<button>수정</button>
+        	</a>
+    	</div>
     </div>
 
     <script th:inline="javascript">

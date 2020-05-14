@@ -46,14 +46,6 @@ public class Board extends TimeEntity {
     @Column(name="top_category", columnDefinition="TINYINT", length = 1, nullable = false)
     private Byte topCategory;
     
-    // many to one
-	
-	/*
-	 * @ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE,
-	 * CascadeType.PERSIST, CascadeType.REFRESH})
-	 * 
-	 * @JoinColumn(name="category_id", nullable = false)
-	 */
     @Column(name="category_id", nullable = false)
     private Long categoryId;
     
@@ -62,15 +54,15 @@ public class Board extends TimeEntity {
     private Byte qna;
 
     @Builder
-    public Board(Long id, String title, String content, String writer, Long view, Byte topCategory, Long categoryId) {
+    public Board(Long id, String title, String content, String writer, Long view, Byte status, Byte topCategory, Long categoryId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.view = view;
+        this.status = status;
         this.topCategory = topCategory;
         this.categoryId = categoryId;
-        this.status = 1;
         this.qna = 0;
     }
 

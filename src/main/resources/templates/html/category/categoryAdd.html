@@ -14,19 +14,30 @@
     <h1>카테고리 추가</h1>
   </div>
 </div>
+    <div>
     
     <form action="/notice/category/add" method="post">
-    	항목 : <input type="text" name="memo" maxlength="10"> <br>
-    	Top : 
-    	<select name="topCategory">
-        	<option type="number" value="1" th:selected="${category} == 1">공지사항</option>
-        	<option type="number" value="2" th:selected="${category} == 2">커뮤니티</option>
-        	<option type="number" value="3" th:selected="${category} == 3">문의</option>
-        </select><br>
-    	Manager : <input type="text" name="communityManager"> <br>
-        <input type="submit" value="등록">
-        <a th:href="@{'/'+${path}+'/category'}">목록</a>
+    	<div>
+    		항목 : <input type="text" name="memo" maxlength="10">
+    	</div> <br>
+    	<div>
+        <input type="hidden" name="topCategory" th:value="${category}"/>
+        </div> <br>
+        <div>
+        	Manager : <input type="text" name="communityManager">
+        </div> <br>
+    	<div>
+	    	<div style="float:left">
+	    		<input type="submit" value="등록">
+	    	</div>
+	    	<div style="float:left">
+	    	<button th:href="@{'/'+${path}+'/category?topCategory='+${category}}">목록</button>
+	    	</div>
+    	</div>
+        
+        
     </form>
+    </div>
     
     <div lang="en" th:replace="common/footer :: footer"></div>
 
