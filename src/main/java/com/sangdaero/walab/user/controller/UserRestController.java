@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.service.UserService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/userdata")
@@ -44,5 +45,33 @@ public class UserRestController {
 		mUserService.setStatus(principal, isOn);
 		return "done";
     }
+
+    @PostMapping("/change")
+	public void changeTime(@RequestParam("id") Long id, Integer time) {
+		mUserService.changeVolunteerTime(id, time);
+	}
+
+	@PostMapping("/name")
+	public String changeName(@RequestParam("id") Long id, @RequestParam("name") String name, RedirectAttributes attributes) {
+		mUserService.changeName(id, name);
+		return name;
+	}
+
+	@PostMapping("/nickname")
+	public String changeNickname(@RequestParam("id") Long id, @RequestParam("nickname") String nickname) {
+		mUserService.changeNickname(id, nickname);
+		return nickname;
+	}
+
+	@PostMapping("/phone")
+	public String changePhone(@RequestParam("id") Long id, @RequestParam("phone") String phone) {
+		mUserService.changePhone(id, phone);
+		return phone;
+	}
+
+	@PostMapping("/usertype")
+	public void changeUserType(@RequestParam("id") Long id, @RequestParam("type") Byte type) {
+		mUserService.changeUserType(id, type);
+	}
 
 }
