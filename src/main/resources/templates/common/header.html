@@ -17,7 +17,6 @@
     <script src="/node_modules/js-cookie/src/js.cookie.js"></script>
     <script src="/node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
 
-
 	<style th:inline="text">
    #sidebarCollapse {
     width: 40px;
@@ -38,63 +37,6 @@ function w3_open() {
 	  document.getElementById("mySidebar").style.display = "none";
 	  document.getElementById("openNav").style.display = "inline-block";
 	}
-	
-	var logout = function() {
-	    $.post("/logout", function() {
-	        $("#user").html('');
-	        $(".unauthenticated").show();
-	        $(".authenticated").hide();
-	    })
-	    return true;
-	}
-	
-	$.get("/userdata/getBasicInfo", function(data) {
-		if(typeof data.name != "undefined"){
-			$("#user").html(data.name);
-	        $(".unauthenticated").hide();
-	        $(".authenticated").show();
-	        
-	        if(data.userType != 1){
-	        	$('a.menu').hide();
-	        	
-	        	if(window.location.pathname != "/"){
-	        		window.location.replace("/");	
-	        	}
-	        	
-	        }
-	        
-	        if(data.status == 0){
-	        	$('#toggle-event').bootstrapToggle('off');
-	        }
-	        
-	        
-		}
-		else{
-			logout();
-		}
-    });
-	
-	$( document ).ready(function() {
-		$.ajaxSetup({
-			  beforeSend : function(xhr, settings) {
-			    if (settings.type == 'POST' || settings.type == 'PUT'
-			        || settings.type == 'DELETE') {
-			      if (!(/^http:.*/.test(settings.url) || /^https:.*/
-			        .test(settings.url))) {
-			        // Only send the token to relative URLs i.e. locally.
-			        xhr.setRequestHeader("X-XSRF-TOKEN",
-			          Cookies.get('XSRF-TOKEN'));
-			      }
-			    }
-			  }
-			});
-		
-		    $('#toggle-event').change(function() {
-		    	$.post("/userdata/setStatus", {isOn: $(this).prop('checked')}, function(data) {
-		    		console.log(data);
-		        });
-		    }) 
-	});
 	</script>
 </head>
 </html>
