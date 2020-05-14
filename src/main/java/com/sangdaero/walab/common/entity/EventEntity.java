@@ -38,6 +38,10 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventEntity extends TimeEntity {
 
+	// 2020-05-11 added
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="eventId")
+	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
+	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -58,9 +62,9 @@ public class EventEntity extends TimeEntity {
 	
 	@OneToMany(mappedBy="event")
 	private List<UserEventMapper> userEventList;
-
+  
 	@ManyToOne
-	@JoinColumn(name="manager", nullable=true)
+	@JoinColumn(name = "manager", nullable=true)
 	private User manager;
 
 	@Column(length = 255)
@@ -140,5 +144,6 @@ public class EventEntity extends TimeEntity {
 		this.evaluate = evaluate;
 		this.deadline = deadline;
 	}
+
 	
 }

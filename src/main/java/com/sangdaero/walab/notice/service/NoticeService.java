@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sangdaero.walab.common.category.repository.CategoryRepository;
 import com.sangdaero.walab.common.category.service.CategoryService;
 import com.sangdaero.walab.common.entity.Board;
+import com.sangdaero.walab.common.entity.BoardCategory;
 import com.sangdaero.walab.notice.domain.repository.NoticeRepository;
 import com.sangdaero.walab.notice.dto.NoticeDto;
 
@@ -38,15 +39,15 @@ public class NoticeService extends CategoryService {
                 .content(notice.getContent())
                 .writer(notice.getWriter())
                 .view(notice.getView())
+                .status(notice.getStatus())
                 .topCategory(notice.getTopCategory())
-                .categoryId(notice.getCategoryId())
                 .regDate(notice.getRegDate())
                 .modDate(notice.getModDate())
                 .build();
     }
 
     // Save
-    public Long savePost(NoticeDto noticeDto) {
+    public Long savePost(NoticeDto noticeDto, Long categoryId) {
         return mNoticeRepository.save(noticeDto.toEntity()).getId();
     }
     
@@ -57,57 +58,69 @@ public class NoticeService extends CategoryService {
     
     // Delete
     public void deletePost(Long id) {
-    	Long deleteCategory = (long) -1;
-    	mNoticeRepository.updateNoticeCategoryId(deleteCategory, id);
+    	Byte status = 0;
+    	mNoticeRepository.updateCommunityCategoryId(status, id);
     }
 
     // getNoticelist -> convertEntitytoDto
     public List<NoticeDto> getNoticelist(Integer pageNum, Long categoryId, String keyword, Integer searchType) {
     	Page<Board> page;
     	
-    	Long deleted = (long) -1;
+    	Byte deleted = 0;
 
    		switch(searchType) {
-   			// Search by Title
-    		case 1:
-    			if (categoryId == 0) {
-            		page = mNoticeRepository.findAllByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else {
-    				page = mNoticeRepository.findAllByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			}
-    			break;
-    		// Search by Content
-    		case 2:
-    			if (categoryId == 0) {
-            		page = mNoticeRepository.findAllByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else {
-    				page = mNoticeRepository.findAllByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			}
-    			break;
-    		// Search by Writer
-    		case 3:
-    			if (categoryId == 0) {
-            		page = mNoticeRepository.findAllByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else {
-    				page = mNoticeRepository.findAllByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			}
-    			break;
-    		// Notices without search
-    		default:
-    			if (categoryId == 0) {
-            		page = mNoticeRepository.findAllByCategoryIdNotAndTopCategoryEquals(deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-            	} else {
-            		page = mNoticeRepository.findAllByCategoryIdAndTopCategoryEquals(categoryId, topCategory,
-            				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-            	}
-    			break;
+   	// Search by Title
+		case 1:
+			if (categoryId == 0) {
+        		page = mNoticeRepository.findAllByTitleContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else if (categoryId == -1) {
+        		page = mNoticeRepository.findAllByTitleContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else {
+				page = mNoticeRepository.findAllByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+        				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			}
+			break;
+		// Search by Content
+		case 2:
+			if (categoryId == 0) {
+        		page = mNoticeRepository.findAllByContentContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else if (categoryId == -1) {
+        		page = mNoticeRepository.findAllByContentContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else {
+				page = mNoticeRepository.findAllByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+        				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			}
+			break;
+		// Search by Writer
+		case 3:
+			if (categoryId == 0) {
+        		page = mNoticeRepository.findAllByWriterContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else if (categoryId == -1) {
+        		page = mNoticeRepository.findAllByWriterContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			} else {
+				page = mNoticeRepository.findAllByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+        				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+			}
+			break;
+		// Communities without search
+		default:
+			if (categoryId == 0) {
+        		page = mNoticeRepository.findAllByStatusNotAndTopCategoryEquals(deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+        	} else if (categoryId == -1) {
+        		page = mNoticeRepository.findAllByStatusAndTopCategoryEquals(deleted, topCategory,
+        				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+        	} else {
+        		page = mNoticeRepository.findAllByStatusNotAndCategoryIdAndTopCategoryEquals(deleted, categoryId, topCategory,
+        				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
+        	}
+			break;
     	}
     	
         List<Board> notices = page.getContent();
@@ -149,33 +162,41 @@ public class NoticeService extends CategoryService {
     
 
     public Long getNoticeCount(Long categoryId, String keyword, Integer searchType) {
-    	Long deleted = (long) -1;
+    	Byte deleted = 0;
     	
     	switch(searchType) {
-    		case 1:
-    			if (categoryId == 0) {
-    	    		return mNoticeRepository.countByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else {
-    	    		return mNoticeRepository.countByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
-    	    	}
-    		case 2:
-    			if (categoryId == 0) {
-    	    		return mNoticeRepository.countByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else {
-    	    		return mNoticeRepository.countByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
-    	    	}
-    		case 3:
-    			if (categoryId == 0) {
-    	    		return mNoticeRepository.countByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else {
-    	    		return mNoticeRepository.countByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
-    	    	}
-    		default:
-    			if (categoryId == 0) {
-    	    		return mNoticeRepository.countByCategoryIdNotAndTopCategoryEquals(deleted, topCategory);
-    	    	} else {
-    	    		return mNoticeRepository.countByCategoryIdAndTopCategoryEquals(categoryId, topCategory);
-    	    	}
+		case 1:
+			if (categoryId == 0) {
+	    		return mNoticeRepository.countByTitleContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else if (categoryId == -1) {
+	    		return mNoticeRepository.countByTitleContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else {
+	    		return mNoticeRepository.countByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+	    	}
+		case 2:
+			if (categoryId == 0) {
+	    		return mNoticeRepository.countByContentContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else if (categoryId == -1) {
+	    		return mNoticeRepository.countByContentContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else {
+	    		return mNoticeRepository.countByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+	    	}
+		case 3:
+			if (categoryId == 0) {
+	    		return mNoticeRepository.countByWriterContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else if (categoryId == -1) {
+	    		return mNoticeRepository.countByWriterContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+	    	} else {
+	    		return mNoticeRepository.countByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+	    	}
+		default:
+			if (categoryId == 0) {
+	    		return mNoticeRepository.countByStatusNotAndTopCategoryEquals(deleted, topCategory);
+	    	} else if (categoryId == -1) {
+	    		return mNoticeRepository.countByStatusAndTopCategoryEquals(deleted, topCategory);
+	    	} else {
+	    		return mNoticeRepository.countByStatusNotAndCategoryIdAndTopCategoryEquals(deleted, categoryId, topCategory);
+	    	}
     	}
     }
     
@@ -192,6 +213,7 @@ public class NoticeService extends CategoryService {
                 .content(notice.getContent())
                 .writer(notice.getWriter())
                 .view(notice.getView()+ 1)
+                .status(notice.getStatus())
                 .topCategory(notice.getTopCategory())
                 .categoryId(notice.getCategoryId())
                 .regDate(notice.getRegDate())

@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sangdaero.walab.common.entity.EventEntity;
-import com.sangdaero.walab.common.entity.FundraisingEntity;
 import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.interest.application.service.InterestService;
 import com.sangdaero.walab.payment.dto.FundraisingDto;
@@ -35,12 +35,18 @@ public class PaymentController {
 	// constructor
 	public PaymentController(PaymentService mPaymentService, FundraisingService mFundraisingService,
 			UserService mUserService, InterestService mInterestService) {
-		
 		this.mPaymentService = mPaymentService;
 		this.mFundraisingService = mFundraisingService;
 		this.mUserService = mUserService;
 		this.mInterestService = mInterestService;
 	}
+	
+	// test
+	@GetMapping("/test")
+	public String testPage() {
+		return "html/payment/test.html";
+	}
+	
 	
 	// - - - - - - - - - - - - Fundraising Part - - - - - - - - - - - - 
 	@GetMapping("/fundraising")
@@ -52,6 +58,29 @@ public class PaymentController {
 	public String fundraisingWrite() {
 		return "html/payment/fundraising/fundraisingWrite.html";
 	}
+	
+	@GetMapping("/fundraisingDetail")
+	public String fundraisingDetail(@RequestParam(value="userId", defaultValue="1") Long userId, @RequestParam(value="paymentId",  defaultValue="1") Long paymentId, Model model) {
+		
+		FundraisingDto fundraisingDto = mFundraisingService.getSingleFundraisingDtoByEventIdAndUserId(paymentId, userId);
+		model.addAttribute("fundraisingDto", fundraisingDto);
+		model.addAttribute("paymentId", paymentId);
+		
+		return "html/payment/fundraising/fundraisingDetail.html";
+		
+	}
+	
+	@DeleteMapping("/fundraisingDelete")
+	public String fundraisingDelete(@RequestParam(value="eventId") Long eventId, @RequestParam(value="userId") Long userId) {
+		
+		mFundraisingService.deleteSingleFundraisingByEventIdAndUserId(eventId, userId);
+		
+		String redirection = "redirect:/paymentDetail/" + eventId; // go back to a detail page, with id={no}
+		
+		return redirection;
+		
+	}
+
 	
 	@PostMapping("/fundraisingWrite")
 	public String fundraisingWrite(FundraisingDto fundraisingDto) {
