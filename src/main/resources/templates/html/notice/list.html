@@ -17,6 +17,91 @@
 
 <div id="wrap">
 
+	<div>
+		<a th:href="@{/notice/category?topCategory=1}">카테고리 관리</a>
+	</div>
+
+	<!-- Select Category -->
+	<div>
+		<h4>카테고리 선택</h4>
+		<form action="/notice" method="GET">
+			<select name="category">
+				<option value="0" th:selected="0 == ${category}">전체</option>
+				<option th:each="categoryOption : ${categoryList}"
+				th:text="${categoryOption.memo}"
+				th:value="${categoryOption.id}"
+				th:selected="${categoryOption.id} == ${category}"/>
+				<option value="-1" th:selected="-1 == ${category}">삭제된 글</option>
+			</select>
+			<button>확인</button>
+		</form>
+	</div><br>
+	
+
+
+    <!-- Search -->
+	<div>
+		<form action="/notice" method="GET">
+	        <div class="search" style="float:left">
+	            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+	        </div>
+	        <div style="float:left">
+		        <select name="type">
+					<option value="1">제목</option>
+					<option value="2">내용</option>
+					<option value="3">작성자</option>
+				</select>
+	        </div>
+			<div style="float:left">
+				<button>검색하기</button>
+			</div>
+	    </form>
+	</div><br><br>
+
+    <!-- List -->
+	<div>
+		<div>
+		    <table style="border:1px solid;">
+		        <thead>
+		        <tr>
+		            <th class="one wide">번호</th>
+		            <th class="ten wide">글제목</th>
+		            <th class="two wide">작성자</th>
+		            <th class="three wide">조회수</th>
+		        </tr>
+		        </thead>
+		
+		        <tbody>
+		        <!-- CONTENTS !-->
+		        <tr th:each="notice : ${noticeList}">
+		            <td>
+		                <span th:text="${notice.id}"></span>
+		            </td>
+		            <td>
+		                <a th:href="@{'/notice/post/' + ${notice.id}}">
+		                    <span th:text="${notice.title}"></span>
+		                </a>
+		            </td>
+		            <td>
+		                <span th:text="${notice.writer}"></span>
+		            </td>
+		            <td>
+		                <span th:text="${notice.view}"></span>
+		            </td>
+		        </tr>
+		        </tbody>
+		    </table>
+	    </div>
+	
+	    <div>
+		    <span th:each="pageNum : ${pageList}" th:inline="text">
+		        <a th:href="@{'/notice/?category=' + ${category} + '&page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
+		    </span>
+	    </div>
+    </div>
+    
+    <a th:href="@{/notice/post}">글쓰기</a>
+
 
 	<form action="/notice" method="GET">
 		<select name="category">

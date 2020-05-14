@@ -24,10 +24,16 @@
     </div>
 
     <!-- TODO 월간, 주간 구현해야 함 -->
-    <div style="margin-left: 15%">
-      <button>누적</button>
-      <button>월간</button>
-      <button>주간</button>
+    <div class="row" style="margin-left: 15%">
+      <li>
+        <a th:href="'?scope=1'">전체</a>
+      </li>
+      <li>
+        <a th:href="'?scope=2'">월간</a>
+      </li>
+      <li>
+        <a th:href="'?scope=3'">주간</a>
+      </li>
     </div>
 
     <div style="margin-left: 15%">

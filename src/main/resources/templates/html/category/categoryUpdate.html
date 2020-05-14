@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>카테고리 수정</h1>
+  </div>
+</div>
+	
+	<div>
+	    <form th:action="@{'/'+${path}+'/category/edit/' + ${categoryDto.id}}" method="post">
+	    	<div>
+		        <input type="hidden" name="_method" value="put"/>
+		        <input type="hidden" name="id" th:value="${categoryDto.id}"/>
+		        <input type="hidden" name="topCategory" th:value="${categoryDto.topCategory}"/>
+	        </div>
+	        <div>
+		       	항목 : <input type="text" name="memo" th:value="${categoryDto.memo}">
+			</div><br>
+			<div>
+				관리자 : <input type="text" name="communityManager" th:value="${categoryDto.communityManager}"> 
+			</div><br>
+			<div>
+				상태 : 
+		       	<select name="status">
+		       		<option value="1" th:selected="1 == ${categoryDto.status}">정상</option>
+		       		<option value="0" th:selected="0 == ${categoryDto.status}">삭제</option>
+		       	</select>
+			</div><br>
+	       	
+	       	<div>
+		       	<div style="float:right">
+		       		<button th:href="@{'/'+${path}+'/category?topCategory='+${categoryDto.topCategory}}">목록</button>
+		       	</div>
+		       	<div style="float:right">
+		       		<input type="submit" value="수정"><br>
+		       	</div>
+	       	</div>
+	    </form>
+    </div>
+    
+    <div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+
+</body>
+</html>

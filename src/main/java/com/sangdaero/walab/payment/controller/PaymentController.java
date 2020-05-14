@@ -175,6 +175,17 @@ public class PaymentController {
 		List<FundraisingDto> fundraisingDtoList = mFundraisingService.findAllFundraisingDtoByEventId(no);
 		model.addAttribute("fundraisingList", fundraisingDtoList);
 		
+		// iterate to delete redundant data between "Users to be registered" and "Users that are already registered".
+//		if (!simpleUsers.isEmpty() && !fundraisingDtoList.isEmpty()) {
+//			for (int i=0; i<simpleUsers.size(); i++) {
+//				
+//				Long unRegistered = simpleUsers.get(i).getId();
+//				for (int k=0; k<fundraisingDtoList.size(); k++) {
+//					
+//				}
+//			}
+//		}
+		
 		return "html/payment/paymentDetail.html";
 	}
 	

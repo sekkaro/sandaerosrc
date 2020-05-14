@@ -92,4 +92,3 @@ public class FundraisingEntity extends TimeEntity {
 	}
 
 }
-

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header">
+</head>
+<body>
+<div lang="en" th:replace="common/menu :: menu"></div>
+
+<div id="main" style="margin-left: 15%">
+
+<div class="w3-teal">
+  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>카테고리 추가</h1>
+  </div>
+</div>
+    <div>
+    
+    <form action="/notice/category/add" method="post">
+    	<div>
+    		항목 : <input type="text" name="memo" maxlength="10">
+    	</div> <br>
+    	<div>
+        <input type="hidden" name="topCategory" th:value="${category}"/>
+        </div> <br>
+        <div>
+        	Manager : <input type="text" name="communityManager">
+        </div> <br>
+    	<div>
+	    	<div style="float:left">
+	    		<input type="submit" value="등록">
+	    	</div>
+	    	<div style="float:left">
+	    	<button th:href="@{'/'+${path}+'/category?topCategory='+${category}}">목록</button>
+	    	</div>
+    	</div>
+        
+        
+    </form>
+    </div>
+    
+    <div lang="en" th:replace="common/footer :: footer"></div>
+
+</div>
+
+</body>
+<script src="${pageContext.request.contextPath}/resources/static/js/ckeditor.js"></script>
+
+</html>
