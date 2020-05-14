@@ -1,26 +1,19 @@
 package com.sangdaero.walab.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.interest.application.dto.InterestDto;
-import com.sangdaero.walab.interest.application.dto.InterestForm;
 import com.sangdaero.walab.interest.application.service.InterestService;
-import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.service.UserService;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,19 +22,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-	private final UserService mUserService;
-	private final InterestService mInterestService;
-	private final UserRepository userRepository;
-	private final InterestRepository mInterestRepository;
-	private final ObjectMapper objectMapper;
+	private UserService mUserService;
+	private InterestService mInterestService;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	public UserController(UserService mUserService, InterestService mInterestService) {
+		this.mUserService = mUserService;
+		this.mInterestService = mInterestService;
+	}
 
 	@GetMapping("")
 	public String userPage(Model model,
@@ -90,45 +89,14 @@ public class UserController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String edit(@PathVariable Long id, Model model) throws JsonProcessingException {
+	public String edit(@PathVariable Long id, Model model) {
 		UserDetailDto userDetailDTO = mUserService.getUser(id);
+		List<InterestDto> allInterest = mInterestService.getInterestList();
+
 		model.addAttribute("userInfo", userDetailDTO);
-
-		List<String> all = mInterestRepository.findAll()
-				.stream().map(InterestCategory::getName).collect(Collectors.toList());
-
-		model.addAttribute("whitelist", objectMapper.writeValueAsString(all));
+		model.addAttribute("allInterest", allInterest);
 
 		return "html/user/update";
-	}
-
-	@PostMapping("/interest/add/{id}")
-	@ResponseBody
-	public ResponseEntity addInterest(@PathVariable Long id, @RequestBody InterestForm interestForm) {
-
-		InterestCategory interest = mInterestRepository.findByName(interestForm.getInterestName());
-
-		if(interest==null) {
-			return ResponseEntity.badRequest().build();
-		}
-
-		mUserService.addInterest(id, interest);
-
-		return ResponseEntity.ok().build();
-	}
-
-	@PostMapping("/interest/remove/{id}")
-	@ResponseBody
-	public ResponseEntity removeInterest(@PathVariable Long id, @RequestBody InterestForm interestForm) {
-		InterestCategory interest = mInterestRepository.findByName(interestForm.getInterestName());
-
-		if(interest==null) {
-			return ResponseEntity.badRequest().build();
-		}
-
-		mUserService.removeInterest(id, interest);
-
-		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping("/edit/{id}")
@@ -166,5 +134,4 @@ public class UserController {
 		}
 		return "redirect:/";
 	}
-
 }

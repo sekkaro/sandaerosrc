@@ -40,16 +40,16 @@ public class CommunityService extends CategoryService {
                 .content(community.getContent())
                 .writer(community.getWriter())
                 .view(community.getView())
-                .status(community.getStatus())
                 .topCategory(community.getTopCategory())
+                .categoryId(community.getCategoryId())
                 .regDate(community.getRegDate())
                 .modDate(community.getModDate())
                 .build();
     }
 
     // Save post
-    public Long savePost(CommunityDto communityDto, Long categoryId) {
-    	return mCommunityRepository.save(communityDto.toEntity()).getId();
+    public Long savePost(CommunityDto communityDto) {
+        return mCommunityRepository.save(communityDto.toEntity()).getId();
     }
     
     // Update post
@@ -59,67 +59,54 @@ public class CommunityService extends CategoryService {
     
     // Delete post
     public void deletePost(Long id) {
-    	Byte status = 0;
-    	mCommunityRepository.updateCommunityCategoryId(status, id);
+    	Long deleteCategory = (long) -1;
+    	mCommunityRepository.updateCommunityCategoryId(deleteCategory, id);
     }
 
     // getCommunitylist -> convertEntitytoDto
     public List<CommunityDto> getCommunitylist(Integer pageNum, Long categoryId, String keyword, Integer searchType) {
     	Page<Board> page;
 
-    	Byte deleted = 0;
+    	Long deleted = (long) -1;
     	
    		switch(searchType) {
    			// Search by Title
     		case 1:
     			if (categoryId == 0) {
-            		page = mCommunityRepository.findAllByTitleContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else if (categoryId == -1) {
-            		page = mCommunityRepository.findAllByTitleContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+            		page = mCommunityRepository.findAllByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
             				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
-    				page = mCommunityRepository.findAllByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+    				page = mCommunityRepository.findAllByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
             				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Content
     		case 2:
     			if (categoryId == 0) {
-            		page = mCommunityRepository.findAllByContentContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else if (categoryId == -1) {
-            		page = mCommunityRepository.findAllByContentContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+            		page = mCommunityRepository.findAllByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
             				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
-    				page = mCommunityRepository.findAllByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+    				page = mCommunityRepository.findAllByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
             				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Search by Writer
     		case 3:
     			if (categoryId == 0) {
-            		page = mCommunityRepository.findAllByWriterContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-    			} else if (categoryId == -1) {
-            		page = mCommunityRepository.findAllByWriterContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory,
+            		page = mCommunityRepository.findAllByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory,
             				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			} else {
-    				page = mCommunityRepository.findAllByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory,
+    				page = mCommunityRepository.findAllByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory,
             				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
     			}
     			break;
     		// Communities without search
     		default:
     			if (categoryId == 0) {
-            		page = mCommunityRepository.findAllByStatusNotAndTopCategoryEquals(deleted, topCategory,
-            				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
-            	} else if (categoryId == -1) {
-            		page = mCommunityRepository.findAllByStatusAndTopCategoryEquals(deleted, topCategory,
+            		page = mCommunityRepository.findAllByCategoryIdNotAndTopCategoryEquals(deleted, topCategory,
             				PageRequest.of(pageNum-1,PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	} else {
-            		System.out.println("\n\n"+categoryId+"\n\n");
-            		page = mCommunityRepository.findAllByStatusNotAndCategoryIdAndTopCategoryEquals(deleted, categoryId, topCategory,
+            		page = mCommunityRepository.findAllByCategoryIdAndTopCategoryEquals(categoryId, topCategory,
             				PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by(Sort.Direction.DESC, "regDate")));
             	}
     			break;
@@ -164,40 +151,32 @@ public class CommunityService extends CategoryService {
     
 
     public Long getCommunityCount(Long categoryId, String keyword, Integer searchType) {
-    	Byte deleted = 0;
+    	Long deleted = (long) -1;
     	
     	switch(searchType) {
     		case 1:
     			if (categoryId == 0) {
-    	    		return mCommunityRepository.countByTitleContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else if (categoryId == -1) {
-    	    		return mCommunityRepository.countByTitleContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+    	    		return mCommunityRepository.countByTitleContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
-    	    		return mCommunityRepository.countByTitleContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+    	    		return mCommunityRepository.countByTitleContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 2:
     			if (categoryId == 0) {
-    	    		return mCommunityRepository.countByContentContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else if (categoryId == -1) {
-    	    		return mCommunityRepository.countByContentContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+    	    		return mCommunityRepository.countByContentContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
-    	    		return mCommunityRepository.countByContentContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+    	    		return mCommunityRepository.countByContentContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		case 3:
     			if (categoryId == 0) {
-    	    		return mCommunityRepository.countByWriterContainingAndStatusNotAndTopCategoryEquals(keyword, deleted, topCategory);
-    	    	} else if (categoryId == -1) {
-    	    		return mCommunityRepository.countByWriterContainingAndStatusAndTopCategoryEquals(keyword, deleted, topCategory);
+    	    		return mCommunityRepository.countByWriterContainingAndCategoryIdNotAndTopCategoryEquals(keyword, deleted, topCategory);
     	    	} else {
-    	    		return mCommunityRepository.countByWriterContainingAndStatusNotAndCategoryIdAndTopCategoryEquals(keyword, deleted, categoryId, topCategory);
+    	    		return mCommunityRepository.countByWriterContainingAndCategoryIdAndTopCategoryEquals(keyword, categoryId, topCategory);
     	    	}
     		default:
     			if (categoryId == 0) {
-    	    		return mCommunityRepository.countByStatusNotAndTopCategoryEquals(deleted, topCategory);
-    	    	} else if (categoryId == -1) {
-    	    		return mCommunityRepository.countByStatusAndTopCategoryEquals(deleted, topCategory);
+    	    		return mCommunityRepository.countByCategoryIdNotAndTopCategoryEquals(deleted, topCategory);
     	    	} else {
-    	    		return mCommunityRepository.countByStatusNotAndCategoryIdAndTopCategoryEquals(deleted, categoryId, topCategory);
+    	    		return mCommunityRepository.countByCategoryIdAndTopCategoryEquals(categoryId, topCategory);
     	    	}
     	}
     }
@@ -215,7 +194,6 @@ public class CommunityService extends CategoryService {
                 .content(community.getContent())
                 .writer(community.getWriter())
                 .view(community.getView()+ 1)
-                .status(community.getStatus())
                 .topCategory(community.getTopCategory())
                 .categoryId(community.getCategoryId())
                 .regDate(community.getRegDate())

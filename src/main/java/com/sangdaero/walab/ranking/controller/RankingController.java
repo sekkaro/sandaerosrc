@@ -1,6 +1,6 @@
 package com.sangdaero.walab.ranking.controller;
 
-import com.sangdaero.walab.user.application.dto.VolunteerRanking;
+import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +22,13 @@ public class RankingController {
 
 	@GetMapping("")
 	public String rankingPage(Model model, @RequestParam(value = "scope", defaultValue = "1") int scope) {
-//		List<SimpleUser> userRanking = mUserService.getUserRankingList();
-		List<VolunteerRanking> userRanking = mUserService.getVolunteerRankingList();
+		List<SimpleUser> userRanking = mUserService.getUserRankingList();
 
 		// 월간
-		if(scope==2 || scope==3) {
-			userRanking = mUserService.getRanking(scope);
+		if(scope==2) {
+			userRanking = mUserService.getMonthlyRanking(scope);
+		} else if(scope==3) { // 주간
+			userRanking = mUserService.getWeeklyRanking(scope);
 		}
 
 		model.addAttribute("userRanking", userRanking);

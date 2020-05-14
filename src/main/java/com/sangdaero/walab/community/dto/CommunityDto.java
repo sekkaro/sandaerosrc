@@ -5,7 +5,6 @@ package com.sangdaero.walab.community.dto;
 import java.time.LocalDateTime;
 
 import com.sangdaero.walab.common.entity.Board;
-import com.sangdaero.walab.common.entity.BoardCategory;
 
 import lombok.*;
 
@@ -20,34 +19,31 @@ public class CommunityDto {
     private String content;
     private String writer;
     private Long view;
-    private Byte status;
     private Byte topCategory;
-    private Long categoryId;
+    private Long categoryId;  
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 
     public Board toEntity() {
-        Board community = Board.builder()
+        Board board = Board.builder()
                 .id(id)
                 .title(title)
                 .content(content)
                 .writer(writer)
                 .view(view)
-                .status(status)
                 .topCategory(topCategory)
                 .categoryId(categoryId)
                 .build();
-        return community;
+        return board;
     }
 
     @Builder
-    public CommunityDto(Long id, String title, String content, String writer, Long view, Byte status, Byte topCategory, Long categoryId, LocalDateTime regDate, LocalDateTime modDate) {
+    public CommunityDto(Long id, String title, String content, String writer, Long view, Byte topCategory, Long categoryId, LocalDateTime regDate, LocalDateTime modDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.view = view;
-        this.status = status;
         this.topCategory = topCategory;
         this.categoryId = categoryId;
         this.regDate = regDate;

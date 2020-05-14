@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +33,5 @@ public class InterestCategory extends TimeEntity {
         this.name = name;
         this.type = type;
         this.on_off = 1;
-    }
-
-    public InterestCategory update(String name) {
-        this.setName(name);
-        this.setModDate(LocalDateTime.now());
-        return this;
     }
 }
