@@ -1,7 +1,10 @@
 package com.sangdaero.walab.ranking.controller;
 
+<<<<<<< HEAD
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDto;
+=======
+>>>>>>> ba59c60c9a1927f0d011d251d086923636eb4bd3
 import com.sangdaero.walab.user.application.dto.VolunteerRanking;
 import com.sangdaero.walab.user.application.service.UserService;
 import org.springframework.stereotype.Controller;

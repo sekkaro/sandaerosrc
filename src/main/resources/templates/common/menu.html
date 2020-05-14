@@ -1,19 +1,40 @@
 <div th:fragment="menu">
   <meta charset="UTF-8">
 		
+<<<<<<< HEAD
   <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+=======
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+>>>>>>> ba59c60c9a1927f0d011d251d086923636eb4bd3
   <a class="navbar-brand" th:href="@{/}">Sangdaero</a>
     <ul class="navbar-nav mr-auto">
       
     </ul>
+<<<<<<< HEAD
       <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+=======
+      <div class="authenticated">
+			<input id="toggle-event" class="authenticated" type="checkbox"
+				checked data-toggle="toggle" data-onstyle="success"
+				data-offstyle="danger"> 안녕하세요, <span id="user"></span>님 <a
+				onClick="logout()"
+				class="btn btn-outline-success my-2 my-sm-0 authenticated">Logout</a>
+		</div>
+		<a th:href="@{/login}"
+			class="btn btn-outline-success my-2 my-sm-0 unauthenticated">Login</a>
+>>>>>>> ba59c60c9a1927f0d011d251d086923636eb4bd3
 </nav>
 
 <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" id="mySidebar" style="width: 15%; display: block">
   <button class="w3-bar-item w3-button w3-large"
   onclick="w3_close()">Close &times;</button>
+<<<<<<< HEAD
   <a th:href="@{/request}" class="w3-bar-item w3-button w3-border-bottom menu">활동 관리</a>
+=======
+  <a th:href="@{/activity}" class="w3-bar-item w3-button w3-border-bottom menu">활동 관리</a> 
+  <a th:href="@{/request}" class="w3-bar-item w3-button w3-border-bottom menu">요청 관리</a>
+>>>>>>> ba59c60c9a1927f0d011d251d086923636eb4bd3
   <a th:href="@{/community}" class="w3-bar-item w3-button w3-border-bottom menu">커뮤니티 관리</a>
   <a th:href="@{/user}" class="w3-bar-item w3-button w3-border-bottom menu">회원 관리</a>
   <a th:href="@{/interest}" class="w3-bar-item w3-button w3-border-bottom menu">관심사 관리</a>

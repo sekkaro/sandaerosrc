@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head lang="en" th:replace="common/header :: header"></head>
+<body>
+
+	<div lang="en" th:replace="common/menu :: menu"></div>
+
+	<div id="main" style="margin-left: 15%">
+
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>활동 등록</h1>
+			</div>
+		</div>
+
+
+		<div class="w3-container">
+
+			<form th:action="@{'/activity/activityForm/edit/' + ${activityDto.id}}"
+				method="post">
+				<input type="hidden" name="_method" value="put" /> <input
+					type="hidden" name="id" th:value="${activityDto.id}" /> 제목 : <input
+					type="text" name="title" th:value="${activityDto.title}"> <br>
+				<br> 카테고리: <select name="interestCategoryId">
+					<option value="0">관심사를 선택하세요</option>
+					<option th:each="interest : ${interests}" th:value="${interest.id}"
+						th:text="${interest.name}"
+						th:selected="${interest.id} == ${activityDto.interestCategory.id}"></option>
+				</select><br>
+				<br> 상태: <select name="status">
+					<option th:value="0" th:selected="${activityDto.status} == 0">매칭
+						전</option>
+					<option th:value="1" th:selected="${activityDto.status} == 1">진행중</option>
+					<option th:value="2" th:selected="${activityDto.status} == 2">매칭
+						완료</option>
+					<option th:value="3" th:selected="${activityDto.status} == 3">모집
+						마감</option>
+				</select><br>
+				<br> 이용자:
+				<ul>
+					<li th:each="user : ${users}"><input type="checkbox"
+						th:id="${user.id}" th:value="${user.id}" name="userId"
+						th:checked="${activityDto.userIds.contains(user.id)}" /> <label
+						th:for="${user.id}" th:text="${user.name}"></label></li>
+				</ul>
+				<input type="radio" id="direct" name="delivery" value="0"
+					th:checked="${activityDto.deliveryFlag} == 0"> <label
+					for="direct">직접 수령</label> <input type="radio" id="through"
+					name="delivery" value="1"
+					th:checked="${activityDto.deliveryFlag} == 1"> <label
+					for="through">봉사사 통해 전달</label><br> <br> 봉사자:
+				<ul>
+					<li th:each="volunteer : ${users}"><input type="checkbox"
+						th:id="${volunteer.id}" th:value="${volunteer.id}"
+						name="volunteerId"
+						th:checked="${activityDto.volunteerIds.contains(volunteer.id)}" />
+						<label th:for="${volunteer.id}" th:text="${volunteer.name}"></label>
+					</li>
+				</ul>
+				<input type="checkbox" id="phoneAgree" name="phoneAgree"
+					th:checked="${activityDto.phoneAgree} == 1" /> <label
+					for="phoneAgree">전화번호 공유 동의</label> <br> <input
+					type="checkbox" id="locationAgree" name="locationAgree" /> <label
+					for="locationAgree">위치 공유 동의</label> <br> 관리자: <select
+					name="managerId">
+					<option value="0">관리자를 선택하세요</option>
+					<option th:each="manager : ${managers}" th:value="${manager.id}"
+						th:text="${manager.name}"
+						th:selected="${manager.id} == ${activityDto.manager.id}"></option>
+				</select><br>
+				<br> 시작 시간: <input type="date" name="startDate"
+					th:value="${activityDto.startTime.toLocalDate()}"> <input
+					type="time" name="startTime"
+					th:value="${activityDto.startTime.toLocalTime()}"> <br>
+				<br> 끝 시간: <input type="date" name="endDate"
+					th:value="${activityDto.endTime.toLocalDate()}"> <input
+					type="time" name="endTime"
+					th:value="${activityDto.endTime.toLocalTime()}"> <br>
+				<br> 장소:
+				<textarea name="place">[[${activityDto.place}]]</textarea>
+				<br>
+				<br> 마감 시간: <input type="date" name="deadlineDate"
+					th:value="${activityDto.deadline.toLocalDate()}"> <input
+					type="time" name="deadlineTime"
+					th:value="${activityDto.deadline.toLocalTime()}"> <br>
+				<br> 세부내용:
+				<textarea name="content">[[${activityDto.content}]]</textarea>
+				<br>
+				<br> <input type="submit" value="수정">
+			</form>
+
+		</div>
+		<a th:href="@{/activity}">
+			<button>목록</button>
+		</a>
+
+
+		<div lang="en" th:replace="common/footer :: footer"></div>
+
+	</div>
+</body>
+</html>

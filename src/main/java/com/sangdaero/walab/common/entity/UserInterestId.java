@@ -21,3 +21,4 @@ public class UserInterestId implements Serializable {
     }
 
 }
+

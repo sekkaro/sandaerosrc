@@ -15,6 +15,18 @@ public interface UserEventMapperRepository extends JpaRepository<UserEventMapper
 	@Transactional
 	void deleteByEventId(Long eventId);
 
-	List<UserEventMapper> findAllByUserTypeAndEvent_id(byte b, Long id);
+	List<UserEventMapper> findAllByUserTypeAndEvent_id(byte userType, Long id);
+	
+	@Transactional
+	void deleteByEventIdAndUserType(Long id, byte userType);
+
+	UserEventMapper findByEventIdAndUserId(Long id, Long userId);
+
+	UserEventMapper findByEventIdAndUserIdAndUserType(Long id, Long userId, byte userType);
+
+	List<UserEventMapper> findAllByEventIdAndUserType(Long id, byte userType);
+
+	@Transactional
+	void deleteByEventIdAndUserIdAndUserType(Long id, Long userId, byte userType);
 
 }
