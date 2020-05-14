@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+
+<head lang="en" th:replace="common/header :: header">
+
+<!-- bootstrap -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
 <body>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
-
 	<div id="main" style="margin-left: 15%">
 
 		<div class="w3-teal">
@@ -22,117 +26,136 @@
 		<h2 th:text="${paymentDto.title}"></h2>
 
 		<!-- inline for interleaving variable into a sentence, with [[variable]] -->
-		공개 상태 : 
+		공개 상태 :
 		<p th:if="${paymentDto.status == 0}">열림</p>
 		<p th:if="${paymentDto.status == 1}">닫힘</p>
-		
+
 		책임자 :
-		<p><span th:each="manager : ${paymentDto.manager}" th:text="${manager.name}"></span><p>
+		<p th:text="${paymentDto.manager.name}"></p>
+		<p>
 		
-		모금 목표 금액 :
+			<span th:each="manager : ${paymentDto.manager}">
+				<p th:text="${manager}"></p>
+			</span>
+		<p>모금 목표 금액 :
 		<p th:text="${paymentDto.donationPrice}"></p>
 
 		등록시킬 후원자 목록 : <br>
-		<form th:action="@{'/payment/paymentUserMatching/' + ${paymentDto.id} }" method="GET">
+		<form
+			th:action="@{'/payment/paymentUserMatching/' + ${paymentDto.id} }"
+			method="GET">
+			
+			
+			<table th:name="table1" th:id="table1">
+				<tr th:each="userInfo, iterState : ${simpleUserList}">
+					<td>
+							<span th:text="|${userInfo.name} (${userInfo.nickname})|"></span>
+					<td>
+					<input type="checkbox" name="userMatchingCheckBox" th:value="${userInfo.id}" th:id="${userInfo.id}"></td>
+				</tr> 
+			</table>
+			
+			<!--  card 구현하는중 
+			
+			<div class="card-deck">
+				<div class="card">
+					<div class="card-body d-flex flex-column align-items-start">
+			
+						<span th:each="userInfo, iterState : ${simpleUserList}">
+							<h6 class="card-title" th:text="|${userInfo.name}|"></h6>
+							<p class="card-subtitle mb-2 text-muted" th:text="|${userInfo.nickname}|"></p>
+							<input type="checkbox" name="userMatchingCheckBox" th:value="${userInfo.id}" th:id="${userInfo.id}">
+						</span> 
 		
-        <tr th:each="userInfo, iterState : ${simpleUserList}">
-          <td th:text="|${userInfo.name} (${userInfo.nickname})|"/>
-          <td><input type="checkbox" name="userMatchingCheckBox" th:value="${userInfo.id}"></td>
-          <span th:if=${iterState.count%5==5}><br></span>
-        </tr>
-        <br>
-        <button>체크된 유저 등록</button>
+					</div>
+				</div>
+			</div>
+			-->
+			<br>
+			<button>체크된 유저 등록</button>
 		</form>
-		
-		<br>
-		등록된 유저 리스트 : <br>
-		
-		
-		<!-- 수정중  시작  -->
-		
+
+		<br> 등록된 유저 리스트 : <br>
+
 		<!-- fundraising list  -->
-			<form action="/payment/fundraisingStatusToggle" method="GET">
-				<!-- toggle 'payment_status' attribute. -->
+		<form action="/payment/fundraisingStatusToggle" method="GET">
+			<!-- toggle 'payment_status' attribute. -->
 
-				<table>
-					<thead>
-						<tr>
-							<th class="one wide">id(번호)</th>
-							<th class="one wide">이름</th>
-							<th class="one wide">후원자명</th>
-							<th class="two wide">후원금액</th>
-							<th class="two wide">입금확인</th>
-							<th class="two wide">연락처</th>
-							<th class="three wide">사업자영수증</th>
-							<th class="three wide">메모</th>
-							<th><input type="checkbox" name="fundraisingCheckBox" ></th>
-						</tr>
-					</thead>
+			<table>
+				<thead>
+					<tr>
+						<th class="one wide">id(번호)</th>
+						<th class="one wide">이름</th>
+						<th class="one wide">후원자명</th>
+						<th class="two wide">후원금액</th>
+						<th class="two wide">입금확인</th>
+						<th class="two wide">연락처</th>
+						<th class="three wide">사업자영수증</th>
+						<th class="three wide">메모</th>
+						<th><input type="checkbox" name="fundraisingCheckBox"></th>
+					</tr>
+				</thead>
 
-					<tbody>
+				<tbody>
 
-						<!-- CONTENTS !-->
-						<tr th:each="fundraising, iterState : ${fundraisingList}">
-							<!-- <td><span th:text="${(pageNum-1)*5 + iterState.count}"></span></td> -->
+					<!-- CONTENTS !-->
+					<tr th:each="fundraising, iterState : ${fundraisingList}">
+
+						<td><span th:text="${iterState.count}"></span></td>
+
+
+						<td>
+							<a th:href="@{'/fundraisingDetail' + '/?userId=' + ${fundraising.user.id} +'&paymentId=' + ${paymentDto.id} }">
+								<span th:each="user : ${fundraising.user}" th:text="${user.name}"></span>
+							</a>
 							
-							<td>
-							<span th:text="${iterState.index}"></span> 
-							</td>
-							
-							<!-- 
-							<td><span th:each="user : ${fundraising.user_id}" th:text="${user.name}"></span></td>
-							 -->
-							
-							<td><span th:text="${fundraising.donator}"></span></td>
-							
-							<td><span th:text="${fundraising.personalPayAmount}"></span></td>
-							
-							<td>
-							<span th:if="${fundraising.payment_status == 0}">미입금</span> 
-							<span th:if="${fundraising.payment_status == 1}">입금완료</span></td>
-							
-							<td><span th:text="${fundraising.donator_phone}"></span></td>
-							
-							<td>
-							<span th:if="${fundraising.bill_type == 0}">미발급</span> 
-							<span th:if="${fundraising.bill_type == 1}">발급 희망</span></td>
-							
-							<td><span th:text="${fundraising.memo}"></span></td>
-							
-							<!-- 
+						</td>
+
+						<td>
+								<span th:text="${fundraising.donator}"></span>
+						</td>
+						
+						<td><span th:text="${fundraising.personalPayAmount}"></span></td>
+
+						<td><span th:if="${fundraising.paymentStatus == 0}">미입금</span>
+							<span th:if="${fundraising.paymentStatus == 1}">입금완료</span></td>
+
+						<td><span th:text="${fundraising.donatorPhone}"></span></td>
+
+						<td><span th:if="${fundraising.billType == 0}">미발급</span> <span
+							th:if="${fundraising.billType == 1}">발급 희망</span></td>
+
+						<td><span th:text="${fundraising.memo}"></span></td>
+
+						<!-- 
 							<td><input type="checkbox" name="fundraisingCheckBox"
 								th:value="${fundraisingId}"></td>
 								 -->
-						</tr>
-					</tbody>
-				</table>
+					</tr>
+				</tbody>
+			</table>
 
-				<!-- When list is empty, show a message -->
-				<div th:if="${#lists.isEmpty(fundraisingList)}"><br><br><h3>조건에 맞는 항목이 없습니다.</h3><br><br></div>		
-				<button id="fundraisingCheckBoxBtn">체크 항목 입금완료/미입금 변환</button>
+			<!-- When list is empty, show a message -->
+			<div th:if="${#lists.isEmpty(fundraisingList)}">
+				<br>
+				<br>
+				<h3>조건에 맞는 항목이 없습니다.</h3>
+				<br>
+				<br>
+			</div>
+			<button id="fundraisingCheckBoxBtn">체크 항목 입금완료/미입금 변환</button>
 
-			</form>
-		
-		
-		
-		
-		<!-- 수정중 끝 -->
-		
-		<br>
-		
-		
-		
-		<br>
-		모금 종류 :
+		</form>
+		<br> <br> 모금 종류 :
 		<p th:if="${paymentDto.selectSupport == 1}">후원</p>
 		<p th:if="${paymentDto.selectSupport == 0}">오락</p>
 
 		메모 :
 		<p th:text="${paymentDto.content}"></p>
-		
+
 		<p th:inline="text">작성일 :
 			[[${#temporals.format(paymentDto.regDate, 'yyyy-MM-dd HH:mm')}]]</p>
-			
+
 		<p th:inline="text">최종 수정일 :
 			[[${#temporals.format(paymentDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
 
@@ -140,30 +163,23 @@
 		<!-- Update & Delete -->
 		<div>
 			<!-- Update -->
-			<a th:href="@{'/payment/paymentUpdate/' + ${paymentDto.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
+			<a
+				th:href="@{'/payment/paymentUpdate/' + ${paymentDto.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
 				<button>수정</button>
 			</a> <br>
 
 			<!--  Delete -->
-			<form id="payment-delete-form"
-				th:action="@{'/payment/' + ${paymentDto.id}}" method="post">
+			<form id="payment-delete-form" th:action="@{'/payment/' + ${paymentDto.id}}" method="post">
 				<!-- by sending hidden data with name '_method' and value 'delete', it will search for delete method in controller. -->
 				<input type="hidden" name="_method" value="delete" />
 				<button id="delete-btn">삭제</button>
 			</form>
 		</div>
 
-		<a th:href="@{'/payment/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
+		<a
+			th:href="@{'/payment/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
 			<button>뒤로가기</button>
 		</a>
-
-
-
-		<!-- for debugging -->
-		<script th:inline="javascript">
-			var boardDto = /*[[${paymentDto}]]*/"";
-		</script>
-		<script th:inline="javascript" th:src="@{/payment/paymentDebugLog.js}"></script>
 
 		<div lang="en" th:replace="common/footer :: footer"></div>
 

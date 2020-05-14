@@ -2,6 +2,8 @@ package com.sangdaero.walab.common.category.controller;
 
 import java.util.List;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import com.sangdaero.walab.common.category.dto.CategoryDto;
 import com.sangdaero.walab.common.category.service.CategoryService;
 
 public class CategoryController {
-		private CategoryService mCategoryService;
+		protected CategoryService mCategoryService;
 		
 		public CategoryController(CategoryService categoryService) {
 			this.mCategoryService = categoryService;
@@ -30,8 +32,7 @@ public class CategoryController {
 	 		
 	 		String path = currentPath(topCategory);
 	 		
-	 		System.out.println(path);
-	        List<CategoryDto> categoryDtoList = mCategoryService.getCategory(topCategory);
+	        List<CategoryDto> categoryDtoList = mCategoryService.getCategory(topCategory, keyword, searchType);
 	        
 	        model.addAttribute("topCategory", topCategory);
 	        model.addAttribute("path", path);
@@ -46,6 +47,7 @@ public class CategoryController {
 	    		@RequestParam(value = "path") String path) {
 			
 			model.addAttribute("path", path);
+			
 			if (path.equals("community")) {
 				model.addAttribute("category", 2);
 			} else if (path.equals("qna")) {
@@ -60,11 +62,12 @@ public class CategoryController {
 		// Execute when click save button
 	    @PostMapping("/category/add")
 	    public String addCategory(CategoryDto categoryDto) {
+	    	System.out.println("\n"+categoryDto+"\n");
 	    	String path = currentPath(categoryDto.getTopCategory());
 	    	
 	        mCategoryService.saveCategory(categoryDto);
 	        
-	        return "redirect:/"+path+"/category";
+	        return "redirect:/"+path+"/category?topCategory="+categoryDto.getTopCategory();
 	    }
 	    
 	    // Detail page of community

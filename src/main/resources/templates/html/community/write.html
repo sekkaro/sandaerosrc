@@ -3,7 +3,44 @@
 <meta charset="UTF-8">
 <head lang="en" th:replace="common/header :: header"></head>
 <body>
-<script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
+	<!-- Summernote Editor -->
+	<script >
+		$(document).ready(function() {
+			$('#summernote').summernote({
+				height: 300,
+				minHeight: null,
+				maxHeight: null,
+				focus: true,
+				lang: "ko-KR",
+				placeholder: '최대 2048자',
+				callbacks: {
+					onImageUpload: function(files) {
+						uploadSummernoteImageFile(files[0], this);
+					}
+				}
+			});
+			
+			function uploadSummernoteImageFile(file, editor) {
+				data = new FormData();
+				data.append("file", file);
+				$.ajax({
+					data : data,
+					type : "POST",
+					url : "/summernoteFileUpload/uploadSummernoteImageFile",
+					contentType : false,
+					processData : false,
+					success : function(data) {
+						console.log(data);
+						$(editor).summernote('insertImage', location.origin+data.url);
+					},
+					error : function(data) {
+						console.log(data);
+					}
+				})
+			}
+		});
+	</script>
+
 <div lang="en" th:replace="common/menu :: menu"></div>
 
 <div id="main" style="margin-left: 15%">
@@ -15,36 +52,45 @@
   </div>
 </div>
 
-    <form action="/community/post" method="post">
-    	제목 : <input type="text" name="title" maxlength="10"> <br>
-    	작성자 : <input type="text" name="writer"> <br>
-    	<input type="hidden" value="0" name="view">
-    	<input type="hidden" value="2" name="topCategory">
-        Sub: 
-        <select name="categoryId">
-        	<option th:each="categoryOption : ${categoryDto}"
-        			th:text="${categoryOption.memo}"
-        			th:value="${categoryOption.id}"/>
-        </select><br>
+	<div>
+		<form action="/community/post" method="post">
+			<div>
+				제목 : <input type="text" name="title" maxlength="10">
+			</div> <br>
+	    	<div>
+	    		작성자 : <input type="text" name="writer">
+	    	</div> <br>
+	    	<div>
+		    	<input type="hidden" value="0" name="view">
+		    	<input type="hidden" value="2" name="topCategory">
+	    	</div>
+	    	<div>
+	        	Sub: 
+		        <select name="categoryId">
+		        	<option th:each="categoryOption : ${categoryDto}"
+		        			th:text="${categoryOption.memo}"
+		        			th:value="${categoryOption.id}"/>
+		        </select>
+	        </div> <br>
+	        
+	        <div class="editor_wrap">
+				<textarea name="content" id="summernote"></textarea>
+			</div><br>
+	
+			<div>
+				<div style="float:right">
+					<button th:href="@{/community}">목록</button>
+				</div>
+				<div style="float:right">
+					<input type="submit" value="등록">
+				</div>
+			</div>
+	    </form>
+	</div>
         
-        <div class="editor_wrap">
-		   <textarea name="content" id="content"></textarea>
-		</div><br>
-
-        <input type="submit" value="등록">
-        <a th:href="@{/community}">목록</a>
-    </form>
-    
     <div lang="en" th:replace="common/footer :: footer"></div>
 
 </div>
-	<!-- CKEditor -->
-	<script type="text/javascript">
-		ClassicEditor
-		    .create( document.querySelector( '#content' ) )
-		    .catch( error => {
-		        console.error( error );
-		    } );
-	</script>
+	
 </body>
 </html>

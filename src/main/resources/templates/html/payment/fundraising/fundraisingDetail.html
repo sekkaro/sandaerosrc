@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+
+<head lang="en" th:replace="common/header :: header">
+<link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+</head>
+<body>
+	<div lang="en" th:replace="common/menu :: menu"></div>
+	<div id="main" style="margin-left: 15%">
+		<div class="w3-teal">
+			<button id="openNav" style="display: none"
+				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+			<div class="w3-container">
+				<h1>개별 모금활동 상세 페이지</h1>
+			</div>
+		</div>
+		<div class="w3-container">
+
+		<br><br>
+		후원자 이름 :<br>
+		<p th:text="${fundraisingDto.user.name}"></p><br>
+		
+		후원 title :  <br>
+		<input type="text" th:value="${fundraisingDto.title}" readonly="true" ondblclick="this.readOnly='';" ></input>
+		<br> <br>
+	
+		
+		메모 : <br>
+		<p th:text="${fundraisingDto.memo}"></p><br>
+		
+		후원 금액 : <br>
+		<p th:text="${fundraisingDto.personalPayAmount}"></p><br>
+		
+		입금자명 : <br>
+		<p th:text="${fundraisingDto.donator}"></p><br>
+		
+		사업자 영수증(string형식의 file-path) : <br>
+		<p th:if="${fundraisingDto.billType==0}">미발급</p>
+		<p th:if="${fundraisingDto.billType==1}">발급</p>
+		<br>
+		
+		입금 상태 : <br>
+		<p th:if="${fundraisingDto.paymentStatus==0}">미입금</p>
+		<p th:if="${fundraisingDto.paymentStatus==1}">입금 완료</p>
+		<br>
+
+		후원자 전화번호 : <br>
+		<p th:text="${fundraisingDto.donatorPhone}"></p><br>
+		
+		사업자 영수증 : <br>
+		<p th:text="${fundraisingDto.businessPicture}"></p><br>
+	
+		최종 수정일 : <br>
+		<p th:text="${fundraisingDto.modDate}"></p><br>
+		<br>
+
+
+			<!--  Delete -->
+			<form id="fundraising-delete-form" th:action="@{'/fundraisingDelete/?eventId=' + ${paymentId} + '&userId=' + ${fundraisingDto.user.id} }" method="post">
+		
+				<!-- by sending hidden data with name '_method' and value 'delete', it will search for delete method in controller. -->
+				<input type="hidden" name="_method" value="delete" />
+				<button id="delete-btn">삭제</button>
+			</form>
+
+		</div>
+		<div lang="en" th:replace="common/footer :: footer"></div>
+	</div>
+</body>
+</html>
+

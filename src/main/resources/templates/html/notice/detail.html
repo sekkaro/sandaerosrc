@@ -17,6 +17,58 @@
 
 <div id="wrap" style="padding-left:10px;">
 
+	<!-- Notice Content -->
+	<div>
+		<div>
+			<div style="float: left; width: 10%;">
+				<h2 th:text="'ID '+${noticeDto.id}"></h2>
+			</div>
+			<div style="float: left; width: 55%">
+				<h2 th:text="${noticeDto.title}"></h2>
+			</div>
+			<div style="float: right; width: 35%;">
+				<h2 th:text="'작성자 - ' + ${noticeDto.writer}"></h2>
+			</div>
+			
+		</div>
+		<div>
+			<div style="float: left; width: 10%;">
+				<p th:text="'view '+${noticeDto.view}"></p>	
+			</div>
+			<div style="float: left; width: 25%;">
+		    	<p th:text="'category '+${category}"></p>
+		    </div>
+		    <div style="float: right; width: 35%;">
+				<p th:inline="text">[[${#temporals.format(noticeDto.modDate, 'yyyy-MM-dd HH:mm')}]]</p>
+			</div>
+		</div>
+		<div>
+			<span th:utext="${noticeDto.content}"></span>
+		</div>
+		<!--
+			<h2 th:text="'Top - ' + ${noticeDto.topCategory}"></h2> 
+		 -->
+    </div>
+
+	<!-- Update / Delete / List Button -->
+    <div>
+    	<div style="float: right">
+			<a th:href="@{'/notice/?category=' + ${noticeDto.categoryId}}">
+	            <button>목록</button>
+	        </a>
+		</div>
+    	<div style="float: right">
+	        <form id="delete-form" th:action="@{'/notice/post/' + ${noticeDto.id}}" method="post">
+	            <input type="hidden" name="_method" value="delete"/>
+	            <button id="delete-btn">삭제</button>
+	        </form>
+        </div>
+    	<div style="float: right">
+    		<a th:href="@{'/notice/post/edit/' + ${noticeDto.id}}">
+            	<button>수정</button>
+        	</a>
+    	</div>
+      
 	<h2 th:text="'공지사항 ID - ' + ${noticeDto.id}"></h2>
     <h2 th:text="'공지사항 제목 - ' + ${noticeDto.title}"></h2>
     <h2 th:text="'작성자 - ' + ${noticeDto.writer}"></h2>
@@ -41,6 +93,7 @@
         <a th:href="@{'/notice/?category=' + ${noticeDto.categoryId}}">
             <button>목록</button>
         </a>
+      
     </div>
 
     <script th:inline="javascript">

@@ -17,4 +17,7 @@ public interface UserInterestRepository extends JpaRepository<UserInterest, User
     void deleteByUser_Id(Long id);
 //    void deletByUser_Id(Long id);
 
+    @Transactional
+	void deleteByUser_IdAndInterestId(Long id, Long id2);
+
 }

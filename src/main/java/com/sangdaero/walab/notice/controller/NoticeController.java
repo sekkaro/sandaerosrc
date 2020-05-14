@@ -40,7 +40,7 @@ public class NoticeController extends CategoryController {
         List<NoticeDto> noticeDtoList = mNoticeService.getNoticelist(pageNum, category, keyword, searchType);
         Integer[] pageList = mNoticeService.getPageList(pageNum, category, keyword, searchType);
         
-        List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1);
+        List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1, "", 0);
 
         model.addAttribute("categoryList", categoryDtoList);
         model.addAttribute("noticeList", noticeDtoList);
@@ -55,7 +55,7 @@ public class NoticeController extends CategoryController {
 	// Writing notice page
 	@GetMapping("/post")
     public String write(Model model) {
-		List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1);
+		List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1, "", 0);
 		
 		model.addAttribute("categoryDto", categoryDtoList);
 		
@@ -64,8 +64,8 @@ public class NoticeController extends CategoryController {
 
 	// Execute when click save button
     @PostMapping("/post")
-    public String write(NoticeDto noticeDto) {
-        mNoticeService.savePost(noticeDto);
+    public String write(NoticeDto noticeDto, @RequestParam(value="categoryId")Long categoryId) {
+        mNoticeService.savePost(noticeDto, categoryId);
         return "redirect:/notice";
     }
 
@@ -73,8 +73,10 @@ public class NoticeController extends CategoryController {
     @GetMapping("/post/{no}")
     public String detail(@PathVariable("no") Long id, Model model) {
         NoticeDto noticeDto = mNoticeService.getPost(id);
-
+        String category = super.mCategoryService.getCategoryMemo(noticeDto.getCategoryId());
+        
         model.addAttribute("noticeDto", noticeDto);
+        model.addAttribute("category", category);
         
         return "html/notice/detail.html";
     }
@@ -83,8 +85,10 @@ public class NoticeController extends CategoryController {
     @GetMapping("/post/edit/{no}")
     public String edit(@PathVariable("no") Long id, Model model) {
         NoticeDto noticeDto = mNoticeService.getPost(id);
-        List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1);
+        List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1, "", 0);
 		
+        System.out.println("\n\n"+noticeDto+"\n\n");
+        
         model.addAttribute("noticeDto", noticeDto);
         model.addAttribute("categoryDto", categoryDtoList);
         return "html/notice/update.html";

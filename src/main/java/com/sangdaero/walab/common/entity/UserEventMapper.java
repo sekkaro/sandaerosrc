@@ -37,5 +37,17 @@ public class UserEventMapper extends TimeEntity {
 	@Column(name="user_type", nullable=false)
 	@ColumnDefault("0")
 	private Byte userType;
+	
+	@Column(name="status", nullable = false)
+	@ColumnDefault("0")
+	private Byte status;
+	
+	@Column(name="phone_agree", nullable = false)
+	@ColumnDefault("0")
+	private Byte phoneAgree;
+	
+	@Column(name="location_agree", nullable = false)
+	@ColumnDefault("0")
+	private Byte locationAgree;
 
 }
