@@ -15,13 +15,19 @@ import com.sangdaero.walab.common.entity.User;
 
 public interface FundraisingRepository extends JpaRepository<FundraisingEntity, FundraisingId> {
 	
+	// find a single fundraising with composite key, (eventId, userId)
 	@Query(nativeQuery = true, value="SELECT * FROM fundraising WHERE event_id = :eventId AND user_id = :userId")
-	List<EventEntity> findByEventIdAndUserId(@Param("eventId")Long eventId, @Param("userId")User userId, Pageable pageable);
+	FundraisingEntity findByEventIdAndUserId(@Param("eventId")EventEntity eventId, @Param("userId")User userId);
 	
 	// find all
 	List<FundraisingEntity> findAll();
 	
-	// find specific with only event_id
-	List<FundraisingEntity> findByEventId(EventEntity EventId); // doesn't work
+	// find all with only event_id
+	List<FundraisingEntity> findAllByEventId(EventEntity eventId);
+	
+	// delete all with only event_id
+	List<FundraisingEntity> deleteAllByEventId(EventEntity eventId);
+	
+	List<FundraisingEntity> deleteByEventIdAndUserId(EventEntity eventId, User userId);
 	
 }
