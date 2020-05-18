@@ -19,16 +19,20 @@ public class ActivityUserDto {
 	private Byte status;
 	private Byte phoneAgree;
 	private Byte locationAgree;
+	private String startImage;
+	private String endImage;
 	
 	private LocalDateTime regDate;
 	private LocalDateTime modDate;
 	
-	public ActivityUserDto(User user, Byte status, Byte phoneAgree, Byte locationAgree,
+	public ActivityUserDto(User user, Byte status, Byte phoneAgree, Byte locationAgree, String startImage, String endImage,
 			LocalDateTime regDate, LocalDateTime modDate) {
 		this.user = user;
 		this.status = status;
 		this.phoneAgree = phoneAgree;
 		this.locationAgree = locationAgree;
+		this.startImage = startImage;
+		this.endImage = endImage;
 		this.regDate = regDate;
 		this.modDate = modDate;
 	}

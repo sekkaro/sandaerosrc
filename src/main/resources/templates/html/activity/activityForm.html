@@ -50,8 +50,7 @@
 					<h4>담당 인원</h4>
 				</div>
 				<div class="row">
-					<div class="col-md-5">
-						<div class="row">
+					<div class="col-md-4">
 							이용자:
 							<input id="searchUsers" type="text" placeholder="유저 이름으로 검색">
 							<ul id="users">
@@ -60,17 +59,8 @@
 							<div id="pagingUsers">
 
 							</div>
-						</div>
-						<div class="row">
-							관리자:
-							<select name="managerId">
-								<option value="0">관리자를 선택하세요</option>
-								<option th:each="manager : ${managers}" th:value="${manager.id}"
-									th:text="${manager.name}"></option>
-							</select>
-						</div>
 					</div>
-					<div class="col-md-7">
+					<div class="col-md-4">
 						봉사자:
 						<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
 						<ul id="volunteers">
@@ -79,6 +69,14 @@
 						<div id="pagingVolunteers">
 
 						</div>
+					</div>
+					<div class="col-md-4">
+						관리자:
+							<select name="managerId">
+								<option value="0">관리자를 선택하세요</option>
+								<option th:each="manager : ${managers}" th:value="${manager.id}"
+									th:text="${manager.name}"></option>
+							</select>
 					</div>
 				</div>
 				<hr>
@@ -126,6 +124,8 @@
 			var volunteers = [];
 			var clickedUsers = [];
 			var clickedVolunteers = [];
+			var userStatusList = [];
+			var permittedVolunteer =/*[[${permittedVolunteer}]]*/'none';
 
 			function execPostcode() {
 				new daum.Postcode({
@@ -138,6 +138,7 @@
 				}).open();
 			}
 		
+			
 			function addEventListenersToUsers(){
 				$('input[name="userId"]').each(function(){
 					
@@ -147,25 +148,43 @@
 					
 					if(clickedUsers.indexOf($(this).val()) > -1){
 						$(this).prop('checked', true);
+						$('#user'+ $(this).val()).toggle();
+						$(this).next().next().attr("name","userStatus");
 	    			}
 					
 					$(this).click(function(){
 						$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
+						$('#user'+ $(this).val()).toggle();
 						
 						if($(this).prop('checked')){
 			    			if(clickedUsers.indexOf($(this).val()) == -1){
 			    				clickedUsers.push($(this).val());
 			    			}
+			    			$(this).next().next().attr("name","userStatus");
 						}
 						else{
 							if(clickedUsers.indexOf($(this).val()) > -1){
 			    				clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
 			    			}
+							$(this).next().next().removeAttr("name");
 						}
 						
 					})
 					
 				})	
+				
+				$('input[name="userId"]+label+select').each(function(){
+					$(this).change(function(){
+						
+						for(var i = 0; i < users.length ; i++){
+							if(users[i].id == $(this).attr('id').replace("user","")){
+								users[i].status = $(this).val();
+								break;
+							}
+						}
+						
+					});
+				});
 			}
 			
 			function addEventListenersToVolunteers(){
@@ -178,25 +197,43 @@
 					
 					if(clickedVolunteers.indexOf($(this).val()) > -1){
 						$(this).prop('checked', true);
+						$('#volunteer'+ $(this).val()).toggle();
+						$(this).next().next().attr("name","volunteerStatus");
 	    			}
 					
 					$(this).click(function(){
 						$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
+						$('#volunteer'+ $(this).val()).toggle();
 						
 						if($(this).prop('checked')){
 			    			if(clickedVolunteers.indexOf($(this).val()) == -1){
 			    				clickedVolunteers.push($(this).val());
 			    			}
+			    			$(this).next().next().attr("name","volunteerStatus");
 						}
 						else{
 							if(clickedVolunteers.indexOf($(this).val()) > -1){
 			    				clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
-			    			}
+							}
+							$(this).next().next().removeAttr("name");
 						}
 						
 					})
 					
 				})
+				
+				$('input[name="volunteerId"]+label+select').each(function(){
+					$(this).change(function(){
+						
+						for(var i = 0; i < volunteers.length ; i++){
+							if(volunteers[i].id == $(this).attr('id').replace("volunteer","")){
+								volunteers[i].status = $(this).val();
+								break;
+							}
+						}
+						
+					});
+				});
 				
 			}
 			
@@ -218,10 +255,20 @@
 								}
 								
 								if(clickedVolunteers.indexOf(users[i].id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
+									innerHtml += " disabled> <label for='"+ users[i].id +"'>"+ users[i].name +"</label>";
 								}
 								else{
-									innerHtml += "> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
+									innerHtml += "> <label for='"+ users[i].id +"'>"+ users[i].name +"</label>";
+								}
+								
+								if(users[i].status==null || users[i].status == 0){
+									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+								}
+								else if(users[i].status == 1){
+									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+								}
+								else{
+									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
 								}
 								
 							}
@@ -255,10 +302,20 @@
 								}
 								
 								if(clickedUsers.indexOf(volunteers[i].id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label></li>";
+									innerHtml += " disabled> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
 								}
 								else{
-									innerHtml += "> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label></li>";
+									innerHtml += "> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
+								}
+								
+								if(volunteers[i].status==null || volunteers[i].status == 0){
+									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+								}
+								else if(volunteers[i].status == 1){
+									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+								}
+								else{
+									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
 								}
 								
 							}
@@ -275,7 +332,7 @@
 			}
 			
 			
-			$('input#searchUsers').on('input', function(){
+			/*$('input#searchUsers').on('input', function(){
 				var keyword = $('#searchUsers').val();
 				
 				$.get("/activitydata/getUsers", {keyword: keyword}, function(data) {
@@ -387,8 +444,180 @@
 					
         		});
 				
-			})
+			})*/
 			
+			
+			function searchUsers(keyword){
+				var innerHtml = "";
+				var innerPage = "";
+				var pages = 0;
+				users = [];
+				
+				try{
+					
+					userStatusList.forEach(function(user){
+						if(user.name.includes(keyword) && (user.type == null || user.type == 0)){
+							users.push(user);
+						}
+					});
+					
+					if(users.length > 0){
+						var count = 0;
+						users.forEach(function(item){
+							if(pages<1){
+								innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";									
+							}
+							else{
+								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";							
+							}
+							
+							if(clickedVolunteers.indexOf(item.id.toString()) > -1){
+								innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							}
+							else{
+								innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							}
+
+							
+							if(item.status==null || item.status == 0){
+								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else if(item.status == 1){
+								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else{
+								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+							}
+							
+							count++;
+							
+							if(count == usersPerPage){
+								pages++;
+								count = 0;
+							}
+						})
+						
+						numOfPages = (count>0)?pages+1:pages;
+						
+						for(var i = 0; i < numOfPages ; i++){
+							innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
+						}
+					}
+					else{
+						innerHtml = "그 이름의 이용자를 찾지 못했습니다";	
+					}
+					
+				}
+				finally{
+					
+					$('#users').html(innerHtml);
+					$('#pagingUsers').html(innerPage);
+					
+					addEventListenersToUsers();
+					addEventListenersToUserPagingButtons();
+					
+				}	
+			
+			}
+			
+			function searchVolunteers(keyword){
+				var innerHtml = "";
+				var innerPage = "";
+				var pages = 0;
+				volunteers = [];
+				
+				try{
+					
+					userStatusList.forEach(function(user){
+						if(user.name.includes(keyword) && (user.type == null || user.type == 1)){
+							volunteers.push(user);
+						}
+					});
+					
+					if(volunteers.length > 0){
+						
+						var count = 0;
+						volunteers.forEach(function(item){
+							if(pages<1){
+								innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";									
+							}
+							else{
+								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";							
+							}
+							
+							if(clickedUsers.indexOf(item.id.toString()) > -1){
+								innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							}
+							else{
+								innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							}
+							
+							if(item.status==null || item.status == 0){
+								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else if(item.status == 1){
+								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else{
+								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+							}
+							
+							count++;
+							
+							if(count == usersPerPage){
+								pages++;
+								count = 0;
+							}
+						})
+						
+						numOfPagesVolunteers = (count>0)?pages+1:pages;
+						
+						for(var i = 0; i < numOfPagesVolunteers ; i++){
+							innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
+						}
+						
+					}
+					else{
+						innerHtml = "그 이름의 이용자를 찾지 못했습니다";
+					}
+					
+				}
+				finally{
+					
+					$('#volunteers').html(innerHtml);
+					$('#pagingVolunteers').html(innerPage);
+					
+					addEventListenersToVolunteers();
+					addEventListenersToVolunteerPagingButtons();
+					
+				}
+				
+			}
+			
+			$.get("/activitydata/getUsers", {id: null}, function(data) {
+				
+				userStatusList = data;
+				
+				if(permittedVolunteer != null){
+					clickedVolunteers.push(permittedVolunteer.id.toString());
+					for(var i = 0; i < userStatusList.length ; i++){
+						if(userStatusList[i].id == permittedVolunteer.id){
+							userStatusList[i].status = 1;
+							break;
+						}
+					}
+				}
+				
+				searchUsers("");
+				
+				searchVolunteers("");
+				
+			});
+			
+			
+			$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
+			
+			$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
 			
 		
 			

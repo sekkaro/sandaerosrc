@@ -12,7 +12,7 @@
 			<button id="openNav" style="display: none"
 				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 			<div class="w3-container">
-				<h1>요청 관리 페이지</h1>
+				<h1>앱에서 들어온 요청</h1>
 			</div>
 		</div>
 
@@ -70,7 +70,8 @@
 							<td><span th:if="${request.status == 0}">대기</span> <span
 								th:if="${request.status == 1}">등록</span><span
 								th:if="${request.status == 2}">거절</span></td>
-							<td th:if="${request.status == 0}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/register/' + ${request.id}}">활동 등록</a></td>
+							<td th:if="${request.status == 0} and ${request.event == null}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/register/' + ${request.id}}">활동 등록</a></td>
+							<td th:if="${request.status == 0} and ${request.event}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/permit/' + ${request.id}}">승인</a></td>
 							<td th:if="${request.status == 0}"><button type="button" th:data-requestId="${request.id}" class="btn btn-outline-danger btn-sm" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">거절</button></td>
 							<td th:if="${request.status == 1}"><a class="btn btn-outline-primary btn-sm" th:href="@{'/activity/' + ${request.event?.id}}">등록된 활동 보기</a></td>
 						</tr>

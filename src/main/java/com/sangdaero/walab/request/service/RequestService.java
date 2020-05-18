@@ -13,7 +13,9 @@ import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.Request;
+import com.sangdaero.walab.common.entity.UserEventMapper;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
+import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 
 @Service
@@ -22,15 +24,17 @@ public class RequestService {
 	private RequestRepository mRequestRepository;
 	private InterestRepository mInterestRepository;
 	private UserRepository mUserRepository;
+	private UserEventMapperRepository mUserEventMapperRepository;
 	private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
     private static final int PAGE_POSTCOUNT = 3;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public RequestService(RequestRepository requestRepository, InterestRepository interestRepository, 
-			UserRepository userRepository) {
+			UserRepository userRepository, UserEventMapperRepository userEventMapperRepository) {
 		mRequestRepository = requestRepository;
 		mInterestRepository = interestRepository;
 		mUserRepository = userRepository;
+		mUserEventMapperRepository = userEventMapperRepository;
 	}
 	
 	// getRequestlist -> convertEntitytoDto
@@ -114,6 +118,27 @@ public class RequestService {
     	
 	}
     
+    public Long registerRequestToEvent(Long id) {
+		
+    	Request request = mRequestRepository.findById(id).orElse(null);
+    	
+    	UserEventMapper userEventMapper = new UserEventMapper();
+    	userEventMapper.setEvent(request.getEvent());
+    	userEventMapper.setUser(request.getClient());
+    	userEventMapper.setStatus((byte) 1);
+    	userEventMapper.setLocationAgree((byte) 1);
+    	userEventMapper.setPhoneAgree((byte) 1);
+    	userEventMapper.setUserType((byte) 1);
+    	
+    	mUserEventMapperRepository.save(userEventMapper);
+    	
+    	request.setStatus((byte) 1);
+    	
+    	mRequestRepository.save(request);
+    	
+		return request.getEvent().getId();
+	}
+    
  // Request -> RequestDto conversion
  		private RequestDto convertRequestToDto(Request request) {
  			
@@ -131,5 +156,7 @@ public class RequestService {
  			return requestDto;
  			
  		}
+
+		
 
 }

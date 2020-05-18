@@ -1,11 +1,7 @@
 package com.sangdaero.walab.common.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-<<<<<<< HEAD
-=======
 import java.util.HashSet;
->>>>>>> ba59c60c9a1927f0d011d251d086923636eb4bd3
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +23,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,6 +41,7 @@ public class EventEntity extends TimeEntity {
 
 	// 2020-05-11 added
 	@OneToMany(fetch= FetchType.LAZY, mappedBy="eventId")
+	@JsonIgnore
 	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
 	
 	@Id 

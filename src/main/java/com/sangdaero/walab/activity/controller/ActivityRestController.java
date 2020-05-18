@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sangdaero.walab.activity.dto.ActivityPeopleDto;
 import com.sangdaero.walab.activity.dto.ActivityUserDto;
+import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.activity.service.ActivityService;
+import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.service.UserService;
 
@@ -43,13 +46,27 @@ public class ActivityRestController {
 		return status;
 	}
 	
-	@GetMapping("/getUsers")
-	public List<UserDetailDto> getUsers(@RequestParam("keyword") String keyword) {
-		List<UserDetailDto> userList = mUserService.findUsers(keyword);
-		return userList;
+	@PostMapping("/setTitleAndStatus")
+	public String setTitleAndStatus(@RequestParam("id") Long id, @RequestParam("title") String title, @RequestParam("status") Byte status) {
+		mActivityService.setTitleAndStatus(id, title, status);
+		return title + "|" + status;
 	}
 	
-	@PostMapping("/setUsers")
+	@PostMapping("/setCategoryAndDeadline")
+	public String setCategoryAndDeadline(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId, 
+			@RequestParam(value="deadlineDate") String deadlineDate, @RequestParam(value="deadlineTime") String deadlineTime) {
+		String interestCategoryName = mActivityService.setInterestCategoryAndDeadline(id, interestCategoryId, deadlineDate, deadlineTime);
+		return interestCategoryName + "." + deadlineDate + "." + deadlineTime;
+	}
+	
+	@GetMapping("/getUsers")
+	public List<UserStatusDto> getUsers(@RequestParam("id") Long id) {
+		List<SimpleUser> userList = mUserService.getSimpleUserList();
+		List<UserStatusDto>	userStatusList = mActivityService.getUsersStatus(id, userList);
+		return userStatusList;
+	}
+	
+	/*@PostMapping("/setUsers")
 	public List<ActivityUserDto> setUsers(@RequestParam("id") Long id, @RequestParam(value="users[]", required=false) List<Long> userIdList) {
 		List<ActivityUserDto> userList = mActivityService.setUsers(id, userIdList, (byte) 0);
 		return userList;
@@ -59,7 +76,7 @@ public class ActivityRestController {
 	public List<ActivityUserDto> setVolunteers(@RequestParam("id") Long id, @RequestParam(value="volunteers[]", required=false) List<Long> volunteerIdList) {
 		List<ActivityUserDto> userList = mActivityService.setUsers(id, volunteerIdList, (byte) 1);
 		return userList;
-	}
+	}*/
 	
 	@PostMapping("/setDelivery")
 	public Byte setDelivery(@RequestParam("id") Long id, @RequestParam("delivery") Byte delivery) {
@@ -81,6 +98,15 @@ public class ActivityRestController {
 		return startDate + "." + startTime + "." + endDate + "." + endTime;
 	}
 	
+	@PostMapping("/setVolunteerTimeAndPlaceAndContent")
+	public String setVolunteerTimeAndPlaceAndContent(@RequestParam("id") Long id, 
+			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
+			@RequestParam("endDate") String endDate, @RequestParam("endTime") String endTime,
+			@RequestParam("place") String place, @RequestParam("content") String content) {
+		mActivityService.setVolunteerTimeAndPlaceAndContent(id, startDate, startTime, endDate, endTime, place, content);
+		return place + "|" + content +"|" +startDate + "|" + startTime + "|" + endDate + "|" + endTime;
+	}
+	
 	@PostMapping("/setPlace")
 	public String setPlace(@RequestParam("id") Long id, @RequestParam("place") String place) {
 		mActivityService.setPlace(id, place);
@@ -91,6 +117,17 @@ public class ActivityRestController {
 	public String setManager(@RequestParam("id") Long id, @RequestParam("manager") Long managerId) {
 		String managerName = mActivityService.setManager(id, managerId);
 		return managerName;
+	}
+	
+	@PostMapping("/setPeople")
+	public ActivityPeopleDto setPeople(@RequestParam("id") Long id, 
+			@RequestParam(value="users[]", required=false) List<Long> userIdList,
+			@RequestParam(value="userStatusList[]", required=false) List<Byte> userStatusList,
+			@RequestParam(value="volunteers[]", required=false) List<Long> volunteerIdList,
+			@RequestParam(value="volunteerStatusList[]", required=false) List<Byte> volunteerStatusList,
+			@RequestParam("manager") Long managerId) {
+		ActivityPeopleDto people = mActivityService.setPeople(id, userIdList, userStatusList, volunteerIdList, volunteerStatusList, managerId);
+		return people;
 	}
 	
 	@PostMapping("/setContent")

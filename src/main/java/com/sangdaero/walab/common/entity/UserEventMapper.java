@@ -49,5 +49,11 @@ public class UserEventMapper extends TimeEntity {
 	@Column(name="location_agree", nullable = false)
 	@ColumnDefault("0")
 	private Byte locationAgree;
-
+	
+	@Column(name="start_image", nullable = true)
+	private String startImage;
+	
+	@Column(name="end_image", nullable = true)
+	private String endImage;
+	
 }

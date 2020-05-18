@@ -65,8 +65,16 @@ public class RequestController {
 		model.addAttribute("interests", interestList);
 		model.addAttribute("managers", managerList);
 		model.addAttribute("users", userList);
+		model.addAttribute("permittedVolunteer", requestDto.getClient());
 		
 		return "html/activity/activityForm.html";
+	}
+	
+	@GetMapping("/permit/{no}")
+	public String permitRequest(@PathVariable("no") Long id, Model model) {
+		Long eventId = mRequestService.registerRequestToEvent(id);
+		
+		return "redirect:/activity/" + eventId;
 	}
 
 }

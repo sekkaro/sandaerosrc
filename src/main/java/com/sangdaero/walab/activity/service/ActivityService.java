@@ -26,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
 import com.sangdaero.walab.activity.dto.ActivityDto;
+import com.sangdaero.walab.activity.dto.ActivityPeopleDto;
 import com.sangdaero.walab.activity.dto.ActivityUserDto;
+import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.common.entity.EventEntity;
 import com.sangdaero.walab.common.entity.FileEntity;
 import com.sangdaero.walab.common.entity.InterestCategory;
@@ -37,6 +39,7 @@ import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.request.repository.RequestRepository;
+import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 
@@ -172,6 +175,8 @@ public class ActivityService {
         		activityUser.setStatus(userEvent.getStatus());
         		activityUser.setPhoneAgree(userEvent.getPhoneAgree());
         		activityUser.setLocationAgree(userEvent.getLocationAgree());
+        		activityUser.setStartImage(userEvent.getStartImage());
+        		activityUser.setEndImage(userEvent.getEndImage());
         		activityUser.setRegDate(userEvent.getRegDate());
         		activityUser.setModDate(userEvent.getModDate());
         		
@@ -185,6 +190,8 @@ public class ActivityService {
         		activityVolunteer.setStatus(userEvent.getStatus());
         		activityVolunteer.setPhoneAgree(userEvent.getPhoneAgree());
         		activityVolunteer.setLocationAgree(userEvent.getLocationAgree());
+        		activityVolunteer.setStartImage(userEvent.getStartImage());
+        		activityVolunteer.setEndImage(userEvent.getEndImage());
         		activityVolunteer.setRegDate(userEvent.getRegDate());
         		activityVolunteer.setModDate(userEvent.getModDate());
         		
@@ -203,9 +210,9 @@ public class ActivityService {
     }
     
     @Transactional
-    public Long saveActivity(String title, Long interestCategoryId, List<Long> userIdList, Byte delivery, 
+    public Long saveActivity(String title, Long interestCategoryId, List<Long> userIdList, List<Byte> userStatusList, Byte delivery, 
     		Long managerId, String startDate, String startTime, String endDate, String endTime, String place, 
-    		String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, MultipartFile[] files, Long requestId) {
+    		String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile[] files, Long requestId) {
 		
     	ActivityDto activityDto = new ActivityDto();
     	
@@ -233,6 +240,8 @@ public class ActivityService {
     	
     	if(userIdList!=null) {
     		
+    		int index = 0;
+    		
     		for(Long userId: userIdList) {
         		UserEventMapper userEventMapper = new UserEventMapper();
         		
@@ -240,16 +249,20 @@ public class ActivityService {
         		userEventMapper.setUser(user);
         		userEventMapper.setEvent(event);
         		userEventMapper.setUserType((byte) 0);
-        		userEventMapper.setLocationAgree((byte) 0);
-        		userEventMapper.setPhoneAgree((byte) 0);
-        		userEventMapper.setStatus((byte) 0);
+        		userEventMapper.setLocationAgree((byte) ((userStatusList.get(index)==1)?1:0));
+        		userEventMapper.setPhoneAgree((byte) ((userStatusList.get(index)==1)?1:0));
+        		userEventMapper.setStatus(userStatusList.get(index));
         		
         		mUserEventMapperRepository.save(userEventMapper);
+        		
+        		index++;
         	}
     		
     	}
     	
     	if(volunteerIdList != null) {
+    		
+    		int index = 0;
     		
     		for(Long volunteerId: volunteerIdList) {
         		UserEventMapper userEventMapper = new UserEventMapper();
@@ -258,11 +271,13 @@ public class ActivityService {
         		userEventMapper.setUser(volunteer);
         		userEventMapper.setEvent(event);
         		userEventMapper.setUserType((byte) 1);
-        		userEventMapper.setLocationAgree((byte) 0);
-        		userEventMapper.setPhoneAgree((byte) 0);
-        		userEventMapper.setStatus((byte) 0);
+        		userEventMapper.setLocationAgree((byte) ((volunteerStatusList.get(index)==1)?1:0));
+        		userEventMapper.setPhoneAgree((byte) ((volunteerStatusList.get(index)==1)?1:0));
+        		userEventMapper.setStatus(volunteerStatusList.get(index));
         		
         		mUserEventMapperRepository.save(userEventMapper);
+        		
+        		index++;
         	}
     		
     	}
@@ -400,8 +415,9 @@ public class ActivityService {
     	mActivityRepository.save(activity);
 	}
     
-    public List<ActivityUserDto> setUsers(Long id, List<Long> userIdList, byte userType) {
+    public List<ActivityUserDto> setUsers(Long id, List<Long> userIdList, List<Byte> userStatusList, byte userType) {
     	EventEntity event = mActivityRepository.findById(id).orElse(null);
+    	int index = 0;
     	
     	if(userIdList!=null) {
     		
@@ -416,10 +432,15 @@ public class ActivityService {
             		userEventMapper.setUserType(userType);
             		userEventMapper.setLocationAgree((byte) 0);
             		userEventMapper.setPhoneAgree((byte) 0);
-            		userEventMapper.setStatus((byte) 0);
-            		
-            		mUserEventMapperRepository.save(userEventMapper);
+            		userEventMapper.setStatus(userStatusList.get(index));
         		}
+        		else {
+        			userEventMapper.setStatus(userStatusList.get(index));
+        		}
+        		
+        		mUserEventMapperRepository.save(userEventMapper);
+        		
+        		index++;
         	}
     		
     		List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByEventIdAndUserType(id, userType);
@@ -521,6 +542,8 @@ public class ActivityService {
        	     activityUser.setLocationAgree(userEventMapper.getLocationAgree());
        	     activityUser.setPhoneAgree(userEventMapper.getLocationAgree());
        	     activityUser.setStatus(userEventMapper.getStatus());
+       	     activityUser.setStartImage(userEventMapper.getStartImage());
+       	     activityUser.setEndImage(userEventMapper.getEndImage());
        	     activityUser.setRegDate(userEventMapper.getRegDate());
        	     activityUser.setModDate(userEventMapper.getModDate());
        	     
@@ -532,7 +555,93 @@ public class ActivityService {
         
         return activityUsers;
     }
-	
+    
+    public ActivityPeopleDto setPeople(Long id, List<Long> userIdList, List<Byte> userStatusList, List<Long> volunteerIdList,
+			List<Byte> volunteerStatusList, Long managerId) {
+    	List<ActivityUserDto> users = setUsers(id, userIdList, userStatusList, (byte) 0);
+    	List<ActivityUserDto> volunteers = setUsers(id, volunteerIdList, volunteerStatusList, (byte) 1);
+    	String managerName = setManager(id, managerId);
+    	
+    	ActivityPeopleDto activityPeople = new ActivityPeopleDto();
+    	activityPeople.setUsers(users);
+    	activityPeople.setVolunteers(volunteers);
+    	activityPeople.setManagerName(managerName);
+    	
+		return activityPeople;
+	}
+    
+    public List<UserStatusDto> getUsersStatus(Long id, List<SimpleUser> userList) {
+		List<UserStatusDto> userStatusList = new ArrayList<>();
+		
+		for(SimpleUser user: userList) {
+			UserStatusDto userStatus = new UserStatusDto();
+			userStatus.setId(user.getId());
+			userStatus.setName(user.getName());
+			
+			if(id != null) {
+				UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserId(id, user.getId());
+				if(userEventMapper == null) {
+					userStatus.setStatus(null);
+					userStatus.setType(null);
+				}
+				else {
+					userStatus.setStatus(userEventMapper.getStatus());
+					userStatus.setType(userEventMapper.getUserType());
+				}
+			}
+			else {
+				userStatus.setStatus(null);
+				userStatus.setType(null);
+			}
+			
+			userStatusList.add(userStatus);
+		
+		}
+    	
+    	
+		return userStatusList;
+	}
+    
+    public void setTitleAndStatus(Long id, String title, Byte status) {
+    	EventEntity activity = mActivityRepository.findById(id).orElse(null);
+		
+		activity.setTitle(title);
+		activity.setStatus(status);
+		
+		mActivityRepository.save(activity);
+	}
+    
+    public String setInterestCategoryAndDeadline(Long id, Long interestCategoryId, String deadlineDate,
+			String deadlineTime) {
+    	EventEntity activity = mActivityRepository.findById(id).orElse(null);
+    	
+    	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
+    	
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
+    	
+    	activity.setDeadline((deadlineDate.isEmpty()||deadlineTime.isEmpty())?null:LocalDateTime.parse(deadlineDate + deadlineTime, formatter));
+    	
+    	activity.setInterestCategory(interestCategory);
+    	
+    	mActivityRepository.save(activity);
+    	
+    	return (interestCategory!=null)?interestCategory.getName():"카테고리 없음";
+	}
+    
+    public void setVolunteerTimeAndPlaceAndContent(Long id, String startDate, String startTime, String endDate,
+			String endTime, String place, String content) {
+    	EventEntity activity = mActivityRepository.findById(id).orElse(null);
+    	
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
+    	
+    	activity.setStartTime((startDate.isEmpty()||startTime.isEmpty())?null:LocalDateTime.parse(startDate + startTime, formatter));
+    	activity.setEndTime((endDate.isEmpty()||endTime.isEmpty())?null:LocalDateTime.parse(endDate + endTime, formatter));
+    	activity.setPlace(place);
+    	activity.setContent(content);
+    	
+    	mActivityRepository.save(activity);
+	}
+    
 	// EventEntity -> ActivityDto conversion
 		private ActivityDto convertEventEntityToActivityDto(EventEntity eventEntity) {
 			
