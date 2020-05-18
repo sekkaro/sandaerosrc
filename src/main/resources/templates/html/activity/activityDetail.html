@@ -2,51 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
 <head lang="en" th:replace="common/header :: header"></head>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0794c5090c6554a68e453d22b1837f5&libraries=services"></script>
 <body>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main" style="margin-left: 15%">
-	
-	<div class="w3-teal">
-			<button id="openNav" style="display: none"
-				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h1>활동 상세 페이지</h1>
-			</div>
-		</div>
+
+	<button id="openNav" style="display: none"
+			class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+	<div class="w3-container">
+		<h4>활동 목록</h4>
 	</div>
-	
-	<div style="margin-left: 15%" class="container">
-		<div class="row mt-4 justify-content-center">
-			<div class="col-8">
-				<input type="hidden" id="activityId" th:value="${activityDto.id}" />
-				<div class="lead">
-					<h2 id="titleText" th:text="${activityDto.title}"></h2>
+
+	<div class="container">
+		<input type="hidden" id="activityId" th:value="${activityDto.id}" />
+
+		<div class="row">
+			<div class="col-md-3">
+					<h4 id="titleText" th:text="${activityDto.title}" style="display: inline"></h4>
 					<input id="editTitleField" type="text" th:value="${activityDto.title}"
-				   		   style="display: none;">
-					<button id="editTitleButton">수정</button>
-					<button id="cancelTitleButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					카테고리 :
-					<p id="category" th:if="${activityDto.interestCategory}"
-			   		   th:text="${activityDto.interestCategory.name}"></p>
-					<p id="category" th:if="${activityDto.interestCategory==null}">카테고리 없음</p>
-					<select id="editCategory" style="display: none;">
-						<option value="0">관심사를 선택하세요</option>
-						<option th:each="interest : ${interests}" th:value="${interest.id}"
-							th:text="${interest.name}" 
-							th:selected="${interest.id} == ${activityDto.interestCategory?.id}"></option>
-					</select>
-					<button id="editCategoryButton">수정</button>
-					<button id="cancelCategoryButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					상태:
-					<p id="status" th:switch="${activityDto.status}">
-					<span th:case="'0'">매칭 전</span> <span th:case="'1'">진행중</span> <span
-					  	  th:case="'2'">매칭 완료</span> <span th:case="'3'">모집 마감</span>
+						   style="display: none;">
+<!--					<button id="editTitleButton">수정</button>-->
+<!--					<button id="cancelTitleButton" style="display: none;">취소</button>-->
+			</div>
+			<div class="col-md-7">
+					<p id="status" th:switch="${activityDto.status}" style="display:inline;">
+						<span th:case="'0'">매칭 전</span> <span th:case="'1'">진행중</span> <span
+							th:case="'2'">매칭 완료</span> <span th:case="'3'">모집 마감</span>
 					</p>
 					<select id="editStatus" style="display: none;">
 						<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
@@ -54,166 +38,213 @@
 						<option th:value="2" th:selected="${activityDto.status} == 2">매칭 완료</option>
 						<option th:value="3" th:selected="${activityDto.status} == 3">모집 마감</option>
 					</select>
-					<button id="editStatusButton">수정</button>
-					<button id="cancelStatusButton" style="display: none;">취소</button>
+<!--					<button id="editStatusButton">수정</button>-->
+<!--					<button id="cancelStatusButton" style="display: none;">취소</button>-->
+			</div>
+			<div class="col-md-2">
+				<a href="/" id="editTitleGroupBtn">편집</a>
+				<a href="/" id="cancelTitleGroupBtn" style="display: none;">취소</a>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-5">
+				<label for="category">카테고리</label>
+
+				<p id="category" th:if="${activityDto.interestCategory}"
+				   th:text="${activityDto.interestCategory.name}" style="display: inline"></p>
+				<p id="category" th:if="${activityDto.interestCategory==null}" style="display: inline">카테고리 없음</p>
+
+				<select id="editCategory" style="display: none;">
+					<option value="0">관심사를 선택하세요</option>
+					<option th:each="interest : ${interests}" th:value="${interest.id}"
+						th:text="${interest.name}"
+						th:selected="${interest.id} == ${activityDto.interestCategory?.id}"></option>
+				</select>
+<!--				<button id="editCategoryButton">수정</button>-->
+<!--				<button id="cancelCategoryButton" style="display: none;">취소</button>-->
+			</div>
+			<div class="col-md-5">
+				<label for="deadline">마감 기한</label>
+				<p id="deadline" th:if="${activityDto.deadline==null}" style="display: inline">마감시간 없음</p>
+				<p id="deadline" th:if="${activityDto.deadline}" style="display: inline">[[${#temporals.format(activityDto.deadline, 'yyyy-MM-dd HH:mm')}]]</p>
+				<div id="editDeadline" style="display: none;">
+					<input type="date" name="deadlineDate" th:value="${activityDto.deadline?.toLocalDate()}">
+					<input type="time" name="deadlineTime" th:value="${activityDto.deadline?.toLocalTime()}">
 				</div>
-				<div class="lead">
-					이용자 :
-					<p id="userList" th:if="${activityDto.activityUsers.size()} == 0">이용자 없음</p>
+<!--				<button id="editDeadlineButton">수정</button>-->
+<!--				<button id="cancelDeadlineButton" style="display: none;">취소</button>-->
+			</div>
+			<div class="col-md-2">
+				<a href="/" id="editCategoryGroupBtn">편집</a>
+				<a  href="/" id="cancelCategoryGroupBtn" style="display: none;">취소</a>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<h4>담당 인원</h4>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="row">
+					<label for="userList">이용자</label>
+					<p id="userList" th:if="${activityDto.activityUsers.size()} == 0" style="display:inline;">이용자 없음</p>
 					<table id="userList" th:if="${activityDto.activityUsers.size()} > 0">
-						<tr>
-							<th>이름</th>
-							<th>전화번호</th>
-							<th>전화번호 공유 동의</th>
-							<th>위치 공유 동의</th>
-							<th>상태</th>
-						</tr>
 						<tr th:each="activityUser : ${activityDto.activityUsers}">
 							<td class="userIds" style="display:none;" th:text="${activityUser.user?.id}"></td>
 							<td th:text="${activityUser.user?.name}"></td>
 							<td th:text="${activityUser.user?.phone}"></td>
-							<td class="text-center" th:text="${activityUser.phoneAgree == 0} ? 'X' : 'O'"></td>
-							<td class="text-center" th:text="${activityUser.locationAgree == 0} ? 'X' : 'O'"></td>
-							<td th:switch="${activityUser.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span
-								th:case="'2'">거절</span></td>
+<!--								<td class="text-center" th:text="${activityUser.phoneAgree == 0} ? 'X' : 'O'"></td>-->
+<!--								<td class="text-center" th:text="${activityUser.locationAgree == 0} ? 'X' : 'O'"></td>-->
+<!--								<td th:switch="${activityUser.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span-->
+<!--										th:case="'2'">거절</span></td>-->
 						</tr>
 					</table>
 					<div id="editUsers" style="display: none;">
 						<input id="searchUsers" type="text" placeholder="유저 이름으로 검색">
 						<ul id="users">
-				
+
 						</ul>
 						<div id="pagingUsers">
-				
+
 						</div>
 						<!--  <li th:each="user : ${users}"><input type="checkbox"
-							  	  th:id="${user.id}" th:value="${user.id}" name="userId"
-							  	  th:checked="${activityDto.userIds.contains(user.id)}"
-							  	  autocomplete="off" /> <label th:for="${user.id}"
-							  	  th:text="${user.name}"></label></li> -->
+									th:id="${user.id}" th:value="${user.id}" name="userId"
+									th:checked="${activityDto.userIds.contains(user.id)}"
+									autocomplete="off" /> <label th:for="${user.id}"
+									th:text="${user.name}"></label></li> -->
 					</div>
-					<button id="editUsersButton">수정</button>
-					<button id="cancelUsersButton" style="display: none;">취소</button>
+<!--					<button id="editUsersButton">수정</button>-->
+<!--					<button id="cancelUsersButton" style="display: none;">취소</button>-->
 				</div>
-				<div class="lead">
-					봉사자 :
-					<p id="volunteerList" th:if="${activityDto.activityVolunteers.size()} == 0">봉사자 없음</p>
-					<table id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
-						<tr>
-							<th>이름</th>
-							<th>전화번호</th>
-							<th>전화번호 공유 동의</th>
-							<th>위치 공유 동의</th>
-							<th>상태</th>
-						</tr>
-						<tr th:each="activityVolunteer : ${activityDto.activityVolunteers}">
-							<td class="volunteerIds" style="display:none;" th:text="${activityVolunteer.user?.id}"></td>
-							<td th:text="${activityVolunteer.user?.name}"></td>
-							<td th:text="${activityVolunteer.user?.phone}"></td>
-							<td class="text-center" th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></td>
-							<td class="text-center" th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></td>
-							<td th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span
-						    	th:case="'2'">거절</span></td>
-						</tr>
-					</table>
-					<div id="editVolunteers" style="display: none;">
-						<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
-						<ul id="volunteers">
-				
-						</ul>
-						<div id="pagingVolunteers">
-				
-						</div>
-						<!--  <li th:each="volunteer : ${users}"><input type="checkbox"
-								  th:id="${volunteer.id}" th:value="${volunteer.id}"
-								  name="volunteerId"
-								  th:checked="${activityDto.volunteerIds.contains(volunteer.id)}" /> <label
-								  th:for="${volunteer.id}" th:text="${volunteer.name}"></label></li> -->
-					</div>
-					<button id="editVolunteersButton">수정</button>
-					<button id="cancelVolunteersButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					전달 여부:
-					<p id="delivery"
-			   		   th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" />
-					<div id="editDelivery" style="display: none;">
-					<input type="radio" id="direct" name="delivery" value="0"
-					   	   th:checked="${activityDto.deliveryFlag} == 0"> <label
-					   	   for="direct">직접 수령</label> <input type="radio" id="through"
-					   	   name="delivery" value="1"
-					   	   th:checked="${activityDto.deliveryFlag} == 1"> <label
-					   	   for="through">봉사사 통해 전달</label>
-					</div>
-					<button id="editDeliveryButton">수정</button>
-					<button id="cancelDeliveryButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					봉사시간:
-					<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime==null}">시작 시간 없음 ~ 끝 시간 없음</p>
-					<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime==null}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ 끝 시간 없음</p>
-					<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime}">시작 시간 없음 ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
-					<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
-					<div id="editVolunteerTime" style="display: none;">
-						시작 시간: <input type="date" name="startDate" th:value="${activityDto.startTime?.toLocalDate()}"> 
-								<input type="time" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}"> <br>
-						끝 시간: <input type="date" name="endDate" th:value="${activityDto.endTime?.toLocalDate()}"> 
-							   <input type="time" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}">
-					</div>
-					<button id="editVolunteerTimeButton">수정</button>
-					<button id="cancelVolunteerTimeButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					장소:
-					<p id="place" th:if="${activityDto.place.isEmpty()}">장소 없음</p>
-					<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
-					<textarea id="editPlace" name="place" style="display: none;">[[${activityDto.place}]]</textarea>
-					<button id="editPlaceButton">수정</button>
-					<button id="cancelPlaceButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					관리자:
-					<p id="manager" th:if="${activityDto.manager==null}">관리자 없음</p>
+				<div class="row">
+					<label for="manager">관리자</label>
+					<p id="manager" th:if="${activityDto.manager==null}" style="display: inline">관리자 없음</p>
 					<p id="manager" th:if="${activityDto.manager}" th:text="${activityDto.manager.name}"></p>
 					<select id="editManager" style="display: none;">
 						<option value="0">관리자를 선택하세요</option>
 						<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" th:selected="${manager.id} == ${activityDto.manager?.id}"></option>
 					</select>
-					<button id="editManagerButton">수정</button>
-					<button id="cancelManagerButton" style="display: none;">취소</button>
+<!--					<button id="editManagerButton">수정</button>-->
+<!--					<button id="cancelManagerButton" style="display: none;">취소</button>-->
 				</div>
-				<div class="lead">
-					세부내용:
+			</div>
+			<div class="col-md-6">
+				<label for="volunteerList">봉사자</label>
+				<p id="volunteerList" th:if="${activityDto.activityVolunteers.size()} == 0" style="display: inline">봉사자 없음</p>
+				<table id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
+					<tr th:each="activityVolunteer : ${activityDto.activityVolunteers}">
+						<td class="volunteerIds" style="display:none;" th:text="${activityVolunteer.user?.id}"></td>
+						<td th:text="${activityVolunteer.user?.name}"></td>
+						<td th:text="${activityVolunteer.user?.phone}"></td>
+<!--							<td class="text-center" th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></td>-->
+<!--							<td class="text-center" th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></td>-->
+<!--							<td th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span-->
+<!--									th:case="'2'">거절</span></td>-->
+					</tr>
+				</table>
+				<div id="editVolunteers" style="display: none;">
+					<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
+					<ul id="volunteers">
+
+					</ul>
+					<div id="pagingVolunteers">
+
+					</div>
+					<!--  <li th:each="volunteer : ${users}"><input type="checkbox"
+							  th:id="${volunteer.id}" th:value="${volunteer.id}"
+							  name="volunteerId"
+							  th:checked="${activityDto.volunteerIds.contains(volunteer.id)}" /> <label
+							  th:for="${volunteer.id}" th:text="${volunteer.name}"></label></li> -->
+				</div>
+<!--				<button id="editVolunteersButton">수정</button>-->
+<!--				<button id="cancelVolunteersButton" style="display: none;">취소</button>-->
+			</div>
+			<div class="col-md-2">
+				<a  href="/" id="editUserGroupBtn">편집</a>
+				<a  href="/" id="cancelUserGroupBtn" style="display: none;">취소</a>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<h4>활동 내용</h4>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="row">
+					<label for="volunteerTime">활동 시간</label>
+					<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime==null}">시작 시간 없음 ~ 끝 시간 없음</p>
+					<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime==null}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ 끝 시간 없음</p>
+					<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime}">시작 시간 없음 ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
+					<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
+					<div id="editVolunteerTime" style="display: none;">
+						시작 시간: <input type="date" name="startDate" th:value="${activityDto.startTime?.toLocalDate()}">
+						<input type="time" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}"> <br>
+						끝 시간: <input type="date" name="endDate" th:value="${activityDto.endTime?.toLocalDate()}">
+						<input type="time" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}">
+					</div>
+<!--					<button id="editVolunteerTimeButton">수정</button>-->
+<!--					<button id="cancelVolunteerTimeButton" style="display: none;">취소</button>-->
+				</div>
+				<div class="row">
+					<label for="content">세부내용</label>
 					<p id="content" th:if="${activityDto.content.isEmpty()}">세부내용 없음</p>
 					<p id="content" th:if="${activityDto.content != ''}" th:text="${activityDto.content}"></p>
 					<textarea id="editContent" name="content" style="display: none;">[[${activityDto.content}]]</textarea>
-					<button id="editContentButton">수정</button>
-					<button id="cancelContentButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead">
-					마감시간:
-					<p id="deadline" th:if="${activityDto.deadline==null}">마감시간 없음</p>
-					<p id="deadline" th:if="${activityDto.deadline}">[[${#temporals.format(activityDto.deadline, 'yyyy-MM-dd HH:mm')}]]</p>
-					<div id="editDeadline" style="display: none;">
-						<input type="date" name="deadlineDate" th:value="${activityDto.deadline?.toLocalDate()}"> 
-						<input type="time" name="deadlineTime" th:value="${activityDto.deadline?.toLocalTime()}">
-					</div>
-					<button id="editDeadlineButton">수정</button>
-					<button id="cancelDeadlineButton" style="display: none;">취소</button>
-				</div>
-				<div class="lead" id="images" th:if="${files.size()} > 0">
-					<img alt="image" th:each="file: ${files}" th:src="@{${'/images/' + file}}" width="250" height="250">
-				</div>
-				<div>
-					<a th:href="@{/activity}">
-						<button>목록</button>
-					</a>
+<!--					<button id="editContentButton">수정</button>-->
+<!--					<button id="cancelContentButton" style="display: none;">취소</button>-->
 				</div>
 			</div>
-			<div class="col-4">
-				<div id="map" style="width: 100%; height: 400px;"></div>
+			<div class="col-md-4">
+				<div class="row">
+					<label for="place">장소</label>
+					<p id="place" th:if="${activityDto.place.isEmpty()}">장소 없음</p>
+					<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
+
+					<div id="editPlace" name="place" style="display: none;">
+						<input type="text" id="address" placeholder="주소">
+						<input type="button" onclick="execPostcode()" value="주소 검색"><br>
+						<input type="hidden" id="coordi_x">
+						<input type="hidden" id="coordi_y">
+					</div>
+					<button id="editPlaceButton">수정</button>
+					<button id="cancelPlaceButton" style="display: none;">취소</button>
+				</div>
+				<div class="row">
+					<div id="kakaomap" style="width:300px;height:300px;margin-top:10px;"></div>
+					<input type="hidden" id="original_place" th:value="${activityDto.place}">
+				</div>
+			</div>
+			<div class="col-md-2">
+				<a href="/" id="editActivityGroupBtn">편집</a>
+				<a href="/" id="cancelActivityGroupBtn" style="display: none;">취소</a>
 			</div>
 		</div>
+<!--				<div class="lead">-->
+<!--					전달 여부:-->
+<!--					<p id="delivery"-->
+<!--					   th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" />-->
+<!--					<div id="editDelivery" style="display: none;">-->
+<!--						<input type="radio" id="direct" name="delivery" value="0"-->
+<!--							   th:checked="${activityDto.deliveryFlag} == 0"> <label-->
+<!--							for="direct">직접 수령</label> <input type="radio" id="through"-->
+<!--															  name="delivery" value="1"-->
+<!--															  th:checked="${activityDto.deliveryFlag} == 1"> <label-->
+<!--							for="through">봉사사 통해 전달</label>-->
+<!--					</div>-->
+<!--					<button id="editDeliveryButton">수정</button>-->
+<!--					<button id="cancelDeliveryButton" style="display: none;">취소</button>-->
+<!--				</div>-->
+
+<!--				<div class="lead" id="images" th:if="${files.size()} > 0">-->
+<!--					<img alt="image" th:each="file: ${files}" th:src="@{${'/images/' + file}}" width="250" height="250">-->
+<!--				</div>-->
+	</div>
+
+	<div>
+		<a th:href="@{/activity}">
+			<button>목록</button>
+		</a>
 	</div>
 		 
 		 <!--  전화번호 공유 동의:
@@ -232,8 +263,86 @@
 		</a> -->
 
 		<script th:inline="javascript">
-    
-    	$('#editTitleButton').click(function() {
+
+			var origin_place = document.getElementById('original_place').value;
+
+			var mapContainer = document.getElementById('kakaomap'), // 지도를 표시할 div
+					mapOption = {
+						center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+						level: 5 // 지도의 확대 레벨
+					};
+
+			//지도를 미리 생성
+			var map = new daum.maps.Map(mapContainer, mapOption);
+			//주소-좌표 변환 객체를 생성
+			var geocoder = new daum.maps.services.Geocoder();
+			//마커를 미리 생성
+			var marker = new daum.maps.Marker({
+				position: new daum.maps.LatLng(37.537187, 127.005476),
+				map: map
+			});
+
+			findCoordi(origin_place);
+
+			function changeMap(y, x) {
+				// 해당 주소에 대한 좌표를 받아서
+				var coords = new daum.maps.LatLng(y, x);
+				// 지도를 보여준다.
+				mapContainer.style.display = "block";
+				map.relayout();
+				// 지도 중심을 변경한다.
+				map.setCenter(coords);
+				// 마커를 결과값으로 받은 위치로 옮긴다.
+				marker.setPosition(coords)
+			}
+
+			function findCoordi(addr) {
+
+				console.log(addr);
+				geocoder.addressSearch(addr, function(results, status) {
+					// 정상적으로 검색이 완료됐으면
+					if (status === daum.maps.services.Status.OK) {
+
+						var result = results[0]; //첫번째 결과의 값을 활용
+						document.getElementById("coordi_x").value = result.x;
+						document.getElementById("coordi_y").value = result.y;
+
+						// // 해당 주소에 대한 좌표를 받아서
+						var coords = new daum.maps.LatLng(result.y, result.x);
+						// 지도를 보여준다.
+						mapContainer.style.display = "block";
+						map.relayout();
+						// 지도 중심을 변경한다.
+						map.setCenter(coords);
+						// 마커를 결과값으로 받은 위치로 옮긴다.
+						marker.setPosition(coords)
+					}
+				});
+			}
+
+			function execPostcode() {
+				new daum.Postcode({
+					oncomplete: function(data) {
+						var addr = data.address; // 최종 주소 변수
+
+						// 주소 정보를 해당 필드에 넣는다.
+						document.getElementById("address").value = addr;
+						// 주소로 상세 정보를 검색
+						geocoder.addressSearch(addr, function(results, status) {
+							// 정상적으로 검색이 완료됐으면
+							if (status === daum.maps.services.Status.OK) {
+
+								var result = results[0]; //첫번째 결과의 값을 활용
+								document.getElementById("coordi_x").value = result.x;
+								document.getElementById("coordi_y").value = result.y;
+							}
+						});
+					}
+				}).open();
+			}
+
+
+			$('#editTitleButton').click(function() {
     		
     		$('#editTitleField').toggle();
     		
@@ -332,7 +441,7 @@
     		$('#editStatusButton').html('수정');
     	})
     	
-    	const usersPerPage = 1;
+    	const usersPerPage = 4;
 		var numOfPages = 0;
 		var numOfPagesVolunteers = 0;
 		var users = [];
@@ -906,18 +1015,24 @@
     		
     		if($('#editPlaceButton').html() == '수정'){
     			$('#editPlaceButton').html('완료');
-    		}
-    		else{
+    		} else{
     			$('#editPlaceButton').html('수정');
-    			$.post("/activitydata/setPlace", {id: $('#activityId').val(), place: $('#editPlace').val()}, function(data) {
+
+    			$.post("/activitydata/setPlace", {
+    				id: $('#activityId').val(),
+					place: $('#address').val()
+				}, function(data) {
     				if(data !== ""){
     					$('#place').text(data);
     				}
     				else{
     					$('#place').text("장소 없음");
     				}
-    				
-            	});	
+
+            	});
+				var y = document.getElementById("coordi_y").value;
+				var x = document.getElementById("coordi_x").value;
+    			changeMap(y, x);
     		}
     	})
     	
@@ -1272,6 +1387,6 @@
     </script>
 
 	<div lang="en" th:replace="common/footer :: footer"></div>
-
+	</div>
 </body>
 </html>

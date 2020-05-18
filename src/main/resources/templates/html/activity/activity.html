@@ -8,51 +8,57 @@
 
 	<div id="main" style="margin-left: 15%">
 
-		<div class="w3-teal">
+		<div class="container">
 			<button id="openNav" style="display: none"
-				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+					class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 			<div class="w3-container">
-				<h1>활동 관리 페이지</h1>
+				<h2>활동 목록</h2>
 			</div>
-		</div>
 
-		<div class="w3-container">
+			<form  action="/activity" method="GET">
+				<div class="row">
+					<div class="col-md-7">
+						카테고리:
+						<select onchange="this.form.submit()" name="interestType">
+							<option value="0">관심사를 선택하세요</option>
+							<option th:selected="${interestType==interest.id}"
+									th:each="interest : ${interests}" th:value="${interest.id}"
+									th:text="${interest.name}"></option>
+						</select>
+						상태:
+						<select onchange="this.form.submit()" name="status">
+							<option value="0">상태를 선택하세요</option>
+							<option th:selected="${status==1}" value="1">매칭 전</option>
+							<option th:selected="${status==2}" value="2">진행중</option>
+							<option th:selected="${status==3}" value="3">매칭 완료</option>
+							<option th:selected="${status==4}" value="4">모집 마감</option>
+						</select>
+						<select onchange="this.form.submit()" name="sort">
+							<option th:selected="${sort==1}" value="1">최신순</option>
+							<option th:selected="${sort==2}" value="2">오래된순</option>
+						</select>
+					</div>
 
-			<form action="/activity" method="GET">
-				<div class="search">
-					<input name="keyword" type="text" placeholder="제목으로 검색"
-						th:value="${keyword}">
-					<button>검색하기</button>
+					<div class="search col-md-5">
+						<input name="keyword" type="text" placeholder="제목으로 검색"
+							   th:value="${keyword}">
+						<button>검색하기</button>
+					</div>
 				</div>
-				카테고리: <select onchange="this.form.submit()" name="interestType">
-					<option value="0">관심사를 선택하세요</option>
-					<option th:selected="${interestType==interest.id}"
-						th:each="interest : ${interests}" th:value="${interest.id}"
-						th:text="${interest.name}"></option>
-				</select> 상태: <select onchange="this.form.submit()" name="status">
-					<option value="0">상태를 선택하세요</option>
-					<option th:selected="${status==1}" value="1">매칭 전</option>
-					<option th:selected="${status==2}" value="2">진행중</option>
-					<option th:selected="${status==3}" value="3">매칭 완료</option>
-					<option th:selected="${status==4}" value="4">모집 마감</option>
-				</select> <select onchange="this.form.submit()" name="sort">
-					<option th:selected="${sort==1}" value="1">최신순</option>
-					<option th:selected="${sort==2}" value="2">오래된순</option>
-				</select>
 			</form>
 
 			<!-- payment list  -->
 			<form action="/activity" method="GET">
 				<!-- update checked record's 'paymentCheck' status. -->
 
-				<table>
+				<table class="table">
 					<thead>
 						<tr>
-							<th>id(번호)</th>
-							<th>제목</th>
-							<th>카테고리</th>
-							<th>상태</th>
-							<th>등록 날짜</th>
+							<th scope="col">id(번호)</th>
+							<th scope="col">제목</th>
+							<th scope="col">카테고리</th>
+							<th scope="col">상태</th>
+							<th scope="col">등록 날짜</th>
 						</tr>
 					</thead>
 

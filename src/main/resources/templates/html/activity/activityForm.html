@@ -2,103 +2,141 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
 <head lang="en" th:replace="common/header :: header"></head>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <body>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main" style="margin-left: 15%">
 
-		<div class="w3-teal">
-			<button id="openNav" style="display: none"
-				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h1>활동 등록</h1>
-			</div>
-		</div>
-
-
+		<button id="openNav" style="display: none"
+			class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
 		<div class="w3-container">
-
-			<form action="/activity/activityForm" method="post"
-				enctype="multipart/form-data">
-				
-				<input type="hidden" name="requestId" th:value="${requestDto?.id}" />
-
-				제목 : <input type="text" name="title" th:value="${requestDto?.title}"> <br>
-				<br> 카테고리: <select name="interestCategoryId">
-					<option value="0">관심사를 선택하세요</option>
-					<option th:each="interest : ${interests}" th:value="${interest.id}"
-						th:text="${interest.name}" th:selected="${interest.id} == ${requestDto?.interestCategory?.id}"></option>
-				</select><br>
-				<br> 이용자:
-				<input id="searchUsers" type="text" placeholder="유저 이름으로 검색">
-				<ul id="users">
-				
-				</ul>
-				<div id="pagingUsers">
-				
-				</div>
-				<!--  <ul id="users">
-					<li th:each="user : ${users}"><input type="checkbox"
-						th:id="${user.id}" th:value="${user.id}" name="userId" /> <label
-						th:for="${user.id}" th:text="${user.name}"></label></li>
-				</ul> -->
-				<input type="radio" id="direct" name="delivery" value="0" checked>
-				<label for="direct">직접 수령</label> <input type="radio" id="through"
-					name="delivery" value="1"> <label for="through">봉사사
-					통해 전달</label><br> <br> 봉사자:
-				<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
-				<ul id="volunteers">
-				
-				</ul>
-				<div id="pagingVolunteers">
-				
-				</div>
-				<!--  <ul id="volunteers">
-					<li th:each="volunteer : ${users}"><input type="checkbox"
-						th:id="${volunteer.id}" th:value="${volunteer.id}"
-						name="volunteerId" /> <label th:for="${volunteer.id}"
-						th:text="${volunteer.name}"></label></li>
-				</ul> -->
-				<!-- <input type="checkbox" id="phoneAgree" name="phoneAgree" />   <label
-					for="phoneAgree">전화번호 공유 동의</label> <br> <input
-					type="checkbox" id="locationAgree" name="locationAgree" /> <label
-					for="locationAgree">위치 공유 동의</label> -->  <br> 관리자: <select
-					name="managerId">
-					<option value="0">관리자를 선택하세요</option>
-					<option th:each="manager : ${managers}" th:value="${manager.id}"
-						th:text="${manager.name}"></option>
-				</select><br>
-				<br> 시작 시간: <input type="date" name="startDate"> <input
-					type="time" name="startTime"> <br>
-				<br> 끝 시간: <input type="date" name="endDate"> <input
-					type="time" name="endTime"> <br>
-				<br> 장소:
-				<textarea name="place"></textarea>
-				<br>
-				<br> 마감 시간: <input type="date" name="deadlineDate"> <input
-					type="time" name="deadlineTime"> <br>
-				<br> 세부내용:
-				<textarea name="content"></textarea>
-				<br>
-				<br> <input type="file" name="files" multiple> <br>
-				<br> <input type="submit" value="등록">
-			</form>
-
+			<h3>활동 등록</h3>
 		</div>
-		<a th:href="@{/activity}">
-			<button>뒤로가기</button>
-		</a>
+
+		<div class="container">
+
+			<form action="/activity/activityForm" method="post" enctype="multipart/form-data">
+				
+				<input type="hidden" name="requestId" th:value="${requestDto?.id}"/>
+
+				<div class="row">
+					<h4>기본 정보</h4>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="row">
+							카테고리:
+							<select name="interestCategoryId">
+								<option value="0">관심사를 선택하세요</option>
+								<option th:each="interest : ${interests}" th:value="${interest.id}"
+									th:text="${interest.name}" th:selected="${interest.id} == ${requestDto?.interestCategory?.id}"></option>
+							</select>
+						</div>
+						<div class="row">
+							마감 기한:
+							<input type="date" name="deadlineDate"> <input
+								type="time" name="deadlineTime">
+						</div>
+					</div>
+					<div class="col-md-7">
+						제목:
+						<input type="text" name="title" th:value="${requestDto?.title}">
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<h4>담당 인원</h4>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="row">
+							이용자:
+							<input id="searchUsers" type="text" placeholder="유저 이름으로 검색">
+							<ul id="users">
+
+							</ul>
+							<div id="pagingUsers">
+
+							</div>
+						</div>
+						<div class="row">
+							관리자:
+							<select name="managerId">
+								<option value="0">관리자를 선택하세요</option>
+								<option th:each="manager : ${managers}" th:value="${manager.id}"
+									th:text="${manager.name}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-7">
+						봉사자:
+						<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
+						<ul id="volunteers">
+
+						</ul>
+						<div id="pagingVolunteers">
+
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<h4>활동 내용</h4>
+				</div>
+				<div class="row">
+					<div class="col-md-9">
+						활동 시간:
+						<input type="date" name="startDate"> <input type="time" name="startTime"> ~ <input type="date" name="endDate"> <input type="time" name="endTime">
+
+					</div>
+					<div class="col-md-3">
+						장소:
+						<input type="text" id="place" name="place" placeholder="주소">
+						<input type="button" onclick="execPostcode()" value="주소 검색">
+					</div>
+				</div>
+				<div class="row">
+					상세 설명:
+					<textarea name="content"></textarea>
+				</div>
+				<div class="row">
+<!--					<input type="radio" id="direct" name="delivery" value="0" checked>-->
+<!--					<label for="direct">직접 수령</label> <input type="radio" id="through"-->
+<!--															 name="delivery" value="1"> <label for="through">봉사사-->
+<!--					통해 전달</label>-->
+<!--					<br> <input type="file" name="files" multiple> <br>-->
+				</div>
+
+				<input type="submit" value="등록">
+			</form>
+			<a th:href="@{/activity}">
+				<button>뒤로가기</button>
+			</a>
+		</div>
+
 
 		<script th:inline="javascript">
 		
-			const usersPerPage = 1;
+			const usersPerPage = 4;
 			var numOfPages = 0;
 			var numOfPagesVolunteers = 0;
 			var users = [];
 			var volunteers = [];
 			var clickedUsers = [];
 			var clickedVolunteers = [];
+
+			function execPostcode() {
+				new daum.Postcode({
+					oncomplete: function(data) {
+						var addr = data.address; // 최종 주소 변수
+
+						// 주소 정보를 해당 필드에 넣는다.
+						document.getElementById("place").value = addr;
+					}
+				}).open();
+			}
 		
 			function addEventListenersToUsers(){
 				$('input[name="userId"]').each(function(){
