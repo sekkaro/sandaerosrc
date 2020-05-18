@@ -63,5 +63,4 @@ public class EntitySample extends TimeEntity {
         this.topCategory = topCategory;
         this.subCategory = subCategory;
     }
-
 }
