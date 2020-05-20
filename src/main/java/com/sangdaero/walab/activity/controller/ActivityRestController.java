@@ -4,16 +4,20 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sangdaero.walab.activity.dto.ActivityDto;
 import com.sangdaero.walab.activity.dto.ActivityPeopleDto;
 import com.sangdaero.walab.activity.dto.ActivityUserDto;
+import com.sangdaero.walab.activity.dto.AppRequest;
 import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.activity.service.ActivityService;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
+import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.service.UserService;
 
 @RestController
@@ -60,8 +64,8 @@ public class ActivityRestController {
 	}
 	
 	@GetMapping("/getUsers")
-	public List<UserStatusDto> getUsers(@RequestParam("id") Long id) {
-		List<SimpleUser> userList = mUserService.getSimpleUserList();
+	public List<UserStatusDto> getUsers(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId) {
+		List<SimpleUser> userList = mUserService.getSimpleUserListWithInterestOnOff(interestCategoryId);
 		List<UserStatusDto>	userStatusList = mActivityService.getUsersStatus(id, userList);
 		return userStatusList;
 	}
@@ -122,11 +126,11 @@ public class ActivityRestController {
 	@PostMapping("/setPeople")
 	public ActivityPeopleDto setPeople(@RequestParam("id") Long id, 
 			@RequestParam(value="users[]", required=false) List<Long> userIdList,
-			@RequestParam(value="userStatusList[]", required=false) List<Byte> userStatusList,
+			/*@RequestParam(value="userStatusList[]", required=false) List<Byte> userStatusList,*/
 			@RequestParam(value="volunteers[]", required=false) List<Long> volunteerIdList,
 			@RequestParam(value="volunteerStatusList[]", required=false) List<Byte> volunteerStatusList,
 			@RequestParam("manager") Long managerId) {
-		ActivityPeopleDto people = mActivityService.setPeople(id, userIdList, userStatusList, volunteerIdList, volunteerStatusList, managerId);
+		ActivityPeopleDto people = mActivityService.setPeople(id, userIdList, /*userStatusList,*/ volunteerIdList, volunteerStatusList, managerId);
 		return people;
 	}
 	
@@ -141,5 +145,17 @@ public class ActivityRestController {
 			@RequestParam(value="deadlineDate") String deadlineDate, @RequestParam(value="deadlineTime") String deadlineTime) {
 		mActivityService.setDeadline(id, deadlineDate, deadlineTime);
 		return deadlineDate + "." + deadlineTime;
+	}
+	
+	@GetMapping("/getActivities")
+	public List<ActivityDto> getActivities(){
+		return mActivityService.getActivitylist(1, "", 0, 0, 0);
+	}
+	
+	@PostMapping("/unregister")
+	public String unregister(@RequestBody AppRequest unregisterForm) {
+		UserDto userDto = mUserService.createUser(unregisterForm.getEmail(), unregisterForm.getName());
+		mActivityService.unregister(unregisterForm.getId(), userDto);
+		return "success";
 	}
 }

@@ -149,6 +149,29 @@ public class UserService extends OidcUserService {
     	
     	return simpleUserList;
     }
+    
+    public List<SimpleUser> getSimpleUserListWithInterestOnOff(Long interestCategoryId) {
+        List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
+        
+        if(interestCategoryId!=0) {
+        	Iterator<SimpleUser> iter = simpleUserList.iterator();
+            while (iter.hasNext()) {
+               SimpleUser user = iter.next();
+               UserInterest userInterest = mUserInterestRepository.findByUserIdAndInterestId(user.getId(), interestCategoryId);
+               
+               if(userInterest!=null) {
+            	   Byte on_Off = userInterest.getOn_off();
+                   
+                   if(on_Off == 0) {
+                	   iter.remove();
+                   } 
+               }
+               
+            }
+        }
+        
+        return simpleUserList;
+    }
 
     public UserDetailDto getUser(Long id) {
         Optional<User> userWrapper = mUserRepository.findById(id);
@@ -305,6 +328,19 @@ public class UserService extends OidcUserService {
         Optional<User> byId = mUserRepository.findById(id);
         byId.ifPresent(a->a.setUserType(type));
     }
+    
+    public UserDto createUser(String email, String name) {
+		UserDto userDto = new UserDto();
+		userDto.setSocialId(email);
+		userDto.setName(name);
+		
+		updateUser(userDto);
+		
+		User user = mUserRepository.findBySocialId(email);
+		
+		return convertEntityToDto(user);
+		
+	}
 
     public List<UserDetailDto> findUsers(String keyword) {
 		List<User> users = mUserRepository.findAllByNameContaining(keyword);

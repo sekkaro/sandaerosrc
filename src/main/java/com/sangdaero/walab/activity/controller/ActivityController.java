@@ -126,7 +126,7 @@ public class ActivityController {
 	@PostMapping("/activityForm") 
 	public String setActivityForm(@RequestParam(value = "requestId", required = false) Long requestId, 
 			String title, Long interestCategoryId, @RequestParam(value="userId", required=false) List<Long> userIdList, 
-			Byte delivery,  @RequestParam(value = "userStatus", required = false) List<Byte> userStatusList, 
+			Byte delivery,  /*@RequestParam(value = "userStatus", required = false) List<Byte> userStatusList,*/ 
 			@RequestParam(value = "volunteerStatus", required = false) List<Byte> volunteerStatusList, Long managerId, 
 			@RequestParam(value = "startDate", required = false) String startDate, 
 			@RequestParam(value = "startTime", required = false)String startTime, 
@@ -134,7 +134,7 @@ public class ActivityController {
 			String content, @RequestParam(value="volunteerId", required=false) List<Long> volunteerIdList,
 			@RequestParam(value="files", required=false) MultipartFile[] files) {
 		
-		mActivityService.saveActivity(title,interestCategoryId, userIdList, userStatusList, delivery, managerId, startDate, startTime, endDate, endTime, place, deadlineDate, deadlineTime, content, volunteerIdList, volunteerStatusList, files, requestId);
+		mActivityService.saveActivity(title,interestCategoryId, userIdList, /*userStatusList,*/ delivery, managerId, startDate, startTime, endDate, endTime, place, deadlineDate, deadlineTime, content, volunteerIdList, volunteerStatusList, files, requestId);
 			
 		return "redirect:/activity";
 	}

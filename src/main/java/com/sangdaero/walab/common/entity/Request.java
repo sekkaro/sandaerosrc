@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "request")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Request extends TimeEntity {
 	
 	@Id 

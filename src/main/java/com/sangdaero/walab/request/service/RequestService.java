@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.request.dto.RequestDto;
+import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
+import com.sangdaero.walab.common.entity.EventEntity;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.Request;
+import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.common.entity.UserEventMapper;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
+import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 
 @Service
@@ -24,17 +28,20 @@ public class RequestService {
 	private RequestRepository mRequestRepository;
 	private InterestRepository mInterestRepository;
 	private UserRepository mUserRepository;
+	private ActivityRepository mActivityRepository;
 	private UserEventMapperRepository mUserEventMapperRepository;
 	private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
     private static final int PAGE_POSTCOUNT = 3;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public RequestService(RequestRepository requestRepository, InterestRepository interestRepository, 
-			UserRepository userRepository, UserEventMapperRepository userEventMapperRepository) {
+			UserRepository userRepository, UserEventMapperRepository userEventMapperRepository,
+			ActivityRepository activityRepository) {
 		mRequestRepository = requestRepository;
 		mInterestRepository = interestRepository;
 		mUserRepository = userRepository;
 		mUserEventMapperRepository = userEventMapperRepository;
+		mActivityRepository = activityRepository;
 	}
 	
 	// getRequestlist -> convertEntitytoDto
@@ -139,6 +146,23 @@ public class RequestService {
 		return request.getEvent().getId();
 	}
     
+    public void createRequest(Long eventId, Long interestCategoryId, UserDto userDto) {
+		Request request = new Request();
+		
+		User client = mUserRepository.findById(userDto.getId()).orElse(null);
+		EventEntity event = (eventId != null)?mActivityRepository.findById(eventId).orElse(null):null;
+		InterestCategory interestCategory = (eventId != null)?event.getInterestCategory():mInterestRepository.findById(interestCategoryId).orElse(null);
+		
+		request.setClient(client);
+		request.setEvent(event);
+		request.setInterestCategory(interestCategory);
+		request.setStatus((byte)0);
+		request.setTitle((eventId!=null)?userDto.getName() + "님이 " + event.getTitle() + "을/를 봉사자로 참여하기 원하십니다":userDto.getName() + "님이 새로운 활동으로 봉사를 하기 원하십니다");
+		
+		mRequestRepository.save(request);
+		
+	}
+    
  // Request -> RequestDto conversion
  		private RequestDto convertRequestToDto(Request request) {
  			
@@ -156,6 +180,7 @@ public class RequestService {
  			return requestDto;
  			
  		}
+		
 
 		
 

@@ -1,5 +1,6 @@
 package com.sangdaero.walab.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sangdaero.walab.common.entity.UserInterest;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class InterestCategory extends TimeEntity {
     private Byte on_off;
 
     @OneToMany(mappedBy = "interest")
+    @JsonIgnore
     private List<UserInterest> userInterestList = new ArrayList<>();
 
     @Builder
