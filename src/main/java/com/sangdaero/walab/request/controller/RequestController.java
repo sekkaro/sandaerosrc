@@ -66,6 +66,7 @@ public class RequestController {
 		model.addAttribute("managers", managerList);
 		model.addAttribute("users", userList);
 		model.addAttribute("permittedVolunteer", requestDto.getClient());
+		model.addAttribute("productImage", requestDto.getProductImage());
 		
 		return "html/activity/activityForm.html";
 	}

@@ -51,6 +51,7 @@
 							<th scope="col">신청자</th>
 							<th scope="col">요청 날짜</th>
 							<th scope="col">상태</th>
+							<th scope="col">이미지 첨부</th>
 						</tr>
 					</thead>
 
@@ -72,6 +73,13 @@
 							<td><span th:if="${request.status == 0}">대기</span> <span
 								th:if="${request.status == 1}">등록</span><span
 								th:if="${request.status == 2}">거절</span></td>
+							<td>
+								<span th:if="${request.productImage == null}">--</span>
+								<a th:if="${request.productImage}" data-fancybox th:data-src="${'#image' + request.id}" href="javascript:;">사진 보기</a>
+								<div th:if="${request.productImage}" style="display: none;" th:id="${'image' + request.id}">
+									<img alt="image" th:src="@{${'/images/' + request.productImage}}" width="250" height="250">
+								</div>
+							</td>
 							<td th:if="${request.status == 0} and ${request.event == null}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/register/' + ${request.id}}">활동 등록</a></td>
 							<td th:if="${request.status == 0} and ${request.event}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/permit/' + ${request.id}}">승인</a></td>
 							<td th:if="${request.status == 0}"><button type="button" th:data-requestId="${request.id}" class="btn btn-outline-danger btn-sm" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">거절</button></td>

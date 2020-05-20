@@ -117,7 +117,9 @@
 						<label for="through">봉사사 통해 전달</label>
 					</div>
 					<div class="col-md-6">
-						<input type="file" name="files" multiple>
+						<input th:if="${productImage == null}" type="file" name="files" multiple>
+						<img th:if="${productImage}" alt="image" th:src="@{${'/images/' + productImage}}" width="250" height="250">
+						<input th:if="${productImage}" type="text" style="display:none;" name="file" th:value="${productImage}" >
 					</div>
 <!--					<input type="radio" id="direct" name="delivery" value="0" checked>-->
 <!--					<label for="direct">직접 수령</label> <input type="radio" id="through"-->
@@ -145,7 +147,8 @@
 			var clickedVolunteers = [];
 			var userStatusList = [];
 			var permittedVolunteer =/*[[${permittedVolunteer}]]*/'none';
-
+			var productImage =/*[[${productImage}]]*/'none';
+			
 			function execPostcode() {
 				new daum.Postcode({
 					oncomplete: function(data) {
@@ -732,6 +735,16 @@
 				 
 			});
 			
+			if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
+				$('.deliveryGroup').show();
+			}
+			else{
+				$('.deliveryGroup').hide();
+			}
+			
+			if(productImage!=null){
+				
+			}
 			
 			$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
 			

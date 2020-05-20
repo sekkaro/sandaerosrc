@@ -29,7 +29,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
         .authorizeRequests(a -> a
-        		.antMatchers("/","/error").permitAll()
+        		.antMatchers("/","/error","/requestdata/**").permitAll()
         		.anyRequest().authenticated()
         )
         .logout(l -> l
