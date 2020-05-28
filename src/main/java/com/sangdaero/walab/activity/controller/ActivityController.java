@@ -141,9 +141,9 @@ public class ActivityController {
 			@RequestParam(value = "startTime", required = false)String startTime, 
 			String endDate, String endTime, String place, String deadlineDate, String deadlineTime, 
 			String content, @RequestParam(value="volunteerId", required=false) List<Long> volunteerIdList,
-		    @RequestParam(value="files", required=false) MultipartFile[] files,
-		    @RequestParam(value="file", required=false) String requestFileName) {
-
+			@RequestParam(value="files", required=false) MultipartFile[] files,
+			@RequestParam(value="file", required=false) String requestFileName) {
+    
 		mActivityService.saveActivity(title,interestCategoryId, userIdList, /*userStatusList,*/ delivery, managerId, startDate, startTime, endDate, endTime, place, deadlineDate, deadlineTime, content, volunteerIdList, volunteerStatusList, files, requestId, requestFileName);
 			
 		return "redirect:/activity";

@@ -15,15 +15,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
 import com.sangdaero.walab.common.entity.EventEntity;
+import com.sangdaero.walab.common.entity.FileEntity;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.Request;
 import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.common.entity.UserEventMapper;
+import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.user.application.dto.UserDto;
@@ -155,7 +158,7 @@ public class RequestService {
     	
 		return request.getEvent().getId();
 	}
-
+  
 	public void createRequest(Long eventId, Long interestCategoryId, UserDto userDto, MultipartFile multipartFile) {
 		Request request = new Request();
 		
@@ -185,7 +188,6 @@ public class RequestService {
 
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("hello");
 			}
 		}
 		else {
