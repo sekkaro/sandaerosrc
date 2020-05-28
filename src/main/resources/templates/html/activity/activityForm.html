@@ -148,7 +148,7 @@
 			var userStatusList = [];
 			var permittedVolunteer =/*[[${permittedVolunteer}]]*/'none';
 			var productImage =/*[[${productImage}]]*/'none';
-
+			
 			function execPostcode() {
 				new daum.Postcode({
 					oncomplete: function(data) {
@@ -403,121 +403,6 @@
 			}
 			
 			
-			/*$('input#searchUsers').on('input', function(){
-				var keyword = $('#searchUsers').val();
-				
-				$.get("/activitydata/getUsers", {keyword: keyword}, function(data) {
-					var innerHtml = "";
-					var innerPage = "";
-					var pages = 0;
-					users = data;
-					
-					try{
-						if(data!=null && data.length>0){
-							var count = 0;
-							data.forEach(function(item){
-								if(pages<1){
-									innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";									
-								}
-								else{
-									innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";							
-								}
-								
-								if(clickedVolunteers.indexOf(item.id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-								}
-								else{
-									innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-								}
-								
-								count++;
-								
-								if(count == usersPerPage){
-									pages++;
-									count = 0;
-								}
-							})
-							
-							numOfPages = pages;
-							
-							for(var i = 0; i < pages ; i++){
-								innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
-							}
-						}
-						else{
-							innerHtml = "그 이름의 이용자를 찾지 못했습니다";
-						}
-					}
-					finally{
-						$('#users').html(innerHtml);
-						$('#pagingUsers').html(innerPage);
-						
-						addEventListenersToUsers();
-						addEventListenersToUserPagingButtons();
-					}
-					
-        		});
-				
-			})
-			
-			$('input#searchVolunteers').on('input', function(){
-				var keyword = $('#searchVolunteers').val();
-				
-				$.get("/activitydata/getUsers", {keyword: keyword}, function(data) {
-					var innerHtml = "";
-					var innerPage = "";
-					var pages = 0;
-					volunteers = data;
-					
-					try{
-						if(data!=null && data.length>0){
-							var count = 0;
-							data.forEach(function(item){
-								if(pages<1){
-									innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";									
-								}
-								else{
-									innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";							
-								}
-								
-								if(clickedUsers.indexOf(item.id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-								}
-								else{
-									innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-								}
-								
-								count++;
-								
-								if(count == usersPerPage){
-									pages++;
-									count = 0;
-								}
-							})
-							
-							numOfPagesVolunteers = pages;
-							
-							for(var i = 0; i < pages ; i++){
-								innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
-							}
-						}
-						else{
-							innerHtml = "그 이름의 이용자를 찾지 못했습니다";
-						}
-					}
-					finally{
-						$('#volunteers').html(innerHtml);
-						$('#pagingVolunteers').html(innerPage);
-						
-						addEventListenersToVolunteers();
-						addEventListenersToVolunteerPagingButtons();
-					}
-					
-        		});
-				
-			})*/
-			
-			
 			function searchUsers(keyword){
 				var innerHtml = "";
 				var innerPage = "";
@@ -734,16 +619,16 @@
 				}
 				 
 			});
-
+			
 			if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 				$('.deliveryGroup').show();
 			}
 			else{
 				$('.deliveryGroup').hide();
 			}
-      
+			
 			if(productImage!=null){
-
+				
 			}
 			
 			$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});

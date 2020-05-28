@@ -29,9 +29,11 @@
 						<select onchange="this.form.submit()" name="status">
 							<option value="0">상태를 선택하세요</option>
 							<option th:selected="${status==1}" value="1">매칭 전</option>
-							<option th:selected="${status==2}" value="2">진행중</option>
+							<option th:selected="${status==2}" value="2">매칭중</option>
 							<option th:selected="${status==3}" value="3">매칭 완료</option>
-							<option th:selected="${status==4}" value="4">모집 마감</option>
+							<option th:selected="${status==4}" value="4">활동 진행 중</option>
+							<option th:selected="${status==5}" value="5">활동 완료</option>
+							<option th:selected="${status==6}" value="6">취소된 활동</option>
 						</select>
 						<select onchange="this.form.submit()" name="sort">
 							<option th:selected="${sort==1}" value="1">최신순</option>
@@ -77,9 +79,11 @@
 								th:text="${activity.interestCategory.name}"></span> <span
 								th:if="${activity.interestCategory==null}">-----</span></td>
 							<td><span th:if="${activity.status == 0}">매칭 전</span> <span
-								th:if="${activity.status == 1}">진행중</span><span
+								th:if="${activity.status == 1}">매칭 중</span><span
 								th:if="${activity.status == 2}">매칭 완료</span><span
-								th:if="${activity.status == 3}">모집 마감</span></td>
+								th:if="${activity.status == 3}">활동 진행 중</span><span
+								th:if="${activity.status == 4}">활동 완료</span><span
+								th:if="${activity.status == 5}">취소된 활동</span></td>
 							<td><span
 								th:text="${#temporals.format(activity.regDate, 'yyyy-MM-dd HH:mm')}"></span>
 							</td>

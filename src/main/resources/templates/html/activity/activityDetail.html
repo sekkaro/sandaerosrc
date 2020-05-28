@@ -17,6 +17,12 @@
 	</div>
 
 	<div class="container">
+		<div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+            <span id="mContent">메시지</span>
+            <button onclick="hideMessage()" type="button" class="close" aria-label="Close">
+            	<span aria-hidden="true">&times;</span>
+        	</button>
+    	</div>
 		<input type="hidden" id="activityId" th:value="${activityDto.id}" />
 
 		<div class="row">
@@ -29,14 +35,17 @@
 			</div>
 			<div class="col-md-7">
 					<p id="status" th:switch="${activityDto.status}" style="display:inline;">
-						<span th:case="'0'">매칭 전</span> <span th:case="'1'">진행중</span> <span
-							th:case="'2'">매칭 완료</span> <span th:case="'3'">모집 마감</span>
+						<span th:case="'0'">매칭 전</span> <span th:case="'1'">매칭 중</span> <span
+							th:case="'2'">매칭 완료</span> <span th:case="'3'">활동 진행 중</span><span
+							th:case="'4'">활동 완료</span> <span th:case="'5'">취소된 활동</span>
 					</p>
 					<select id="editStatus" style="display: none;">
 						<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
-						<option th:value="1" th:selected="${activityDto.status} == 1">진행중</option>
+						<option th:value="1" th:selected="${activityDto.status} == 1">매칭 중</option>
 						<option th:value="2" th:selected="${activityDto.status} == 2">매칭 완료</option>
-						<option th:value="3" th:selected="${activityDto.status} == 3">모집 마감</option>
+						<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
+						<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
+						<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
 					</select>
 <!--					<button id="editStatusButton">수정</button>-->
 <!--					<button id="cancelStatusButton" style="display: none;">취소</button>-->
@@ -76,7 +85,7 @@
 <!--				<button id="cancelDeadlineButton" style="display: none;">취소</button>-->
 			</div>
 			<div class="col-md-2">
-				<a href="#" id="editCategoryGroupBtn">편집</a>
+				<a th:if="${activityDto.status} == 0" href="#" id="editCategoryGroupBtn">편집</a>
 				<a href="#" id="cancelCategoryGroupBtn" style="display: none;">취소</a>
 			</div>
 		</div>
@@ -161,10 +170,10 @@
 								전화번호 공유 동의: <span th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></span><br>
 								위치 공유 동의: <span th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></span><br>
 								상태: <span th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
-								시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="250" height="300">
+								시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.startImage}}" width="250" height="300">
 									  	<span th:if="${activityVolunteer.startImage == null}">없음</span>
 									    <br>
-								끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="250" height="300">
+								끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.endImage}}" width="250" height="300">
 									  <span th:if="${activityVolunteer.endImage == null }">없음</span>
 							</div>
 						</td>
@@ -200,7 +209,7 @@
 				
 			</div>
 			<div class="col-md-2">
-				<a  href="#" id="editUserGroupBtn">편집</a>
+				<a th:if="${activityDto.status} <= 1" href="#" id="editUserGroupBtn">편집</a>
 				<a  href="#" id="cancelUserGroupBtn" style="display: none;">취소</a>
 			</div>
 		</div>
@@ -302,8 +311,8 @@
 		</a> -->
 
 		<script th:inline="javascript">
-
-			var origin_place = document.getElementById('original_place').value;
+		
+			/*var origin_place = document.getElementById('original_place').value;
 
 			var mapContainer = document.getElementById('kakaomap'), // 지도를 표시할 div
 					mapOption = {
@@ -378,35 +387,12 @@
 						});
 					}
 				}).open();
-			}
-
-
-			/*$('#editTitleButton').click(function() {
-    		
-    		$('#editTitleField').toggle();
-    		
-    		$('#titleText').toggle();
-    		
-    		$('#cancelTitleButton').toggle();
-    		
-    		if($('#editTitleButton').html() == '수정'){
-    			$('#editTitleButton').html('완료');
-    		}
-    		else{
-    			$('#editTitleButton').html('수정');
-    			$.post("/activitydata/setTitle", {id: $('#activityId').val(), title: $('#editTitleField').val()}, function(data) {
-    				$('#titleText').html(data);
-            	});	
-    		}
-    	}) 
+			}*/
+			
     	
-    	$('#cancelTitleButton').click(function(){
-			$('#editTitleField').toggle();
-			$('#editTitleField').val($('#titleText').html());
-    		$('#titleText').toggle();
-    		$('#cancelTitleButton').toggle();
-    		$('#editTitleButton').html('수정');
-    	})*/
+    	function hideMessage() {
+            $('#message').hide();
+        }
     	
 		var statusValue;
     	
@@ -428,22 +414,73 @@
     			$('#editTitleGroupBtn').html('완료');
     		}
     		else{
-    			$('#editTitleGroupBtn').html('편집');
-    			$.post("/activitydata/setTitleAndStatus", {id: $('#activityId').val(), title: $('#editTitleField').val(), status: statusValue}, function(data) {
-    				var arr = data.split("|");
-    				$('#titleText').html(arr[0]);
-    				var status;
-    				switch(Number(arr[1])){
-    					case 0: status = "매칭 전";
-    					break;
-    					case 1: status = "진행중";
-    					break;
-    					case 2: status = "매칭 완료";
-    					break;
-    					case 3: status = "모집 마감";
-    				}
-    				$('#status').html(status);
-            	});	
+    			if($('#editTitleField').val().length == 0){
+    				
+    				$('#editTitleField').toggle();
+    	    		
+    	    		$('#titleText').toggle();
+    	    		
+    	    		$('#editStatus').toggle();
+    	    		
+    	    		$('#status').toggle();
+    	    		
+    	    		$('#cancelTitleGroupBtn').toggle();
+    				
+        			$('#message').removeClass("alert-info");
+        			$('#message').addClass("alert-danger");
+        			$('#mContent').html("제목은 1글자 이상이어야 합니다");
+                    $('#message').show();
+
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+                 	
+        		}
+    			else{
+    				$('#editTitleGroupBtn').html('편집');
+        			$.post("/activitydata/setTitleAndStatus", {id: $('#activityId').val(), title: $('#editTitleField').val(), status: statusValue}, function(data) {
+        				var arr = data.split("|");
+        				$('#titleText').html(arr[0]);
+        				var status;
+        				switch(Number(arr[1])){
+        					case 0: status = "매칭 전";
+        					$('#editCategoryGroupBtn').show();
+        					$('#editUserGroupBtn').show();
+        					break;
+        					case 1: status = "매칭 중";
+        					$('#editCategoryGroupBtn').hide();
+        					$('#editUserGroupBtn').show();
+        					break;
+        					case 2: status = "매칭 완료";
+        					$('#editCategoryGroupBtn').hide();
+        					$('#editUserGroupBtn').hide();
+        					break;
+        					case 3: status = "활동 진행 중";
+        					$('#editCategoryGroupBtn').hide();
+        					$('#editUserGroupBtn').hide();
+        					break;
+        					case 4: status = "활동 완료";
+        					$('#editCategoryGroupBtn').hide();
+        					$('#editUserGroupBtn').hide();
+        					break;
+        					case 5: status = "취소된 활동";
+        					$('#editCategoryGroupBtn').hide();
+        					$('#editUserGroupBtn').hide();
+        				}
+        				$('#status').html(status);
+        				
+        				$('#message').removeClass("alert-danger");
+            			$('#message').addClass("alert-info");
+        				$('#mContent').html("제목과 상태를 수정하였습니다.");
+                        $('#message').show();
+
+                        setTimeout(function() {
+                            hideMessage();
+                        }, 2000);
+                        
+                	});	
+    			}
+    			
     		}
     	})
     	
@@ -459,36 +496,6 @@
     		$('#editTitleGroupBtn').html('편집');
     	})
     	
-    	/*var categoryValue;
-    	
-    	$('#editCategoryButton').click(function() {
-    		
-    		categoryValue = $('#editCategory').val();
-    		
-    		$('#editCategory').toggle();
-    		
-    		$('#category').toggle();
-    		
-    		$('#cancelCategoryButton').toggle();
-    		
-    		if($('#editCategoryButton').html() == '수정'){
-    			$('#editCategoryButton').html('완료');
-    		}
-    		else{
-    			$('#editCategoryButton').html('수정');
-    			$.post("/activitydata/setCategory", {id: $('#activityId').val(), category: categoryValue}, function(data) {
-    					$('#category').html(data);
-            	});	
-    		}
-    	}) 
-    	
-    	$('#cancelCategoryButton').click(function(){
-			$('#editCategory').toggle();
-			$('#editCategory').val(categoryValue);
-    		$('#category').toggle();
-    		$('#cancelCategoryButton').toggle();
-    		$('#editCategoryButton').html('수정');
-    	})*/
     	
     	var categoryValue;
     	var deadlineDate;
@@ -515,18 +522,59 @@
     			$('#editCategoryGroupBtn').html('완료');
     		}
     		else{
-    			$('#editCategoryGroupBtn').html('편집');
-    			$.post("/activitydata/setCategoryAndDeadline", 
-    				{ id: $('#activityId').val(), 
-    				  category: categoryValue,
-    				  deadlineDate: deadlineDate, 
-    				  deadlineTime: deadlineTime
-    				}, 
-    				function(data) {
-    					var arr = data.split(".");
-    					$('#category').html(arr[0]);
-    					$('#deadline').text((arr[1] === "" || arr[2] === "")?"마감시간 없음":arr[1] + " " + arr[2]);
-            	});	
+    			
+    			if(categoryValue == 0 || deadlineDate == "" || deadlineTime == ""){
+    				$('#editCategory').toggle();
+    	    		
+    	    		$('#category').toggle();
+    	    		
+    	    		$('#editDeadline').toggle();
+    	    		
+    	    		$('#deadline').toggle();
+    	    		
+    	    		$('#cancelCategoryGroupBtn').toggle();
+    	    		
+    	    		$('#message').removeClass("alert-info");
+        			$('#message').addClass("alert-danger");
+        			if(categoryValue == 0){
+        				$('#mContent').html("지정한 카테고리는 없는 카테고리입니다");
+        			}
+        			else if(deadlineDate == ""){
+        				$('#mContent').html("마감 날짜가 입력되지 않았습니다");
+        			}
+        			else{
+        				$('#mContent').html("마감 시간이 입력되지 않았습니다");
+        			}
+                    $('#message').show();
+
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+    			}
+    			else{
+    				$('#editCategoryGroupBtn').html('편집');
+        			$.post("/activitydata/setCategoryAndDeadline", 
+        				{ id: $('#activityId').val(), 
+        				  category: categoryValue,
+        				  deadlineDate: deadlineDate, 
+        				  deadlineTime: deadlineTime
+        				}, 
+        				function(data) {
+        					var arr = data.split(".");
+        					$('#category').html(arr[0]);
+        					$('#deadline').text((arr[1] === "" || arr[2] === "")?"마감시간 없음":arr[1] + " " + arr[2]);
+        					
+        					$('#message').removeClass("alert-danger");
+                			$('#message').addClass("alert-info");
+        					$('#mContent').html("카테고리와 마감 기한을 수정하였습니다.");
+                            $('#message').show();
+
+                            setTimeout(function() {
+                                hideMessage();
+                            }, 2000);
+                	});
+    			}
+    				
     		}
     	})
     	
@@ -554,46 +602,6 @@
     		$('#editCategoryGroupBtn').html('편집');
     	})
     	
-    	/*var statusValue;
-    	
-    	$('#editStatusButton').click(function() {
-    		
-    		statusValue = $('#editStatus').val();
-    		
-    		$('#editStatus').toggle();
-    		
-    		$('#status').toggle();
-    		
-    		$('#cancelStatusButton').toggle();
-    		
-    		if($('#editStatusButton').html() == '수정'){
-    			$('#editStatusButton').html('완료');
-    		}
-    		else{
-    			$('#editStatusButton').html('수정');
-    			$.post("/activitydata/setStatus", {id: $('#activityId').val(), status: statusValue}, function(data) {
-    				var status;
-    				switch(data){
-    					case 0: status = "매칭 전";
-    					break;
-    					case 1: status = "진행중";
-    					break;
-    					case 2: status = "매칭 완료";
-    					break;
-    					case 3: status = "모집 마감";
-    				}
-    				$('#status').html(status);
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelStatusButton').click(function(){
-			$('#editStatus').toggle();
-			$('#editStatus').val(statusValue);
-    		$('#status').toggle();
-    		$('#cancelStatusButton').toggle();
-    		$('#editStatusButton').html('수정');
-    	})*/
     	
     	const usersPerPage = 4;
 		var numOfPages = 0;
@@ -1061,181 +1069,6 @@
 		
 		$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
     	
-    	/*$('#editUsersButton').click(function() {
-    		
-    		$('#editUsers').toggle();
-    		
-    		$('#userList').toggle();
-    		
-    		$('#cancelUsersButton').toggle();
-    		
-    		if($('#editUsersButton').html() == '수정'){
-    			$('#editUsersButton').html('완료');
-    		}
-    		else{
-    			$('#editUsersButton').html('수정');
-    			
-    			$.post("/activitydata/setUsers", {id: $('#activityId').val(), users: clickedUsers}, function(data) {
-    				var innerHtml = "";
-    				try{
-    					if(data.length > 0){
-    						innerHtml = "<tr><th>이름</th><th>전화번호</th><th>전화번호 공유 동의</th><th>위치 공유 동의</th><th>상태</th></tr>";
-    						data.forEach(function(item){
-    							var phoneAgree = (item.phoneAgree==0)?"X":"O";
-    							var locationAgree = (item.locationAgree==0)?"X":"O";
-    							var status = "";
-    							switch(item.status){
-    								case 0: status ="대기";
-    								break;
-    								case 1: status ="승인";
-    								break;
-    								case 2: status ="거절";
-    							}
-        						innerHtml += "<tr><td>" + item.user.name + "</td><td>" + item.user.phone + "</td><td class='text-center'>" + phoneAgree + "</td><td class='text-center'>" + locationAgree + "</td><td>" + status +  "</td></tr>";
-        					})
-    					}
-    					else{
-    						innerHtml = "이용자 없음";
-    					}
-    				}
-    				finally{
-    					$('#userList').html(innerHtml);	
-    					userList = clickedUsers;
-    				}
-    				
-            	});
-    		}
-    	})
-    	
-    	$('#cancelUsersButton').click(function(){
-			$('#editUsers').toggle();
-			if(userList.length != 0){
-				userList.forEach(function(item){
-					$('#editUsers ul li input[value="'+ item +'"]').prop('checked', true);
-					$('#editVolunteers ul li input[value="'+ item +'"]').prop('disabled', true);
-				})
-			}
-			else{
-				$('#editUsers ul li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
-						$('#editVolunteers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
-			}
-    		$('#userList').toggle();
-    		$('#cancelUsersButton').toggle();
-    		$('#editUsersButton').html('수정');
-    		$('#users').html("");
-    		$('#searchUsers').val("");
-    		$('#pagingUsers').html("");
-    		clickedUsers = userList;
-    	})
-    	
-    	$('#editVolunteersButton').click(function() {
-    		
-    		$('#editVolunteers').toggle();
-    		
-    		$('#volunteerList').toggle();
-    		
-    		$('#cancelVolunteersButton').toggle();
-    		
-    		if($('#editVolunteersButton').html() == '수정'){
-    			$('#editVolunteersButton').html('완료');
-    		}
-    		else{
-    			$('#editVolunteersButton').html('수정');
-    			$.post("/activitydata/setVolunteers", {id: $('#activityId').val(), volunteers: clickedVolunteers}, function(data) {
-    				var innerHtml = "";
-    				try{
-    					if(data.length > 0){
-    						innerHtml = "<tr><th>이름</th><th>전화번호</th><th>전화번호 공유 동의</th><th>위치 공유 동의</th><th>상태</th></tr>";
-    						data.forEach(function(item){
-    							var phoneAgree = (item.phoneAgree==0)?"X":"O";
-    							var locationAgree = (item.locationAgree==0)?"X":"O";
-    							var status = "";
-    							switch(item.status){
-    								case 0: status ="대기";
-    								break;
-    								case 1: status ="승인";
-    								break;
-    								case 2: status ="거절";
-    							}
-    							innerHtml += "<tr><td>" + item.user.name + "</td><td>" + item.user.phone + "</td><td class='text-center'>" + phoneAgree + "</td><td class='text-center'>" + locationAgree + "</td><td>" + status +  "</td></tr>";
-        					})
-    					}
-    					else{
-    						innerHtml = "봉사자 없음";
-    					}
-    				}
-    				finally{
-    					$('#volunteerList').html(innerHtml);
-    					volunteerList = clickedVolunteers;
-    				}
-    				
-            	});
-    		}
-    	})
-    	
-    	$('#cancelVolunteersButton').click(function(){
-			$('#editVolunteers').toggle();
-			if(volunteerList.length != 0){
-				volunteerList.forEach(function(item){
-					$('#editVolunteers ul li input[value="'+ item +'"]').prop('checked', true);
-					$('#editUsers ul li input[value="'+ item +'"]').prop('disabled', true);
-				})
-			}
-			else{
-				$('#editVolunteers ul li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
-						$('#editUsers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
-			}
-			
-    		$('#volunteerList').toggle();
-    		$('#cancelVolunteersButton').toggle();
-    		$('#editVolunteersButton').html('수정');
-    		$('#volunteers').html("");
-    		$('#searchVolunteers').val("");
-    		$('#pagingVolunteers').html("");
-    		clickedVolunteers = volunteerList;
-    	})
-    	
-    	var managerValue;
-    	
-    	$('#editManagerButton').click(function() {
-    		
-    		managerValue = $('#editManager').val();
-    		
-    		$('#editManager').toggle();
-    		
-    		$('#manager').toggle();
-    		
-    		$('#cancelManagerButton').toggle();
-    		
-    		if($('#editManagerButton').html() == '수정'){
-    			$('#editManagerButton').html('완료');
-    		}
-    		else{
-    			$('#editManagerButton').html('수정');
-    			$.post("/activitydata/setManager", {id: $('#activityId').val(), manager: managerValue}, function(data) {
-    				$('#manager').text(data);
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelManagerButton').click(function(){
-			$('#editManager').toggle();
-			$('#editManager').val(managerValue);
-    		$('#manager').toggle();
-    		$('#cancelManagerButton').toggle();
-    		$('#editManagerButton').html('수정');
-    	})
-    	
-    	*/
-    	
 		$('#editUserGroupBtn').click(function() {
 			
     		//var userStatusList = [];
@@ -1358,6 +1191,15 @@
     					volunteerList = clickedVolunteers;
     					$('#manager').text(data.managerName);
     					getUsers(false, $('#editCategory').val());
+    					
+    					$('#message').removeClass("alert-danger");
+            			$('#message').addClass("alert-info");
+    					$('#mContent').html("담당 인원을 수정하였습니다.");
+                        $('#message').show();
+
+                        setTimeout(function() {
+                            hideMessage();
+                        }, 2000);
     				}
             	});	
     		}
@@ -1417,240 +1259,6 @@
     		$('#editUserGroupBtn').html('편집');
     	})
     	
-    	/*var deliveryValue;
-    	
-    	$('#editDeliveryButton').click(function() {
-    		
-    		deliveryValue = $('input[name="delivery"]:checked').val();
-    		
-    		$('#editDelivery').toggle();
-    		
-    		$('#delivery').toggle();
-    		
-    		$('#cancelDeliveryButton').toggle();
-    		
-    		if($('#editDeliveryButton').html() == '수정'){
-    			$('#editDeliveryButton').html('완료');
-    		}
-    		else{
-    			$('#editDeliveryButton').html('수정');
-    			$.post("/activitydata/setDelivery", {id: $('#activityId').val(), delivery: deliveryValue}, function(data) {
-    				if(data == 0){
-    					$('#delivery').text("직접 수령");
-    				}
-    				else{
-    					$('#delivery').text("봉사자 통해 전달");	
-    				}
-    				
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelDeliveryButton').click(function(){
-			$('#editDelivery').toggle();
-			$('#editDelivery input[value="'+ deliveryValue +'"]').prop('checked', true);
-    		$('#delivery').toggle();
-    		$('#cancelDeliveryButton').toggle();
-    		$('#editDeliveryButton').html('수정');
-    	})*/
-    	
-    	/*var phoneAgreeValue;
-    	
-    	$('#editPhoneAgreeButton').click(function() {
-    		
-    		phoneAgreeValue = $('input[name="phoneAgree"]:checked').val();
-    		
-    		$('#editPhoneAgree').toggle();
-    		
-    		$('#phoneAgree').toggle();
-    		
-    		$('#cancelPhoneAgreeButton').toggle();
-    		
-    		if($('#editPhoneAgreeButton').html() == '수정'){
-    			$('#editPhoneAgreeButton').html('완료');
-    		}
-    		else{
-    			$('#editPhoneAgreeButton').html('수정');
-    			$.post("/activitydata/setPhoneAgree", {id: $('#activityId').val(), phoneAgree: phoneAgreeValue}, function(data) {
-    				if(data == ""){
-    					$('#phoneAgree').text("X");
-    				}
-    				else{
-    					$('#phoneAgree').text("O");	
-    				}
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelPhoneAgreeButton').click(function(){
-			$('#editPhoneAgree').toggle();
-			if(phoneAgreeValue==null){
-				$('input[name="phoneAgree"]').prop('checked', false);
-			}
-			else{
-				$('input[name="phoneAgree"]').prop('checked', true);
-			}
-    		$('#phoneAgree').toggle();
-    		$('#cancelPhoneAgreeButton').toggle();
-    		$('#editPhoneAgreeButton').html('수정');
-    	})
-    	*/
-    	
-    	/*var startDate;
-    	var startTime;
-    	var endDate;
-    	var endTime;
-    	
-    	$('#editVolunteerTimeButton').click(function() {
-    		
-    		startDate = $('input[name="startDate"]').val();
-			startTime = $('input[name="startTime"]').val();
-			endDate = $('input[name="endDate"]').val();
-			endTime = $('input[name="endTime"]').val();
-    		
-    		$('#editVolunteerTime').toggle();
-    		
-    		$('#volunteerTime').toggle();
-    		
-    		$('#cancelVolunteerTimeButton').toggle();
-    		
-    		if($('#editVolunteerTimeButton').html() == '수정'){
-    			$('#editVolunteerTimeButton').html('완료');
-    		}
-    		else{
-    			$('#editVolunteerTimeButton').html('수정');
-    			$.post("/activitydata/setVolunteerTime", 
-    				{ id: $('#activityId').val(), 
-    				  startDate: startDate, 
-    				  startTime: startTime,
-    				  endDate: endDate,
-    				  endTime: endTime
-    				}, 
-    				function(data) {
-    					var arr = data.split(".");
-    					var start = (arr[0] === "" || arr[1] === "")?"시작 시간 없음":arr[0] + " " + arr[1];
-    					var end = (arr[2] === "" || arr[3] === "")?"끝 시간 없음":arr[2] + " " + arr[3];
-    					$('#volunteerTime').text(start + " ~ " + end);
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelVolunteerTimeButton').click(function(){
-			$('#editVolunteerTime').toggle();
-			var volunteerTimeText = $('#volunteerTime').text();
-			
-			if(volunteerTimeText.includes("시작 시간 없음") && volunteerTimeText.includes("끝 시간 없음")){
-				$('input[name="startDate"]').val("");
-				$('input[name="startTime"]').val("");
-				$('input[name="endDate"]').val("");
-				$('input[name="endTime"]').val("");
-			}
-			else if(volunteerTimeText.includes("시작 시간 없음")){
-				$('input[name="startDate"]').val("");
-				$('input[name="startTime"]').val("");
-				$('input[name="endDate"]').val(endDate);
-				$('input[name="endTime"]').val(endTime);
-			}
-			else if(volunteerTimeText.includes("끝 시간 없음")){
-				$('input[name="startDate"]').val(startDate);
-				$('input[name="startTime"]').val(startTime);
-				$('input[name="endDate"]').val("");
-				$('input[name="endTime"]').val("");
-			}
-			else{
-				$('input[name="startDate"]').val(startDate);
-				$('input[name="startTime"]').val(startTime);
-				$('input[name="endDate"]').val(endDate);
-				$('input[name="endTime"]').val(endTime);
-			}
-			
-    		$('#volunteerTime').toggle();
-    		$('#cancelVolunteerTimeButton').toggle();
-    		$('#editVolunteerTimeButton').html('수정');
-    	})
-    	
-    	$('#editPlaceButton').click(function() {
-    		
-    		$('#editPlace').toggle();
-    		
-    		$('#place').toggle();
-    		
-    		$('#cancelPlaceButton').toggle();
-    		
-    		if($('#editPlaceButton').html() == '수정'){
-    			$('#editPlaceButton').html('완료');
-    		} else{
-    			$('#editPlaceButton').html('수정');
-
-    			$.post("/activitydata/setPlace", {
-    				id: $('#activityId').val(),
-					place: $('#address').val()
-				}, function(data) {
-    				if(data !== ""){
-    					$('#place').text(data);
-    				}
-    				else{
-    					$('#place').text("장소 없음");
-    				}
-
-            	});
-				var y = document.getElementById("coordi_y").value;
-				var x = document.getElementById("coordi_x").value;
-    			changeMap(y, x);
-    		}
-    	})
-    	
-    	$('#cancelPlaceButton').click(function(){
-			$('#editPlace').toggle();
-			var placeText = $('#place').text();
-			if(placeText == "장소 없음"){
-				$('#editPlace').val("");
-			}
-			else{
-				$('#editPlace').val($('#place').text());
-			}
-    		$('#place').toggle();
-    		$('#cancelPlaceButton').toggle();
-    		$('#editPlaceButton').html('수정');
-    	})
-    	
-    	$('#editContentButton').click(function() {
-    		
-    		$('#editContent').toggle();
-    		
-    		$('#content').toggle();
-    		
-    		$('#cancelContentButton').toggle();
-    		
-    		if($('#editContentButton').html() == '수정'){
-    			$('#editContentButton').html('완료');
-    		}
-    		else{
-    			$('#editContentButton').html('수정');
-    			$.post("/activitydata/setContent", {id: $('#activityId').val(), content: $('#editContent').val()}, function(data) {
-    				if(data !== ""){
-    					$('#content').text(data);
-    				}
-    				else{
-    					$('#content').text("세부내용 없음");
-    				}
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelContentButton').click(function(){
-			$('#editContent').toggle();
-			var contentText = $('#content').text();
-			if(contentText == "세부내용 없음"){
-				$('#editContent').val("");
-			}
-			else{
-				$('#editContent').val($('#content').text());
-			}
-    		$('#content').toggle();
-    		$('#cancelContentButton').toggle();
-    		$('#editContentButton').html('수정');
-    	})*/
     	
     	var startDate;
     	var startTime;
@@ -1682,38 +1290,90 @@
     			$('#editActivityGroupBtn').html('완료');
     		}
     		else{
-    			$('#editActivityGroupBtn').html('편집');
-    			$.post("/activitydata/setVolunteerTimeAndPlaceAndContent", 
-    				{ id: $('#activityId').val(), 
-    				  startDate: startDate, 
-    				  startTime: startTime,
-    				  endDate: endDate,
-    				  endTime: endTime,
-    				  place: $('#address').val(),
-    				  content: $('#editContent').val()
-    				}, 
-    				function(data) {
-    					var arr = data.split("|");
-    					if(arr[0] !== ""){
-        					$('#place').text(arr[0]);
-        				}
-        				else{
-        					$('#place').text("장소 없음");
-        				}
-    					if(arr[1] !== ""){
-        					$('#content').text(arr[1]);
-        				}
-        				else{
-        					$('#content').text("세부내용 없음");
-        				}
-    					
-    					var start = (arr[2] === "" || arr[3] === "")?"시작 시간 없음":arr[2] + " " + arr[3];
-    					var end = (arr[4] === "" || arr[5] === "")?"끝 시간 없음":arr[4] + " " + arr[5];
-    					$('#volunteerTime').text(start + " ~ " + end);
-            	});	
-    			var y = document.getElementById("coordi_y").value;
-				var x = document.getElementById("coordi_x").value;
-    			changeMap(y, x);
+    			if(startDate == "" || startTime == "" || endDate == "" || endTime == "" || $('#address').val().length == 0){
+    				
+    				$('#editVolunteerTime').toggle();
+    	    		
+    	    		$('#volunteerTime').toggle();
+    	    		
+    				$('#editPlace').toggle();
+    	    		
+    	    		$('#place').toggle();
+    	    		
+    				$('#editContent').toggle();
+    	    		
+    	    		$('#content').toggle();
+    	    		
+    	    		$('#cancelActivityGroupBtn').toggle();
+    	    		
+    	    		$('#message').removeClass("alert-info");
+        			$('#message').addClass("alert-danger");
+        			
+        			if(startDate == ""){
+        				$('#mContent').html("시작 날짜가 입력되지 않았습니다");
+        			}
+        			else if(startTime == ""){
+        				$('#mContent').html("시작 시간이 입력되지 않았습니다");
+        			}
+        			else if(endDate == ""){
+        				$('#mContent').html("끝 날짜가 입력되지 않았습니다");
+        			}
+        			else if(endTime == ""){
+        				$('#mContent').html("끝 시간이 입력되지 않았습니다");
+        			}
+        			else{
+        				$('#mContent').html("장소가 입력되지 않았습니다");
+        			}
+                    $('#message').show();
+
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+    			}
+    			else{
+    				$('#editActivityGroupBtn').html('편집');
+        			$.post("/activitydata/setVolunteerTimeAndPlaceAndContent", 
+        				{ id: $('#activityId').val(), 
+        				  startDate: startDate, 
+        				  startTime: startTime,
+        				  endDate: endDate,
+        				  endTime: endTime,
+        				  place: $('#address').val(),
+        				  content: $('#editContent').val()
+        				}, 
+        				function(data) {
+        					var arr = data.split("|");
+        					if(arr[0] !== ""){
+            					$('#place').text(arr[0]);
+            				}
+            				else{
+            					$('#place').text("장소 없음");
+            				}
+        					if(arr[1] !== ""){
+            					$('#content').text(arr[1]);
+            				}
+            				else{
+            					$('#content').text("세부내용 없음");
+            				}
+        					
+        					var start = (arr[2] === "" || arr[3] === "")?"시작 시간 없음":arr[2] + " " + arr[3];
+        					var end = (arr[4] === "" || arr[5] === "")?"끝 시간 없음":arr[4] + " " + arr[5];
+        					$('#volunteerTime').text(start + " ~ " + end);
+        					
+        					$('#message').removeClass("alert-danger");
+                			$('#message').addClass("alert-info");
+        					$('#mContent').html("활동 내용을 수정하였습니다.");
+                            $('#message').show();
+
+                            setTimeout(function() {
+                                hideMessage();
+                            }, 2000);
+                	});	
+        			var y = document.getElementById("coordi_y").value;
+    				var x = document.getElementById("coordi_x").value;
+        			changeMap(y, x);
+    			}
+    			
     		}
     	})
     	
@@ -1771,80 +1431,6 @@
     		$('#cancelActivityGroupBtn').toggle();
     		$('#editActivityGroupBtn').html('편집');
     	})
-    	
-    	/*var deadlineDate;
-    	var deadlineTime;
-    	
-    	$('#editDeadlineButton').click(function() {
-    		
-    		deadlineDate = $('input[name="deadlineDate"]').val(); 
-			deadlineTime = $('input[name="deadlineTime"]').val();
-    		
-    		$('#editDeadline').toggle();
-    		
-    		$('#deadline').toggle();
-    		
-    		$('#cancelDeadlineButton').toggle();
-    		
-    		if($('#editDeadlineButton').html() == '수정'){
-    			$('#editDeadlineButton').html('완료');
-    		}
-    		else{
-    			$('#editDeadlineButton').html('수정');
-    			$.post("/activitydata/setDeadline", 
-    				{ id: $('#activityId').val(), 
-    				  deadlineDate: deadlineDate, 
-    				  deadlineTime: deadlineTime
-    				}, 
-    				function(data) {
-    					var arr = data.split(".");
-    					$('#deadline').text((arr[0] === "" || arr[1] === "")?"마감시간 없음":arr[0] + " " + arr[1]);
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelDeadlineButton').click(function(){
-			$('#editDeadline').toggle();
-			var deadlineText = $('#deadline').text();
-			
-			if(deadlineText.includes("마감시간 없음")){
-				$('input[name="deadlineDate"]').val("");
-				$('input[name="deadlineTime"]').val("");
-			}
-			else{
-				$('input[name="deadlineDate"]').val(deadlineDate);
-				$('input[name="deadlineTime"]').val(deadlineTime);
-			}
-			
-    		$('#deadline').toggle();
-    		$('#cancelDeadlineButton').toggle();
-    		$('#editDeadlineButton').html('수정');
-    	})*/
-    	
-    	
-    	/*$('input[name="userId"]').each(function(){
-				
-    		if($(this).prop('checked')){
-    			$('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
-    		}
-    		
-			$(this).click(function(){
-				$('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
-			})
-				
-		})
-			
-		$('input[name="volunteerId"]').each(function(){
-				
-			if($(this).prop('checked')){
-    			$('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
-    		}
-			
-			$(this).click(function(){
-				$('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
-			})
-				
-		})*/
 		
     </script>
 

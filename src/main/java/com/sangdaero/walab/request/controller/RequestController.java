@@ -44,7 +44,7 @@ public class RequestController {
         Integer[] pageList = mRequestService.getPageList(pageNum, keyword, interestType, sortType);
         List<InterestDto> interestList = mInterestService.getInterestList();
 
-		int totalNum = pageList.length-1;
+		int totalNum = requestDtoList.size();
         model.addAttribute("requestList", requestDtoList);
         model.addAttribute("pageList", pageList);
         model.addAttribute("keyword", keyword);

@@ -51,9 +51,6 @@ public class Request extends TimeEntity {
 	@Column(name="product_image", nullable = true)
 	private String productImage;
 
-	@Column(name="product_image", nullable = true)
-	private String productImage;
-
 	@Builder
 	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event,
 			String productImage) {
