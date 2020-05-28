@@ -32,8 +32,7 @@ public class Request extends TimeEntity {
 	@Column(length = 255, nullable = false)
 	private String title;
 	
-	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, 
-			CascadeType.PERSIST, CascadeType.REFRESH})
+	@ManyToOne
 	@JoinColumn(name="interest_category", nullable=true)
 	private InterestCategory interestCategory;
 	
@@ -49,14 +48,19 @@ public class Request extends TimeEntity {
 	@JoinColumn(name="event_id", nullable=true)
 	private EventEntity event;
 
+	@Column(name="product_image", nullable = true)
+	private String productImage;
+
 	@Builder
-	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event) {
+	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event,
+				   String productImage) {
 		this.id = id;
 		this.title = title;
 		this.interestCategory = interestCategory;
 		this.client = client;
 		this.status = status;
 		this.event = event;
+		this.productImage = productImage;
 	}
 	
 }

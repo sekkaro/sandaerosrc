@@ -11,9 +11,18 @@ public class HomeController {
 		return "html/index.html";
 	}
 
-	@GetMapping("/test/map")
-	public String naverMap() {
-		return "html/request/naverMap";
+//	@GetMapping("/test/map")
+//	public String naverMap() {
+//		return "html/request/naverMap";
+//	}
+
+	@GetMapping("/test/juso")
+	public String jusoSearch() {
+		return "html/activity/jusoSearch";
 	}
-	
+
+	@GetMapping("/test/tagify")
+	public String testTagify() {
+		return "html/test";
+	}
 }

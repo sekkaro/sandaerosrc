@@ -54,7 +54,7 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th scope="col">id(번호)</th>
+							<th scope="col">#</th>
 							<th scope="col">제목</th>
 							<th scope="col">카테고리</th>
 							<th scope="col">상태</th>
@@ -66,7 +66,10 @@
 
 						<!-- CONTENTS !-->
 						<tr th:each="activity : ${activityList}">
-							<td><span th:text="${activity.id}"></span></td>
+							<th scope="row">
+								<span th:text="${totalNum}-3*(${currentPage}-1)-${activityStat.count}+1"></span>
+							</th>
+<!--							<td><span th:text="${activity.id}"></span></td>-->
 							<td><a th:href="@{'/activity/' + ${activity.id}}"> <span
 									th:text="${activity.title}"></span>
 							</a></td>

@@ -35,12 +35,16 @@ public class InterestCategory extends TimeEntity {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.on_off = 1;
+        this.on_off = on_off;
     }
 
     public InterestCategory update(String name) {
         this.setName(name);
         this.setModDate(LocalDateTime.now());
         return this;
+    }
+
+    public void changeOnOff(Byte value) {
+        this.setOn_off(value);
     }
 }

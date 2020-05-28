@@ -27,19 +27,21 @@ public class RequestDto {
 	private User client;
 	private Byte status;
 	private EventEntity event;
+	private String productImage;
 	
 	private LocalDateTime regDate;
 	private LocalDateTime modDate;
 	
 	@Builder
 	public RequestDto(Long id, String title, InterestCategory interestCategory, User client, Byte status,
-			EventEntity event, LocalDateTime regDate, LocalDateTime modDate) {
+					  EventEntity event, String productImage, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.title = title;
 		this.interestCategory = interestCategory;
 		this.client = client;
 		this.status = status;
 		this.event = event;
+		this.productImage = productImage;
 		this.regDate = regDate;
 		this.modDate = modDate;
 	}
@@ -52,6 +54,7 @@ public class RequestDto {
 				.interestCategory(interestCategory)
 				.client(client)
 				.event(event)
+				.productImage(productImage)
 				.build();
 		
 		return request;

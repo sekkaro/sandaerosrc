@@ -31,4 +31,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     @EntityGraph(attributePaths = { "userInterestList", "fundraising" })
 	Optional<User> getById(Long userId);
+
+    boolean existsByPhone(String phone);
+
+    User findByPhone(String phone);
+
+    User findByNickname(String nickname);
+
+    boolean existsByNickname(String nickname);
 }

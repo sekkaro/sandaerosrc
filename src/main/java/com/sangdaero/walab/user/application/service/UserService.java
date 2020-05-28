@@ -11,6 +11,7 @@ import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
 import com.sangdaero.walab.ranking.service.RankingService;
+
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.dto.UserDto;
@@ -148,29 +149,6 @@ public class UserService extends OidcUserService {
     	}
     	
     	return simpleUserList;
-    }
-    
-    public List<SimpleUser> getSimpleUserListWithInterestOnOff(Long interestCategoryId) {
-        List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
-        
-        if(interestCategoryId!=0) {
-        	Iterator<SimpleUser> iter = simpleUserList.iterator();
-            while (iter.hasNext()) {
-               SimpleUser user = iter.next();
-               UserInterest userInterest = mUserInterestRepository.findByUserIdAndInterestId(user.getId(), interestCategoryId);
-               
-               if(userInterest!=null) {
-            	   Byte on_Off = userInterest.getOn_off();
-                   
-                   if(on_Off == 0) {
-                	   iter.remove();
-                   } 
-               }
-               
-            }
-        }
-        
-        return simpleUserList;
     }
 
     public UserDetailDto getUser(Long id) {
@@ -329,19 +307,6 @@ public class UserService extends OidcUserService {
         byId.ifPresent(a->a.setUserType(type));
     }
     
-    public UserDto createUser(String email, String name) {
-		UserDto userDto = new UserDto();
-		userDto.setSocialId(email);
-		userDto.setName(name);
-		
-		updateUser(userDto);
-		
-		User user = mUserRepository.findBySocialId(email);
-		
-		return convertEntityToDto(user);
-		
-	}
-
     public List<UserDetailDto> findUsers(String keyword) {
 		List<User> users = mUserRepository.findAllByNameContaining(keyword);
 		List<UserDetailDto> userList = new ArrayList<>();
@@ -363,4 +328,52 @@ public class UserService extends OidcUserService {
 				
 		return userList;
 	}
+
+    public UserDto createUser(String email, String name) {
+        UserDto userDto = new UserDto();
+        userDto.setSocialId(email);
+        userDto.setName(name);
+
+        updateUser(userDto);
+
+        User user = mUserRepository.findBySocialId(email);
+
+        return convertEntityToDto(user);
+
+    }
+
+    public List<SimpleUser> getSimpleUserListWithInterestOnOff(Long interestCategoryId) {
+        List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
+
+        if(interestCategoryId!=0) {
+            Iterator<SimpleUser> iter = simpleUserList.iterator();
+            while (iter.hasNext()) {
+                SimpleUser user = iter.next();
+                UserInterest userInterest = mUserInterestRepository.findByUserIdAndInterestId(user.getId(), interestCategoryId);
+
+                if(userInterest!=null) {
+                    Byte on_Off = userInterest.getOn_off();
+
+                    if(on_Off == 0) {
+                        iter.remove();
+                    }
+                }
+
+            }
+        }
+
+        return simpleUserList;
+    }
+
+
+    @Transactional
+    public void setStartImage(Long id, UserDto userDto, String fileDownloadUri) {
+        UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
+        list.setStartImage(fileDownloadUri);
+    }
+
+    public void setEndImage(Long id, UserDto userDto, String fileDownloadUri) {
+        UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
+        list.setEndImage(fileDownloadUri);
+    }
 }

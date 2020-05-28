@@ -57,8 +57,7 @@ public class EventEntity extends TimeEntity {
 	@Column(name="event_category", nullable=false)
 	private Integer eventCategory;
 	
-	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, 
-			CascadeType.PERSIST, CascadeType.REFRESH})
+	@ManyToOne
 	@JoinColumn(name="interest_category", nullable=true)
 	private InterestCategory interestCategory;
 	

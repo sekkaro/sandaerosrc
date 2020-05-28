@@ -29,6 +29,11 @@ public class InterestService {
     }
 
     public Long addInterest(InterestDto interestDto) {
+        String name = interestDto.getName().trim();
+//        name = name.replaceAll(" " , "");
+//        name = name.replaceAll("\\p{Z}", "");
+        interestDto.setName(name);
+        interestDto.setOn_off((byte)1);
         return mInterestRepository.save(interestDto.toEntity()).getId();
     }
 
@@ -43,9 +48,9 @@ public class InterestService {
                     .id(interestCategory.getId())
                     .name(interestCategory.getName())
                     .type(interestCategory.getType())
-                    .on_off(interestCategory.getOn_off())
                     .createdDate(interestCategory.getRegDate())
                     .modifiedDate(interestCategory.getModDate())
+                    .on_off(interestCategory.getOn_off())
                     .count(mUserInterestRepository.countByInterest_Id(interestCategory.getId()))
                     .build();
 
@@ -62,7 +67,6 @@ public class InterestService {
                 .id(interestCategory.getId())
                 .name(interestCategory.getName())
                 .type(interestCategory.getType())
-                .on_off(interestCategory.getOn_off())
                 .build();
 
         return interestDTO;
@@ -77,6 +81,33 @@ public class InterestService {
         InterestCategory interest = mInterestRepository.findById(id)
                                                         .orElseThrow(()->new Exception());
 
-        interest.update(name);
+        interest.update(name.trim());
+    }
+
+    @Transactional
+    public void setOnOff(Long id) throws Exception {
+        InterestCategory interest = mInterestRepository.findById(id).orElseThrow(()->new Exception());
+
+        if(interest.getOn_off()==0) {
+            interest.changeOnOff((byte)1);
+        } else {
+            interest.changeOnOff((byte)0);
+        }
+    }
+
+    public List<InterestName> getAllInterest() {
+        List<InterestCategory> all = mInterestRepository.findAll();
+        List<InterestName> result = new ArrayList<>();
+
+        for(InterestCategory interest : all) {
+            InterestName build = InterestName.builder()
+                    .id(interest.getId())
+                    .name(interest.getName())
+                    .build();
+
+            result.add(build);
+        }
+
+        return result;
     }
 }

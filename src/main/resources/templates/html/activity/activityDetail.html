@@ -161,10 +161,10 @@
 								전화번호 공유 동의: <span th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></span><br>
 								위치 공유 동의: <span th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></span><br>
 								상태: <span th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
-								시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.startImage}}" width="250" height="300">
+								시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="250" height="300">
 									  	<span th:if="${activityVolunteer.startImage == null}">없음</span>
 									    <br>
-								끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.endImage}}" width="250" height="300">
+								끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="250" height="300">
 									  <span th:if="${activityVolunteer.endImage == null }">없음</span>
 							</div>
 						</td>

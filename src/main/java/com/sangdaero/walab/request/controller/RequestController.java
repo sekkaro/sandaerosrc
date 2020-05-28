@@ -44,12 +44,16 @@ public class RequestController {
         Integer[] pageList = mRequestService.getPageList(pageNum, keyword, interestType, sortType);
         List<InterestDto> interestList = mInterestService.getInterestList();
 
+		int totalNum = pageList.length-1;
         model.addAttribute("requestList", requestDtoList);
         model.addAttribute("pageList", pageList);
         model.addAttribute("keyword", keyword);
         model.addAttribute("interestType", interestType);
         model.addAttribute("sort", sortType);
         model.addAttribute("interests", interestList);
+
+		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("totalNum", totalNum);
 
         return "html/request/request.html";
 	}
@@ -60,12 +64,13 @@ public class RequestController {
 		List<InterestDto> interestList = mInterestService.getInterestList();
 		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
-		
+
 		model.addAttribute("requestDto", requestDto);
 		model.addAttribute("interests", interestList);
 		model.addAttribute("managers", managerList);
 		model.addAttribute("users", userList);
 		model.addAttribute("permittedVolunteer", requestDto.getClient());
+		model.addAttribute("productImage", requestDto.getProductImage());
 		
 		return "html/activity/activityForm.html";
 	}
