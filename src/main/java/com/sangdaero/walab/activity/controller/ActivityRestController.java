@@ -1,13 +1,19 @@
 package com.sangdaero.walab.activity.controller;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sangdaero.walab.common.entity.UserEventMapper;
+import com.sangdaero.walab.file.payload.FileUploadResponse;
+import com.sangdaero.walab.file.service.FileUploadDownloadService;
+import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.sangdaero.walab.activity.dto.ActivityDto;
 import com.sangdaero.walab.activity.dto.ActivityPeopleDto;
@@ -19,18 +25,19 @@ import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/activitydata")
+@RequiredArgsConstructor
 public class ActivityRestController {
 	
-	private ActivityService mActivityService;
-	private UserService mUserService;
-	
-	public ActivityRestController(ActivityService activityService, UserService userService) {
-		mActivityService = activityService;
-		mUserService = userService;
-	}
+	private final ActivityService mActivityService;
+	private final UserService mUserService;
+	private final FileUploadDownloadService fileUploadDownloadService;
 	
 	@PostMapping("/setTitle")
 	public String setTitle(@RequestParam("id") Long id, @RequestParam("title") String title) {
@@ -157,5 +164,61 @@ public class ActivityRestController {
 		UserDto userDto = mUserService.createUser(unregisterForm.getEmail(), unregisterForm.getName());
 		mActivityService.unregister(unregisterForm.getId(), userDto);
 		return "success";
+	}
+
+	@RequestMapping(path = "/uploadStartImg", method = RequestMethod.POST,
+			consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void uploadStartImage(@RequestParam("id") Long id, @RequestParam("name") String name,
+											 @RequestParam("email") String email, @RequestParam("image") MultipartFile image) {
+
+		String fileName = fileUploadDownloadService.storeFile(image);
+
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/activitydata/downloadFile/")
+				.path(fileName)
+				.toUriString();
+
+		UserDto userDto = mUserService.createUser(email, name);
+		mUserService.setStartImage(id, userDto, fileDownloadUri);
+	}
+
+	@RequestMapping(path = "/uploadEndImg", method = RequestMethod.POST,
+			consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void uploadEndImage(@RequestParam("id") Long id, @RequestParam("name") String name,
+						   @RequestParam("email") String email, @RequestParam("image") MultipartFile image) {
+
+		String fileName = fileUploadDownloadService.storeFile(image);
+
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/activitydata/downloadFile/")
+				.path(fileName)
+				.toUriString();
+
+		UserDto userDto = mUserService.createUser(email, name);
+		mUserService.setEndImage(id, userDto, fileDownloadUri);
+	}
+
+	@GetMapping("/downloadFile/{fileName:.+}")
+	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request){
+		// Load file as Resource
+		Resource resource = fileUploadDownloadService.loadFileAsResource(fileName);
+
+		// Try to determine file's content type
+		String contentType = null;
+		try {
+			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+		} catch (IOException ex) {
+//			logger.info("Could not determine file type.");
+		}
+
+		// Fallback to the default content type if type could not be determined
+		if(contentType == null) {
+			contentType = "application/octet-stream";
+		}
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.body(resource);
 	}
 }

@@ -45,7 +45,7 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th scope="col">id(번호)</th>
+							<th scope="col">#</th>
 							<th scope="col">제목</th>
 							<th scope="col">카테고리</th>
 							<th scope="col">신청자</th>
@@ -59,7 +59,10 @@
 
 						<!-- CONTENTS -->
 						<tr th:each="request : ${requestList}">
-							<td><span th:text="${request.id}"></span></td>
+							<th scope="row">
+								<span th:text="${totalNum}-3*(${currentPage}-1)-${requestStat.count}+1"></span>
+							</th>
+<!--							<td><span th:text="${request.id}"></span></td>-->
 							<td><span th:text="${request.title}"></span></td>
 							<td><span th:if="${request.interestCategory}"
 								th:text="${request.interestCategory.name}"></span> <span

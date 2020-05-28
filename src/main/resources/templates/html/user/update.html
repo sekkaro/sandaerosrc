@@ -45,9 +45,10 @@
                            aria-describedby="nameHelp" required minlength="2">
 
                     <small id="nameHelp" style="display: none;">
-                        2글자 이상 입력해주세요.
+                        한글로 입력해주세요.
                     </small>
-                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>
+<!--                    <small th:id="nameError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
 
                     <button id="nameEditBtn" th:onclick="|javascript:editName()|">수정</button>
                     <button id="nameCancleBtn" th:onclick="|javascript:cancleName()|" style="display: none;">취소</button>
@@ -66,9 +67,10 @@
 
 <!--                    <input id="nickname" type="text" name="nickname" th:value="${userInfo.nickname}" placeholder="닉네임을 입력하세요." aria-describedby="nicknameHelp" required minlength="2">-->
                     <small id="nicknameHelp" style="display: none;">
-                        2글자 이상 입력해주세요.
+                        3글자 이상 10글자 미만으로 입력해주세요.
                     </small>
-                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>
+<!--                    <small th:id="nicknameError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
 <!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>-->
 
                     <button id="nicknameEditBtn" th:onclick="|javascript:editNickname()|">수정</button>
@@ -90,9 +92,10 @@
                            aria-describedby="phoneHelp" required minlength="2">
 
                     <small id="phoneHelp" style="display: none;">
-                        전화번호를 입력해주세요.
+                        010-xxxx-xxxx 형식으로 입력해주세요.
                     </small>
-                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>
+<!--                    <small th:id="phoneError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>-->
 
                     <button id="phoneEditBtn" th:onclick="|javascript:editPhone()|">수정</button>
                     <button id="phoneCancleBtn" th:onclick="|javascript:canclePhone()|" style="display: none;">취소</button>
@@ -151,7 +154,6 @@
         </div>
     </div>
     <script th:replace="common/fragments.html :: form-validation"></script>
-    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
     <script type="application/javascript">
         $(function () {
             var id = document.getElementById('uid').value;
@@ -277,10 +279,15 @@
                     id: id,
                     name: $('#editName').val()
                 }, function(data) {
-                    $('#name').html(data);
-                    $('#mContent').html("이름을 수정하였습니다.");
-                    $('#message').show();
-
+                    if(data.message==null) {
+                        $('#name').html(data.name);
+                        $('#mContent').html("이름을 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
                     setTimeout(function() {
                         hideMessage();
                     }, 2000);
@@ -315,10 +322,15 @@
                     id: id,
                     nickname: $('#editNickname').val()
                 }, function(data) {
-                    $('#nickname').html(data);
-                    $('#mContent').html("닉네임을 수정하였습니다.");
-                    $('#message').show();
-
+                    if(data.message==null) {
+                        $('#nickname').html(data.nickname);
+                        $('#mContent').html("닉네임을 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
                     setTimeout(function() {
                         hideMessage();
                     }, 2000);
@@ -353,10 +365,15 @@
                     id: id,
                     phone: $('#editPhone').val()
                 }, function(data) {
-                    $('#phone').html(data);
-                    $('#mContent').html("전화번호를 수정하였습니다.");
-                    $('#message').show();
-
+                    if(data.message==null) {
+                        $('#phone').html(data.phone);
+                        $('#mContent').html("전화번호를 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
                     setTimeout(function() {
                         hideMessage();
                     }, 2000);

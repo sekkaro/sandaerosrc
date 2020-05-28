@@ -148,7 +148,7 @@
 			var userStatusList = [];
 			var permittedVolunteer =/*[[${permittedVolunteer}]]*/'none';
 			var productImage =/*[[${productImage}]]*/'none';
-			
+
 			function execPostcode() {
 				new daum.Postcode({
 					oncomplete: function(data) {
@@ -734,16 +734,16 @@
 				}
 				 
 			});
-			
+
 			if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 				$('.deliveryGroup').show();
 			}
 			else{
 				$('.deliveryGroup').hide();
 			}
-			
+      
 			if(productImage!=null){
-				
+
 			}
 			
 			$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});

@@ -212,8 +212,8 @@ public class ActivityService {
     
     @Transactional
     public Long saveActivity(String title, Long interestCategoryId, List<Long> userIdList, /*List<Byte> userStatusList,*/ Byte delivery, 
-    		Long managerId, String startDate, String startTime, String endDate, String endTime, String place, 
-    		String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile[] files, Long requestId, String requestFileName) {
+    		Long managerId, String startDate, String startTime, String endDate, String endTime, String place,
+		    String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile[] files, Long requestId, String requestFileName) {
 		
     	ActivityDto activityDto = new ActivityDto();
     	
@@ -286,10 +286,13 @@ public class ActivityService {
     		
     	}
     		
-    	Path currentPath = Paths.get("");
-    	Path absolutePath = currentPath.toAbsolutePath();
-    	String url = "/src/main/resources/static/images/";	//로컬 용	
-    	
+    Path currentPath = Paths.get("");
+		Path absolutePath = currentPath.toAbsolutePath();
+
+		String url = "/tomcat/webapps/ROOT/WEB-INF/classes/static/images/";
+
+//    	String url = "/src/main/resources/static/images/";
+      
         for(MultipartFile file: files) {
         	if(file!=null && !file.isEmpty()) {
         		String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename();
@@ -309,6 +312,17 @@ public class ActivityService {
          		}
         	}	
         }
+
+		if(requestFileName != null) {
+			Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
+
+			FileEntity fileEntity = new FileEntity();
+			fileEntity.setEvent(event);
+			fileEntity.setTitle(requestFileName);
+			fileEntity.setUrl(fileNameAndPath.toString());
+
+			mFileRepository.save(fileEntity);
+		}
         
         if(requestFileName != null) {
         	Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
@@ -664,7 +678,7 @@ public class ActivityService {
     	
     	mActivityRepository.save(activity);
 	}
-    
+
     public void unregister(Long eventId, UserDto userDto) {
 		UserEventMapper eventUserMapper = mUserEventMapperRepository.findByEventIdAndUserId(eventId, userDto.getId());
 		eventUserMapper.setStatus((byte)2);

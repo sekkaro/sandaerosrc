@@ -3,11 +3,14 @@ package com.sangdaero.walab.interest.controller;
 
 import com.sangdaero.walab.interest.application.dto.InterestDto;
 import com.sangdaero.walab.interest.application.service.InterestService;
+import com.sangdaero.walab.interest.application.validator.InterestValidator;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,12 +19,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/interest")
+@RequiredArgsConstructor
 public class InterestController {
 
-	private InterestService mInterestService;
+	private final InterestService mInterestService;
+	private final InterestValidator mInterestValidator;
 
-	public InterestController(InterestService interestService) {
-		this.mInterestService = interestService;
+	@InitBinder("interestDto")
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(mInterestValidator); // validator 추가
 	}
 
 	@GetMapping("")
@@ -30,7 +36,7 @@ public class InterestController {
 		List<InterestDto> interestDTOList = mInterestService.getInterestList();
 		model.addAttribute("interestList", interestDTOList);
 		model.addAttribute(new InterestDto());
-		model.addAttribute("mod_interest", new InterestDto());
+//		model.addAttribute("mod_interest", new InterestDto());
 		return "html/interest/interest";
 	}
 
@@ -40,11 +46,14 @@ public class InterestController {
 //	}
 
 	@PostMapping("/add")
-	public String addInterest(@Valid InterestDto interestDto, Errors errors) {
+	public String addInterest(@Valid InterestDto interestDto, Errors errors, Model model) {
 
 		if(errors.hasErrors()) {
-			return "redirect:/interest";
+			List<InterestDto> interestDTOList = mInterestService.getInterestList();
+			model.addAttribute("interestList", interestDTOList);
+			return "html/interest/interest";
 		}
+
 		mInterestService.addInterest(interestDto);
 		return "redirect:/interest";
 	}
@@ -76,9 +85,10 @@ public class InterestController {
 		return "redirect:/interest";
 	}
 
-	@DeleteMapping("/{id}")
-	public String delete(@PathVariable("id") Long id) {
-		mInterestService.deleteInterest(id);
+	@PutMapping("/{id}")
+	public String disabled(@PathVariable("id") Long id) throws Exception {
+		mInterestService.setOnOff(id);
+//		mInterestService.deleteInterest(id);
 		return "redirect:/interest";
 	}
 }

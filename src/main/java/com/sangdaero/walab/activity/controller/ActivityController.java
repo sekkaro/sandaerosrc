@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.sangdaero.walab.common.entity.EventEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +59,7 @@ public class ActivityController {
         Integer[] pageList = mActivityService.getPageList(pageNum, keyword, interestType, sortType, status);
         List<InterestDto> interestList = mInterestService.getInterestList();
 
+        int totalNum = pageList.length-1;
         model.addAttribute("activityList", activityDtoList);
         model.addAttribute("pageList", pageList);
         model.addAttribute("keyword", keyword);
@@ -61,6 +67,9 @@ public class ActivityController {
         model.addAttribute("status", status);
         model.addAttribute("sort", sortType);
         model.addAttribute("interests", interestList);
+
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalNum", totalNum);
 
         return "html/activity/activity.html";
 	}
@@ -134,7 +143,7 @@ public class ActivityController {
 			String content, @RequestParam(value="volunteerId", required=false) List<Long> volunteerIdList,
 			@RequestParam(value="files", required=false) MultipartFile[] files,
 			@RequestParam(value="file", required=false) String requestFileName) {
-		
+    
 		mActivityService.saveActivity(title,interestCategoryId, userIdList, /*userStatusList,*/ delivery, managerId, startDate, startTime, endDate, endTime, place, deadlineDate, deadlineTime, content, volunteerIdList, volunteerStatusList, files, requestId, requestFileName);
 			
 		return "redirect:/activity";
