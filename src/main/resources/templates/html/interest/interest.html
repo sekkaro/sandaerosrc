@@ -1,108 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header">
-    <meta charset="UTF-8">
-    <title>상대로 프로젝트</title>
-    <style>
-        .container {
-            max-width: 100%;
-        }
-    </style>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" dir="ltr">
+<head lang="en">
+    <title>상대로</title>
+    <th:block th:replace="common/header :: head"/>
 </head>
+
 <body>
+    <header th:replace="common/header :: header"/>
 
     <div lang="en" th:replace="common/menu :: menu"></div>
 
-    <div id="main" style="margin-left: 15%"></div>
+    <div id="main">
+        <h4>관심사 목록</h4>
 
-    <div class="container">
-        <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-        <div class="py-5 text-center">
-            <h2>관심사 목록 관리</h2>
-        </div>
+        <div id="basicBody">
 
-        <div style="margin-left: 15%">
-            <table class="table">
-                <thead>
+            <div>
+                <table class="table">
+                    <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">관심사</th>
                         <th scope="col">사용자 수</th>
                         <th scope="col">비활성화</th>
                     </tr>
-                </thead>
-                <tbody>
-                <tr th:each="interest : ${interestList}">
-                    <th scope="row">
-                        <span th:text="${interestStat.index}+1"></span>
-                    </th>
-                    <td>
-                        <h5 th:id="InterestName+${interest.id}" th:text="${interest.name}" style="display: inline"></h5>
-                        <input th:id="editName+${interest.id}" type="text" name="name" th:value="${interest.name}"
-                               style="display: none;" placeholder="관심사 이름을 입력하세요."
-                               aria-describedby="interestNameHelp" required minlength="2">
-                        <small th:id="interestNameHelp+${interest.id}" style="display: none;">
-                            2글자 이상 입력해주세요.
-                        </small>
+                    </thead>
+                    <tbody>
+                    <tr th:each="interest : ${interestList}">
+                        <th scope="row">
+                            <span th:text="${interestStat.index}+1"></span>
+                        </th>
+                        <td>
+                            <h5 th:id="InterestName+${interest.id}" th:text="${interest.name}" style="display: inline"></h5>
+                            <input th:id="editName+${interest.id}" type="text" name="name" th:value="${interest.name}"
+                                   style="display: none;" placeholder="관심사 이름을 입력하세요."
+                                   aria-describedby="interestNameHelp" required minlength="2">
+                            <small th:id="interestNameHelp+${interest.id}" style="display: none;">
+                                2글자 이상 입력해주세요.
+                            </small>
 
-                        <small th:id="error+${interest.id}" style="display: none;color: red">
-                        </small>
-<!--                        <small th:id="test+${interest.id}" class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-<!--                        <small th:if="${msg}">hello</small>-->
-<!--                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
-                        <button th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">수정</button>
-                        <button th:id="cancleBtn+${interest.id}" th:onclick="|javascript:cancle('${interest.id}')|" style="display: none;">취소</button>
+                            <small th:id="error+${interest.id}" style="display: none;color: red">
+                            </small>
+                            <!--                        <small th:id="test+${interest.id}" class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
+                            <!--                        <small th:if="${msg}">hello</small>-->
+                            <!--                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
+                            <button th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">수정</button>
+                            <button th:id="cancleBtn+${interest.id}" th:onclick="|javascript:cancle('${interest.id}')|" style="display: none;">취소</button>
 
-<!--                        <form class="needs-validation col-sm-7" th:action="@{'/interest/edit/' + ${interest.id}}" th:object="${mod_interest}" th:method="post" novalidate>-->
-<!--                            <input type="hidden" name="_method" value="put"/>-->
+                            <!--                        <form class="needs-validation col-sm-7" th:action="@{'/interest/edit/' + ${interest.id}}" th:object="${mod_interest}" th:method="post" novalidate>-->
+                            <!--                            <input type="hidden" name="_method" value="put"/>-->
 
-<!--                            <div class="row">-->
-<!--                                <div class="form-group">-->
-<!--                                    <input th:id="u_name+${interest.id}" type="text" name="name" style="width: 100px;" th:value="${interest.name}" placeholder="관심사 이름을 입력하세요."-->
-<!--                                           aria-describedby="u_nameHelp" required minlength="2" > <br>-->
-<!--&lt;!&ndash;                                   readonly ondblclick="this.readOnly='';" onblur="this.readOnly='true;'" &ndash;&gt;-->
-<!--                                    <small id="u_nameHelp">-->
-<!--                                        2글자 이상 입력해주세요.-->
-<!--                                    </small>-->
-<!--                                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-<!--                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
-<!--                                </div>-->
-<!--                                <div>-->
-<!--                                    <input type="submit" value="수정">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </form>-->
-                    </td>
-                    <td>
-                        <div>
-                            <span>현재 <span style="font-weight: bold" th:text="${interest.count}"></span>명이 관심있어 합니다.</span>
-                        </div>
-                    </td>
-                    <td>
-                        <form id="delete-form" th:action="@{'/interest/' + ${interest.id}}" method="post">
-                            <input type="hidden" name="_method" value="put"/>
-                            <button th:if="${interest.on_off==0}">활성화</button>
-                            <button th:if="${interest.on_off==1}">비 활성화</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            <!--                            <div class="row">-->
+                            <!--                                <div class="form-group">-->
+                            <!--                                    <input th:id="u_name+${interest.id}" type="text" name="name" style="width: 100px;" th:value="${interest.name}" placeholder="관심사 이름을 입력하세요."-->
+                            <!--                                           aria-describedby="u_nameHelp" required minlength="2" > <br>-->
+                            <!--&lt;!&ndash;                                   readonly ondblclick="this.readOnly='';" onblur="this.readOnly='true;'" &ndash;&gt;-->
+                            <!--                                    <small id="u_nameHelp">-->
+                            <!--                                        2글자 이상 입력해주세요.-->
+                            <!--                                    </small>-->
+                            <!--                                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
+                            <!--                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
+                            <!--                                </div>-->
+                            <!--                                <div>-->
+                            <!--                                    <input type="submit" value="수정">-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+                            <!--                        </form>-->
+                        </td>
+                        <td>
+                            <div>
+                                <span>현재 <span style="font-weight: bold" th:text="${interest.count}"></span>명이 관심있어 합니다.</span>
+                            </div>
+                        </td>
+                        <td>
+                            <form id="delete-form" th:action="@{'/interest/' + ${interest.id}}" method="post">
+                                <input type="hidden" name="_method" value="put"/>
+                                <button th:if="${interest.on_off==0}">활성화</button>
+                                <button th:if="${interest.on_off==1}">비 활성화</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-            <form class="needs-validation" action="/interest/add" th:object="${interestDto}" method="post" novalidate>
-                <label for="name">관심사 이름</label>
-                <input id="name" type="text" name="name" placeholder="관심사 이름을 입력하세요." aria-describedby="nameHelp" required minlength="2">
-                <small id="nameHelp">
-                    2글자 이상 입력해주세요.
-                </small>
-                <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>
-                <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
-                <br>
-                <input type="submit" value="관심사 추가">
-            </form>
+            </div>
         </div>
+
+        <form class="needs-validation" action="/interest/add" th:object="${interestDto}" method="post" novalidate>
+            <label for="name">관심사 이름</label>
+            <input id="name" type="text" name="name" placeholder="관심사 이름을 입력하세요." aria-describedby="nameHelp" required minlength="2">
+            <small id="nameHelp">
+                2글자 이상 입력해주세요.
+            </small>
+            <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
+            <br>
+            <input type="submit" value="관심사 추가">
+        </form>
     </div>
+
+
 
     <div lang="en" th:replace="common/footer :: footer"></div>
 

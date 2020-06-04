@@ -25,4 +25,9 @@ public class HomeController {
 	public String testTagify() {
 		return "html/test";
 	}
+
+	@GetMapping("/test/addAct")
+	public String addAct() {
+		return "html/test/insertAct";
+	}
 }

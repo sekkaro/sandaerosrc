@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+<head lang="en">
+  <title>상대로</title>
+  <th:block th:replace="common/header :: head"/>
+</head>
 <body>
 
-<div lang="en" th:replace="common/menu :: menu"></div>
+  <header th:replace="common/header :: header"></header>
 
-<div id="main" style="margin-left: 15%">
+  <div lang="en" th:replace="common/menu :: menu"></div>
 
-<div class="w3-teal">
-  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-  <div class="w3-container">
-    <h1>문의 페이지</h1>
+  <div id="main">
+    <h4>문의 사항</h4>
+
+  <div id="basicBody">
+
   </div>
-</div>
 
-<div class="w3-container">
-<p>In this example, the sidebar is hidden (style="display:none")</p>
-<p>It is shown when you click on the menu icon in the top left corner.</p>
-<p>When it is opened, it shifts the page content to the right.</p>
-<p>We use JavaScript to add a 25% left margin to the div element with id="main" when this happens. The value "25%" matches the width of the sidebar.</p>
-</div>
-
-<div lang="en" th:replace="common/footer :: footer"></div>
+  <div lang="en" th:replace="common/footer :: footer"></div>
 
 </div>
 </body>

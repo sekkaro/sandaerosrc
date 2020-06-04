@@ -1,111 +1,116 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+<head lang="en">
+	<title>상대로</title>
+	<th:block th:replace="common/header :: head"/>
+	<link rel="stylesheet" href="/css/listAct.css">
+</head>
 <body>
+	<header th:replace="common/header :: header"/>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
-	<div id="main" style="margin-left: 15%">
+	<div id="main">
 
-		<div class="container">
-			<button id="openNav" style="display: none"
-					class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h2>활동 목록</h2>
-			</div>
-
-			<form  action="/activity" method="GET">
-				<div class="row">
-					<div class="col-md-7">
-						카테고리:
-						<select onchange="this.form.submit()" name="interestType">
-							<option value="0">관심사를 선택하세요</option>
-							<option th:selected="${interestType==interest.id}"
-									th:each="interest : ${interests}" th:value="${interest.id}"
-									th:text="${interest.name}"></option>
-						</select>
-						상태:
-						<select onchange="this.form.submit()" name="status">
-							<option value="0">상태를 선택하세요</option>
-							<option th:selected="${status==1}" value="1">매칭 전</option>
-							<option th:selected="${status==2}" value="2">매칭중</option>
-							<option th:selected="${status==3}" value="3">매칭 완료</option>
-							<option th:selected="${status==4}" value="4">활동 진행 중</option>
-							<option th:selected="${status==5}" value="5">활동 완료</option>
-							<option th:selected="${status==6}" value="6">취소된 활동</option>
-						</select>
-						<select onchange="this.form.submit()" name="sort">
-							<option th:selected="${sort==1}" value="1">최신순</option>
-							<option th:selected="${sort==2}" value="2">오래된순</option>
-						</select>
+		<form id="manageForm" name="manage" action="/activity" method="GET">
+			<div class="upper">
+				<h4 class="header">활동 목록</h4>
+				<div class="menus">
+					<div class="selectmenu">
+						<div class="selectm">
+							<select class="back" onchange="this.form.submit()" name="interestType">
+								<option value="0">관심사를 선택하세요</option>
+								<option th:selected="${interestType==interest.id}"
+										th:each="interest : ${interests}" th:value="${interest.id}"
+										th:text="${interest.name}"></option>
+							</select>
+						</div>
+						<div class="selectm">
+							<select class="back" onchange="this.form.submit()" name="status">
+								<option value="0">상태를 선택하세요</option>
+								<option th:selected="${status==1}" value="1">매칭 전</option>
+								<option th:selected="${status==2}" value="2">매칭중</option>
+								<option th:selected="${status==3}" value="3">매칭 완료</option>
+								<option th:selected="${status==4}" value="4">활동 진행 중</option>
+								<option th:selected="${status==5}" value="5">활동 완료</option>
+								<option th:selected="${status==6}" value="6">취소된 활동</option>
+							</select>
+						</div>
+						<div class="selectm">
+							<select class="back" onchange="this.form.submit()" name="sort">
+								<option th:selected="${sort==1}" value="1">최신순</option>
+								<option th:selected="${sort==2}" value="2">오래된순</option>
+							</select>
+						</div>
 					</div>
-
-					<div class="search col-md-5">
-						<input name="keyword" type="text" placeholder="제목으로 검색"
-							   th:value="${keyword}">
-						<button>검색하기</button>
+					<div class="searchlist searchboxlist">
+						<input id="search" name="keyword" type="search" placeholder="제목으로 검색" th:value="${keyword}">
+<!--						<button>검색하기</button>-->
 					</div>
 				</div>
-			</form>
 
-			<!-- payment list  -->
-			<form action="/activity" method="GET">
-				<!-- update checked record's 'paymentCheck' status. -->
+			</div>
 
-				<table class="table">
+			<div id="actList">
+				<table style="width: 100%">
 					<thead>
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">제목</th>
-							<th scope="col">카테고리</th>
-							<th scope="col">상태</th>
-							<th scope="col">등록 날짜</th>
+						<tr class="top">
+							<th id="leftth">No.</th>
+							<th>카테고리</th>
+							<th>제목</th>
+							<th>상태</th>
+							<th id="rigthth">등록 날짜</th>
 						</tr>
 					</thead>
-
 					<tbody>
-
-						<!-- CONTENTS !-->
 						<tr th:each="activity : ${activityList}">
-							<th scope="row">
+							<td id="no">
 								<span th:text="${totalNum}-3*(${currentPage}-1)-${activityStat.count}+1"></span>
-							</th>
-<!--							<td><span th:text="${activity.id}"></span></td>-->
-							<td><a th:href="@{'/activity/' + ${activity.id}}"> <span
-									th:text="${activity.title}"></span>
-							</a></td>
-							<td><span th:if="${activity.interestCategory}"
-								th:text="${activity.interestCategory.name}"></span> <span
-								th:if="${activity.interestCategory==null}">-----</span></td>
-							<td><span th:if="${activity.status == 0}">매칭 전</span> <span
-								th:if="${activity.status == 1}">매칭 중</span><span
-								th:if="${activity.status == 2}">매칭 완료</span><span
-								th:if="${activity.status == 3}">활동 진행 중</span><span
-								th:if="${activity.status == 4}">활동 완료</span><span
-								th:if="${activity.status == 5}">취소된 활동</span></td>
-							<td><span
-								th:text="${#temporals.format(activity.regDate, 'yyyy-MM-dd HH:mm')}"></span>
+							</td>
+							<td>
+								<span th:if="${activity.interestCategory}" th:text="${activity.interestCategory.name}"></span>
+								<span th:if="${activity.interestCategory==null}">-----</span>
+							</td>
+							<td>
+								<a class="detail-link" th:href="@{'/activity/' + ${activity.id}}">
+									<span th:text="${activity.title}"></span>
+								</a>
+							</td>
+							<td>
+								<span th:if="${activity.status == 0}"><img class="condition" src="/img/13.png"></span>
+								<span th:if="${activity.status == 1}"><img class="condition" src="/img/12.png"></span>
+								<span th:if="${activity.status == 2}"><img class="condition" src="/img/9.png"></span>
+								<span th:if="${activity.status == 3}"><img class="condition" src="/img/11.png"></span>
+								<span th:if="${activity.status == 4}"><img class="condition" src="/img/10.png"></span>
+								<span th:if="${activity.status == 5}"><img class="condition" src="/img/8.png"></span>
+							</td>
+							<td id="actdate">
+								<span th:text="${#temporals.format(activity.regDate, 'yyyy-MM-dd HH:mm')}"></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</form>
-
-			<!-- paging -->
-			<div>
-				<span th:each="pageNum : ${pageList}" th:inline="text"> <a
-					th:href="@{'/activity?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${pageNum}]]</a>
-				</span>
 			</div>
-			<!-- paging end -->
-
-			<a th:href="@{/activity/activityForm}">활동 등록</a>
-
-		</div>
-
-		<div lang="en" th:replace="common/footer :: footer"></div>
-
+			<div class="down">
+				<div id="Paging">
+<!--					<button id="prev" type="submit" name="button"><</button>-->
+<!--					<button id="prevv" type="submit" name="button"><<</button>-->
+<!--					<button id="one" type="submit" name="button">1</button>-->
+<!--					<button id="two" type="submit" name="button">2</img></button>-->
+<!--					<button id="three" type="submit" name="button">3</img></button>-->
+<!--					<button id="next" type="submit" name="button">></button>-->
+<!--					<button id="nextt" type="submit" name="button">>></button>-->
+					<button th:each="pageNum : ${pageList}" th:inline="text"> <a
+							th:href="@{'/activity?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${pageNum}]]</a>
+					</button>
+				</div>
+				<button id="list" type="button" name="button">
+					<a th:href="@{/activity/activityForm}"><img src="/img/18.png"></a>
+				</button>
+			</div>
+		</form>
 	</div>
+	<div lang="en" th:replace="common/footer :: footer"></div>
 </body>
 </html>

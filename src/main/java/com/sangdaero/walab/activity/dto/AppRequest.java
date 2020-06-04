@@ -1,7 +1,5 @@
 package com.sangdaero.walab.activity.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Data;
 
 @Data
