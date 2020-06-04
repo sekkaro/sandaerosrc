@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+<head lang="en">
+	<title>상대로</title>
+	<th:block th:replace="common/header :: head"/>
+</head>
 <body>
+	<header th:replace="common/header :: header"/>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
-	<div id="main" style="margin-left: 15%">
-
-		<div class="w3-container">
-			<button id="openNav" style="display: none"
-					class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h1>앱에서 들어온 요청</h1>
-			</div>
+	<div id="main" >
+		<h4>앱에서 들어온 요청</h4>
 
 			<form action="/request" method="GET">
 				<div class="row">
@@ -42,8 +39,9 @@
 			<form action="/request" method="GET">
 				<!-- update checked record's 'paymentCheck' status. -->
 
-				<table class="table">
-					<thead>
+				<div id="basicBody">
+					<table class="table">
+						<thead>
 						<tr>
 							<th scope="col">#</th>
 							<th scope="col">제목</th>
@@ -53,29 +51,29 @@
 							<th scope="col">상태</th>
 							<th scope="col">이미지 첨부</th>
 						</tr>
-					</thead>
+						</thead>
 
-					<tbody>
+						<tbody>
 
 						<!-- CONTENTS -->
 						<tr th:each="request : ${requestList}">
 							<th scope="row">
 								<span th:text="${totalNum}-3*(${currentPage}-1)-${requestStat.count}+1"></span>
 							</th>
-<!--							<td><span th:text="${request.id}"></span></td>-->
+							<!--							<td><span th:text="${request.id}"></span></td>-->
 							<td><span th:text="${request.title}"></span></td>
 							<td><span th:if="${request.interestCategory}"
-								th:text="${request.interestCategory.name}"></span> <span
-								th:if="${request.interestCategory==null}">——</span></td>
+									  th:text="${request.interestCategory.name}"></span> <span
+									th:if="${request.interestCategory==null}">——</span></td>
 							<td><span th:if="${request.client}"
-								th:text="${request.client.name}"></span> <span
-								th:if="${request.client==null}">——</span></td>
+									  th:text="${request.client.name}"></span> <span
+									th:if="${request.client==null}">——</span></td>
 							<td><span
-								th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
+									th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
 							</td>
 							<td><span th:if="${request.status == 0}">대기</span> <span
-								th:if="${request.status == 1}">등록</span><span
-								th:if="${request.status == 2}">거절</span></td>
+									th:if="${request.status == 1}">등록</span><span
+									th:if="${request.status == 2}">거절</span></td>
 							<td>
 								<span th:if="${request.productImage == null}">--</span>
 								<a th:if="${request.productImage}" data-fancybox th:data-src="${'#image' + request.id}" href="javascript:;">사진 보기</a>
@@ -88,8 +86,10 @@
 							<td th:if="${request.status == 0}"><button type="button" th:data-requestId="${request.id}" class="btn btn-outline-danger btn-sm" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">거절</button></td>
 							<td th:if="${request.status == 1}"><a class="btn btn-outline-primary btn-sm" th:href="@{'/activity/' + ${request.event?.id}}">등록된 활동 보기</a></td>
 						</tr>
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
+
 			</form>
 
 			<!--  paging -->

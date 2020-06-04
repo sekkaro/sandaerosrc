@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header">
-  <meta charset="UTF-8">
-  <title>상대로 프로젝트</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <style>
-    .container {
-      max-width: 100%;
-    }
-  </style>
+<head lang="en">
+  <title>상대로</title>
+  <th:block th:replace="common/header :: head"/>
+  <link rel="stylesheet" href="/css/insertAct.css">
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
+  <header th:replace="common/header :: header"/>
 
   <div lang="en" th:replace="common/menu :: menu"></div>
 
-  <div id="main" style="margin-left: 15%"></div>
+  <div id="main">
+    <h4>랭킹</h4>
 
-  <div class="container">
-    <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-    <div class="py-5 text-center">
-      <h2>랭킹</h2>
-    </div>
+    <div id="basicBody">
 
-    <!-- TODO 월간, 주간 구현해야 함 -->
-    <div class="row" style="margin-left: 15%">
-      <li>
-        <a th:href="'?scope=1'">전체</a>
-      </li>
-      <li>
-        <a th:href="'?scope=2'">월간</a>
-      </li>
-      <li>
-        <a th:href="'?scope=3'">주간</a>
-      </li>
-    </div>
+      <!-- TODO 월간, 주간 구현해야 함 -->
+      <div class="row" style="margin-left: 15%">
+        <li>
+          <a th:href="'?scope=1'">전체</a>
+        </li>
+        <li>
+          <a th:href="'?scope=2'">월간</a>
+        </li>
+        <li>
+          <a th:href="'?scope=3'">주간</a>
+        </li>
+      </div>
 
-    <div style="margin-left: 15%">
-      <table class="table">
-        <thead>
-        <tr>
-          <th scope="col">등수</th>
-          <th scope="col">유저 이름</th>
-        </tr>
-        </thead>
+      <div style="margin-left: 15%">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">등수</th>
+            <th scope="col">유저 이름</th>
+          </tr>
+          </thead>
 
-        <tbody>
-        <tr th:each="userInfo : ${userRanking}">
-          <th scope="row">
-            <span th:text="${userInfoStat.index}+1"></span>
-          </th>
-          <td>
-            <a th:href="@{'/user/detail/' + ${userInfo.id}}">
-              <span th:text="${userInfo.name}"></span>
-            </a>
-            <span th:text="'(' + ${userInfo.volunteerTime} + ' 시간)'"></span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+          <tbody>
+          <tr th:each="userInfo : ${userRanking}">
+            <th scope="row">
+              <span th:text="${userInfoStat.index}+1"></span>
+            </th>
+            <td>
+              <a th:href="@{'/user/detail/' + ${userInfo.id}}">
+                <span th:text="${userInfo.name}"></span>
+              </a>
+              <span th:text="'(' + ${userInfo.volunteerTime} + ' 시간)'"></span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
+
 
   <div lang="en" th:replace="common/footer :: footer"></div>
 

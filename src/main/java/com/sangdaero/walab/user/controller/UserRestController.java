@@ -110,4 +110,9 @@ public class UserRestController {
 		mUserService.changeUserType(id, type);
 	}
 
+	@PostMapping("/addtime")
+	public void addVolunteerTime() {
+
+	}
+
 }

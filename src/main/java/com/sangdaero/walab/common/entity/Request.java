@@ -47,13 +47,13 @@ public class Request extends TimeEntity {
 	@ManyToOne
 	@JoinColumn(name="event_id", nullable=true)
 	private EventEntity event;
-	
+
 	@Column(name="product_image", nullable = true)
 	private String productImage;
 
 	@Builder
 	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event,
-			String productImage) {
+				   String productImage) {
 		this.id = id;
 		this.title = title;
 		this.interestCategory = interestCategory;

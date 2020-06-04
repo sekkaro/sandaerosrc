@@ -46,6 +46,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
 				.mvcMatchers("/node_modules/**")
+				.mvcMatchers("/img/**")
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 	}
 	

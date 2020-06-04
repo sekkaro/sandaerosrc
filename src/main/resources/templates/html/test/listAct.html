@@ -1,0 +1,132 @@
+<?php include('headandmenu.php') ?>
+
+<div id="main">
+
+  <form id="manageForm" name="manage" action="index.html" enctype="multipart/form-data" method="post">
+    <div class="upper">
+
+      <h4 class="header">활동 목록</h4>
+      <div class="menus">
+        <div class="selectmenu">
+          <div class="selectm">
+            <select class="back" id="" name="category">
+              <option value="selected">카테고리별&nbsp;</option>
+              <option value="1">카테고리1</option>
+              <option value="2">카테고리2</option>
+              <option value="3">카테고리3</option>
+            </select>
+          </div>
+
+          <div class="selectm">
+            <select class="back" id="" name="status">
+              <option value="selected">status별&nbsp;</option>
+              <option value="1">상태1</option>
+              <option value="2">상태2</option>
+              <option value="3">상태3</option>
+            </select>
+          </div>
+          <div class="selectm">
+            <select class="back" id="" name="date">
+              <option value="selected">날짜별&nbsp;</option>
+              <option value="1">날짜1</option>
+              <option value="2">날짜2</option>
+            </select>
+          </div>
+        </div>
+        <div class="searchlist searchboxlist">
+          <input type="search" id="search" placeholder="" />
+        </div>
+      </div>
+
+
+
+    </div>
+    <div id="actList">
+      <table style="width:100%">
+        <thead>
+        <tr class= "top">
+          <th id="leftth">No.</th>
+          <th>카테고리</th>
+          <th>제목</th>
+          <th>상태</th>
+          <th id="rightth">등록날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/10.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/11.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/12.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/13.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/9.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/8.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/10.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        <tr>
+          <td id="no">20</td>
+          <td>운전</td>
+          <td>홍길동 할아버지 경로당에 태워드리기</td>
+          <td><img class = "condition" src="img/11.png"></td>
+          <td id="actdate">2020.01.01</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="down">
+      <div id="Paging">
+        <button id="prev" type="submit" name="button"><</button>
+        <button id="prevv" type="submit" name="button"><<</button>
+        <button id="one" type="submit" name="button">1</button>
+        <button id="two" type="submit" name="button">2</img></button>
+        <button id="three" type="submit" name="button">3</img></button>
+        <button id="next" type="submit" name="button">></button>
+        <button id="nextt" type="submit" name="button">>></button>
+      </div>
+      <button id="list" type="submit" name="button"><img src="./img/18.png"></img></button>
+    </div>
+
+  </form>
+</div>
+</body>
+
+</html>

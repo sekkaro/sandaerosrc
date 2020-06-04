@@ -286,13 +286,13 @@ public class ActivityService {
     		
     	}
     		
-    Path currentPath = Paths.get("");
+    	Path currentPath = Paths.get("");
 		Path absolutePath = currentPath.toAbsolutePath();
 
 		String url = "/tomcat/webapps/ROOT/WEB-INF/classes/static/images/";
 
 //    	String url = "/src/main/resources/static/images/";
-      
+    		
         for(MultipartFile file: files) {
         	if(file!=null && !file.isEmpty()) {
         		String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename();
@@ -324,17 +324,6 @@ public class ActivityService {
 			mFileRepository.save(fileEntity);
 		}
         
-        if(requestFileName != null) {
-        	Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
-        	
-        	FileEntity fileEntity = new FileEntity();
- 			fileEntity.setEvent(event);
- 			fileEntity.setTitle(requestFileName);
- 			fileEntity.setUrl(fileNameAndPath.toString());
- 				
- 			mFileRepository.save(fileEntity);
-        }
-        
         if(requestId!=null) {
         	
         	Request request = mRequestRepository.findById(requestId).orElse(null);
@@ -345,6 +334,7 @@ public class ActivityService {
         	mRequestRepository.save(request);
         	
         }
+    	
     	
 		return id;
 	}
@@ -708,5 +698,8 @@ public class ActivityService {
 			return activityDto;
 			
 		}
-		
+
+	public Long getAllActivityNum() {
+    	return mActivityRepository.count();
+	}
 }

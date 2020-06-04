@@ -45,4 +45,5 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 	List<EventEntity> findAllByStatusAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual(byte scope,
 			LocalDateTime currentDate, LocalDateTime endDate);
 
+
 }

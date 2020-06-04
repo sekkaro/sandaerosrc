@@ -1,35 +1,56 @@
-<div th:fragment="menu">
-    <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<!--<div th:fragment="menu1">-->
+<!--    <meta charset="UTF-8">-->
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" th:href="@{/}">Sangdaero</a>
-        <ul class="navbar-nav mr-auto">
+<!--    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--        <a class="navbar-brand" th:href="@{/}">Sangdaero</a>-->
+<!--        <ul class="navbar-nav mr-auto">-->
 
+<!--        </ul>-->
+<!--        <div class="authenticated">-->
+<!--            <input id="toggle-event" class="authenticated" type="checkbox"-->
+<!--                   checked data-toggle="toggle" data-onstyle="success"-->
+<!--                   data-offstyle="danger"> 안녕하세요, <span id="user"></span>님 <a-->
+<!--                onClick="logout()"-->
+<!--                class="btn btn-outline-success my-2 my-sm-0 authenticated">Logout</a>-->
+<!--        </div>-->
+<!--        <a th:href="@{/login}"-->
+<!--           class="btn btn-outline-success my-2 my-sm-0 unauthenticated">Login</a>-->
+<!--    </nav>-->
+
+<!--    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" id="mySidebar" style="width: 15%; display: block">-->
+<!--        <button class="w3-bar-item w3-button w3-large"-->
+<!--                onclick="w3_close()">Close &times;</button>-->
+<!--        <a th:href="@{/activity}" class="w3-bar-item w3-button w3-border-bottom menu">활동 관리</a>-->
+<!--        <a th:href="@{/request}" class="w3-bar-item w3-button w3-border-bottom menu">앱에서 들어온 요청</a>-->
+<!--        <a th:href="@{/user}" class="w3-bar-item w3-button w3-border-bottom menu">회원 관리</a>-->
+<!--        <a th:href="@{/interest}" class="w3-bar-item w3-button w3-border-bottom menu">관심사 관리</a>-->
+<!--        <a th:href="@{/notice}" class="w3-bar-item w3-button w3-border-bottom menu">공지</a>-->
+<!--        <a th:href="@{/payment}" class="w3-bar-item w3-button w3-border-bottom menu">소액 결제</a>-->
+<!--        <a th:href="@{/community}" class="w3-bar-item w3-button w3-border-bottom menu">커뮤니티 관리</a>-->
+<!--        <a th:href="@{/volunteer}" class="w3-bar-item w3-button w3-border-bottom menu">봉사 시간</a>-->
+<!--        <a th:href="@{/ranking}" class="w3-bar-item w3-button w3-border-bottom menu">랭킹 관리</a>-->
+<!--        <a th:href="@{/ask}" class="w3-bar-item w3-button w3-border-bottom menu">문의</a>-->
+<!--    </div>-->
+<!--</div>-->
+<div id="sidebar" th:fragment="menu">
+    <ul>
+        <li class="firstMenu menu"><span>활동 관리</span> <img src = "/img/arrow.png"></li>
+        <ul class = "submenu">
+            <li class="secondMenu"><a th:href="@{/activity}">- 활동목록</a><br><a th:href="@{/request}">- 들어온 요청</a></li>
         </ul>
-        <div class="authenticated">
-            <input id="toggle-event" class="authenticated" type="checkbox"
-                   checked data-toggle="toggle" data-onstyle="success"
-                   data-offstyle="danger"> 안녕하세요, <span id="user"></span>님 <a
-                onClick="logout()"
-                class="btn btn-outline-success my-2 my-sm-0 authenticated">Logout</a>
-        </div>
-        <a th:href="@{/login}"
-           class="btn btn-outline-success my-2 my-sm-0 unauthenticated">Login</a>
-    </nav>
-
-    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" id="mySidebar" style="width: 15%; display: block">
-        <button class="w3-bar-item w3-button w3-large"
-                onclick="w3_close()">Close &times;</button>
-        <a th:href="@{/activity}" class="w3-bar-item w3-button w3-border-bottom menu">활동 관리</a>
-        <a th:href="@{/request}" class="w3-bar-item w3-button w3-border-bottom menu">앱에서 들어온 요청</a>
-        <a th:href="@{/user}" class="w3-bar-item w3-button w3-border-bottom menu">회원 관리</a>
-        <a th:href="@{/interest}" class="w3-bar-item w3-button w3-border-bottom menu">관심사 관리</a>
-        <a th:href="@{/notice}" class="w3-bar-item w3-button w3-border-bottom menu">공지</a>
-        <a th:href="@{/payment}" class="w3-bar-item w3-button w3-border-bottom menu">소액 결제</a>
-        <a th:href="@{/community}" class="w3-bar-item w3-button w3-border-bottom menu">커뮤니티 관리</a>
-        <a th:href="@{/volunteer}" class="w3-bar-item w3-button w3-border-bottom menu">봉사 시간</a>
-        <a th:href="@{/ranking}" class="w3-bar-item w3-button w3-border-bottom menu">랭킹 관리</a>
-        <a th:href="@{/ask}" class="w3-bar-item w3-button w3-border-bottom menu">문의</a>
-    </div>
-
+        <li class="firstMenu"><a th:href="@{/user}">회원 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/interest}">관심사 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/notice}">공지</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/payment}">소액 결제</a> <img src = "/img/arrow.png"></li>
+<!--        <li class="firstMenu"><a th:href="@{/volunteer}">봉사 시간</a> <img src = "/img/arrow.png"></li>-->
+        <li class="firstMenu"><a th:href="@{/community}">커뮤니티 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/ranking}">랭킹 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/ask}">문의</a> <img src = "/img/arrow.png"></li>
+        </li>
+    </ul>
+    <script>showSubMenu();</script>
 </div>
+</html>
