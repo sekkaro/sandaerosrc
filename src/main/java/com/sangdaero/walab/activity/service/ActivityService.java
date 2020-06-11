@@ -55,7 +55,7 @@ public class ActivityService {
 	private RequestRepository mRequestRepository;
 	
 	private static final int BLOCK_PAGE_NUMCOUNT = 12; // 블럭에 존재하는 페이지 수
-    private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
+    private static final int PAGE_POSTCOUNT = 5;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public ActivityService(ActivityRepository activityRepository, InterestRepository interestRepository, 
@@ -178,6 +178,7 @@ public class ActivityService {
         		activityUser.setLocationAgree(userEvent.getLocationAgree());
         		activityUser.setStartImage(userEvent.getStartImage());
         		activityUser.setEndImage(userEvent.getEndImage());
+        		activityUser.setVolunteerTime(userEvent.getVolunteerTime());
         		activityUser.setRegDate(userEvent.getRegDate());
         		activityUser.setModDate(userEvent.getModDate());
         		
@@ -193,6 +194,7 @@ public class ActivityService {
         		activityVolunteer.setLocationAgree(userEvent.getLocationAgree());
         		activityVolunteer.setStartImage(userEvent.getStartImage());
         		activityVolunteer.setEndImage(userEvent.getEndImage());
+        		activityVolunteer.setVolunteerTime(userEvent.getVolunteerTime());
         		activityVolunteer.setRegDate(userEvent.getRegDate());
         		activityVolunteer.setModDate(userEvent.getModDate());
         		
@@ -253,6 +255,7 @@ public class ActivityService {
         		userEventMapper.setLocationAgree((byte) 1);
         		userEventMapper.setPhoneAgree((byte) 1);
         		userEventMapper.setStatus((byte) 1);
+        		userEventMapper.setVolunteerTime(0);
         		//userEventMapper.setLocationAgree((byte) ((userStatusList.get(index)==1)?1:0));
         		//userEventMapper.setPhoneAgree((byte) ((userStatusList.get(index)==1)?1:0));
         		//userEventMapper.setStatus(userStatusList.get(index));
@@ -278,6 +281,7 @@ public class ActivityService {
         		userEventMapper.setLocationAgree((byte) ((volunteerStatusList.get(index)==1)?1:0));
         		userEventMapper.setPhoneAgree((byte) ((volunteerStatusList.get(index)==1)?1:0));
         		userEventMapper.setStatus(volunteerStatusList.get(index));
+        		userEventMapper.setVolunteerTime(0);
         		
         		mUserEventMapperRepository.save(userEventMapper);
         		
@@ -286,13 +290,13 @@ public class ActivityService {
     		
     	}
     		
-    	Path currentPath = Paths.get("");
+    Path currentPath = Paths.get("");
 		Path absolutePath = currentPath.toAbsolutePath();
 
 		String url = "/tomcat/webapps/ROOT/WEB-INF/classes/static/images/";
 
 //    	String url = "/src/main/resources/static/images/";
-    		
+      
         for(MultipartFile file: files) {
         	if(file!=null && !file.isEmpty()) {
         		String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename();
@@ -324,6 +328,17 @@ public class ActivityService {
 			mFileRepository.save(fileEntity);
 		}
         
+        if(requestFileName != null) {
+        	Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
+        	
+        	FileEntity fileEntity = new FileEntity();
+ 			fileEntity.setEvent(event);
+ 			fileEntity.setTitle(requestFileName);
+ 			fileEntity.setUrl(fileNameAndPath.toString());
+ 				
+ 			mFileRepository.save(fileEntity);
+        }
+        
         if(requestId!=null) {
         	
         	Request request = mRequestRepository.findById(requestId).orElse(null);
@@ -334,7 +349,6 @@ public class ActivityService {
         	mRequestRepository.save(request);
         	
         }
-    	
     	
 		return id;
 	}
@@ -451,6 +465,7 @@ public class ActivityService {
             		userEventMapper.setLocationAgree((userStatusList==null)?(byte) 1:(byte) 0);
             		userEventMapper.setPhoneAgree((userStatusList==null)?(byte) 1:(byte) 0);
             		userEventMapper.setStatus((userStatusList==null)?(byte) 1:userStatusList.get(index));
+            		userEventMapper.setVolunteerTime(0);
         		}
         		else {
         			if(userType == 0) {
@@ -572,6 +587,7 @@ public class ActivityService {
        	     activityUser.setEndImage(userEventMapper.getEndImage());
        	     activityUser.setRegDate(userEventMapper.getRegDate());
        	     activityUser.setModDate(userEventMapper.getModDate());
+       	     activityUser.setVolunteerTime(userEventMapper.getVolunteerTime());
        	     
        	     activityUsers.add(activityUser);
        	     
@@ -675,6 +691,81 @@ public class ActivityService {
 		mUserEventMapperRepository.save(eventUserMapper);
 	}
     
+    public List<ActivityDto> getActivitylist(Long interestCategoryId) {
+    	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
+		List<EventEntity> eventList = mActivityRepository.findAllByEventCategoryAndInterestCategoryOrderByStatusAscRegDateDesc(0, interestCategory);
+		List<ActivityDto> activityList = new ArrayList<>();
+		Set<ActivityUserDto> activityUsers;
+		Set<ActivityUserDto> activityVolunteers;
+		ActivityUserDto activityUser;
+		//Set<Long> userIds;
+		//Set<Long> volunteerIds;
+		ActivityDto activity;
+		List<UserEventMapper> userEventList;
+		
+		for(EventEntity event: eventList) {
+			activity = convertEventEntityToActivityDto(event);
+			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
+			activityUsers = new HashSet<>();
+			activityVolunteers = new HashSet<>();
+			//userIds = new HashSet<>();
+			//volunteerIds = new HashSet<>();
+			for(UserEventMapper userEvent : userEventList) {
+				activityUser = new ActivityUserDto();
+				activityUser.setUser(userEvent.getUser());
+				activityUser.setLocationAgree(userEvent.getLocationAgree());
+				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
+				activityUser.setStatus(userEvent.getStatus());
+				
+				if(userEvent.getUserType() == 1) {
+					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
+					activityVolunteers.add(activityUser);
+					//volunteerIds.add(userEvent.getUser().getId());
+				}
+				else {
+					activityUsers.add(activityUser);
+					//userIds.add(userEvent.getUser().getId());
+				}
+			}
+			activity.setActivityUsers(activityUsers);
+			activity.setActivityVolunteers(activityVolunteers);
+			//activity.setUserIds(userIds);
+			//activity.setVolunteerIds(volunteerIds);
+			activityList.add(activity);
+		}
+		
+		
+    	return activityList;
+	}
+    
+    public List<ActivityDto> getTop5Activitylist() {
+    	List<EventEntity> eventList = mActivityRepository.findTop5ByEventCategoryOrderByStatusAscRegDateDesc(0);
+		List<ActivityDto> activityList = new ArrayList<>();
+		for(EventEntity event: eventList) {
+			activityList.add(convertEventEntityToActivityDto(event));
+		}
+    	return activityList;
+	}
+    
+    public List<ActivityDto> getActivitylistForUser(String email) {
+    	User user = mUserRepository.findBySocialId(email);
+    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByUserId(user.getId());
+    	List<ActivityDto> activityList = new ArrayList<>();
+    	for(UserEventMapper userEventMapper : userEventMapperList) {
+    		EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
+    		if(event!=null) {
+    			activityList.add(convertEventEntityToActivityDto(event));
+    		}
+    	}
+		return activityList;
+	}
+    
+    public void setVolunteerTime(Long id, Long volunteerId, Integer time) {
+		UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserIdAndUserType(id, volunteerId, (byte) 1);
+		userEventMapper.setVolunteerTime(time);
+		mUserEventMapperRepository.save(userEventMapper);
+	}
+    
 	// EventEntity -> ActivityDto conversion
 		private ActivityDto convertEventEntityToActivityDto(EventEntity eventEntity) {
 			
@@ -698,8 +789,9 @@ public class ActivityService {
 			return activityDto;
 			
 		}
-
-	public Long getAllActivityNum() {
-    	return mActivityRepository.count();
-	}
+		
+		public Long getAllActivityNum() {
+	    	return mActivityRepository.countByEventCategory(0);
+		}
+		
 }

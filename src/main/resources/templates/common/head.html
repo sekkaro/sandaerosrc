@@ -27,15 +27,6 @@
 
 	<script th:inline="javascript">
 
-        var logout = function() {
-            $.post("/logout", function() {
-                //$("#user").html('');
-                $(".unauthenticated").show();
-                $(".authenticated").hide();
-            })
-            return true;
-        }
-
         $.get("/userdata/getBasicInfo", function(data) {
             if(typeof data.name != "undefined"){
                 //$("#user").html(data.name);
@@ -56,9 +47,6 @@
                 }
 
 
-            }
-            else{
-                logout();
             }
         });
 

@@ -1,6 +1,5 @@
 package com.sangdaero.walab.common.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,13 +46,17 @@ public class Request extends TimeEntity {
 	@ManyToOne
 	@JoinColumn(name="event_id", nullable=true)
 	private EventEntity event;
-
+	
 	@Column(name="product_image", nullable = true)
 	private String productImage;
+	
+	@Column(name="userType", nullable = false)
+	@ColumnDefault("1")
+	private Byte userType;
 
 	@Builder
 	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event,
-				   String productImage) {
+			String productImage, Byte userType) {
 		this.id = id;
 		this.title = title;
 		this.interestCategory = interestCategory;
@@ -61,6 +64,7 @@ public class Request extends TimeEntity {
 		this.status = status;
 		this.event = event;
 		this.productImage = productImage;
+		this.userType = userType;
 	}
 	
 }
