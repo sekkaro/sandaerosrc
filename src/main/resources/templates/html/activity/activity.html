@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en">
-	<title>상대로</title>
-	<th:block th:replace="common/header :: head"/>
+<head>
 	<link rel="stylesheet" href="/css/listAct.css">
+	<th:block th:replace="common/head.html"/>
+
+<!--	<link rel="stylesheet" href="/css/test2.css">-->
+
 </head>
 <body>
-	<header th:replace="common/header :: header"/>
+	<header th:replace="common/menu :: header"></header>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main">
 
-		<form id="manageForm" name="manage" action="/activity" method="GET">
+		<form id="infoForm" name="manage" action="/activity" method="GET">
 			<div class="upper">
 				<h4 class="header">활동 목록</h4>
 				<div class="menus">
 					<div class="selectmenu">
 						<div class="selectm">
 							<select class="back" onchange="this.form.submit()" name="interestType">
-								<option value="0">관심사를 선택하세요</option>
+								<option value="0">관심사 선택</option>
 								<option th:selected="${interestType==interest.id}"
 										th:each="interest : ${interests}" th:value="${interest.id}"
 										th:text="${interest.name}"></option>
@@ -28,7 +29,7 @@
 						</div>
 						<div class="selectm">
 							<select class="back" onchange="this.form.submit()" name="status">
-								<option value="0">상태를 선택하세요</option>
+								<option value="0">상태 선택</option>
 								<option th:selected="${status==1}" value="1">매칭 전</option>
 								<option th:selected="${status==2}" value="2">매칭중</option>
 								<option th:selected="${status==3}" value="3">매칭 완료</option>
@@ -53,20 +54,20 @@
 			</div>
 
 			<div id="actList">
-				<table style="width: 100%">
+				<table style="width: 100%;" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr class="top">
-							<th id="leftth">No.</th>
+							<th id="leftth" style="border-radius: 15px 0 0 0;">No.</th>
 							<th>카테고리</th>
 							<th>제목</th>
 							<th>상태</th>
-							<th id="rigthth">등록 날짜</th>
+							<th id="rigthth" style="border-radius: 0 15px 0 0;">등록 날짜</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="activity : ${activityList}">
 							<td id="no">
-								<span th:text="${totalNum}-3*(${currentPage}-1)-${activityStat.count}+1"></span>
+								<span th:text="${totalNum}-8*(${currentPage}-1)-${activityStat.count}+1"></span>
 							</td>
 							<td>
 								<span th:if="${activity.interestCategory}" th:text="${activity.interestCategory.name}"></span>
@@ -77,13 +78,13 @@
 									<span th:text="${activity.title}"></span>
 								</a>
 							</td>
-							<td>
-								<span th:if="${activity.status == 0}"><img class="condition" src="/img/13.png"></span>
-								<span th:if="${activity.status == 1}"><img class="condition" src="/img/12.png"></span>
-								<span th:if="${activity.status == 2}"><img class="condition" src="/img/9.png"></span>
-								<span th:if="${activity.status == 3}"><img class="condition" src="/img/11.png"></span>
-								<span th:if="${activity.status == 4}"><img class="condition" src="/img/10.png"></span>
-								<span th:if="${activity.status == 5}"><img class="condition" src="/img/8.png"></span>
+							<td class="status">
+								<img th:if="${activity.status == 0}" class="condition" src="/img/b_matching.png">
+								<span th:if="${activity.status == 1}"><img class="condition" src="/img/matching.png"></span>
+								<span th:if="${activity.status == 2}"><img class="condition" src="/img/a_matching.png"></span>
+								<span th:if="${activity.status == 3}"><img class="condition" src="/img/activiting.png"></span>
+								<span th:if="${activity.status == 4}"><img class="condition" src="/img/a_activiting.png"></span>
+								<span th:if="${activity.status == 5}"><img class="condition" src="/img/activity_cancle.png"></span>
 							</td>
 							<td id="actdate">
 								<span th:text="${#temporals.format(activity.regDate, 'yyyy-MM-dd HH:mm')}"></span>
@@ -94,19 +95,19 @@
 			</div>
 			<div class="down">
 				<div id="Paging">
-<!--					<button id="prev" type="submit" name="button"><</button>-->
-<!--					<button id="prevv" type="submit" name="button"><<</button>-->
-<!--					<button id="one" type="submit" name="button">1</button>-->
-<!--					<button id="two" type="submit" name="button">2</img></button>-->
-<!--					<button id="three" type="submit" name="button">3</img></button>-->
-<!--					<button id="next" type="submit" name="button">></button>-->
-<!--					<button id="nextt" type="submit" name="button">>></button>-->
-					<button th:each="pageNum : ${pageList}" th:inline="text"> <a
-							th:href="@{'/activity?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${pageNum}]]</a>
-					</button>
+					<button id="prev" type="submit" name="button"><</button>
+					<button id="prevv" type="submit" name="button"><<</button>
+					<button id="one" type="submit" name="button">1</button>
+					<button id="two" type="submit" name="button">2</img></button>
+					<button id="three" type="submit" name="button">3</img></button>
+					<button id="next" type="submit" name="button">></button>
+					<button id="nextt" type="submit" name="button">>></button>
+<!--					<button th:each="pageNum : ${pageList}" th:inline="text"> <a-->
+<!--							th:href="@{'/activity?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${pageNum}]]</a>-->
+<!--					</button>-->
 				</div>
 				<button id="list" type="button" name="button">
-					<a th:href="@{/activity/activityForm}"><img src="/img/18.png"></a>
+					<a th:href="@{/activity/activityForm}"><img id="addBtn" src="/img/18.png"></a>
 				</button>
 			</div>
 		</form>

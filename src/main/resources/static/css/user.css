@@ -1,0 +1,66 @@
+
+/*.upper {*/
+/*    width: inherit;*/
+/*    display: inline-block;*/
+/*}*/
+
+/*.upper > h4 {*/
+/*    display: inline-block;*/
+/*}*/
+
+/*.upper > .menus {*/
+/*    display: inline-block;*/
+/*}*/
+
+form > select {
+    float: left;
+}
+
+form > input {
+    float: left;
+}
+
+.list {
+    background-color: white;
+    border-radius: 15px;
+    border-color: #a5a5a5;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+span {
+    color: black;
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    border-collapse: separate;
+    background-color: rgba(0, 194, 100, 0.1);
+}
+
+thead > tr > th{
+    color: #019783;
+    height: 50px;
+}
+
+.searchtype {
+    background-color: rgba(0, 194, 100, 0.1) !important;
+    z-index: 99;
+    border: 1px solid #019783 !important;
+    color: #019783 !important;
+    width: 120px;
+    height: 30px;
+    background: url("/img/select_btn.png") no-repeat 90% 45%;
+    background-size: 15px;
+    float: left;
+}

@@ -1,16 +1,19 @@
 /*sidebar*/
 #sidebar {
     display: inline-block;
-    position: static;
+    /*position: static;*/
+    position: fixed;
     background-color: white;
     float: left;
-    width: 17%;
-    min-width: 190px;
+    width: 15%;
+    /*width: 200px;*/
+    /*min-width: 190px;*/
     padding: 20px 20px 20px 0;
     margin: 0;
     box-shadow: 5px 2px 15px rgb(192, 192, 192, 0.5);
     height: 750px;
     margin-right: 0;
+    margin-top: 10px;
 }
 
 ul {
@@ -33,6 +36,7 @@ ul {
     /*color: #4f4f4f;*/
 }
 .firstMenu span {
+    font-size: 16px;
 }
 .firstMenu img{
     float:right;
@@ -44,19 +48,26 @@ ul {
     font-size: 15px;
 }
 
+span {
+    font-size: 14px;
+}
+
 .firstMenu {
     padding: 15px 20px 15px 30px;
 }
 .submenu{
+    position: relative;
+    top: -15px;
     display: none;
 }
 .secondMenu {
-    padding: 0;
-    margin: 0;
+    /*padding: 0;*/
+    margin-top: -10px;
+    /*margin: 0;*/
     background-color: rgba(0, 192, 102, 0.1);
     border-bottom-right-radius: 15px;
-    border-top-right-radius: 15px;
-    padding: 15px 10px 15px 40px;
+    /*border-top-right-radius: 15px;*/
+    padding: 40px 10px 15px 40px;
     line-height: 40px;
 }
 .clickedMenu{
@@ -67,8 +78,8 @@ ul {
 }
 
 @media (max-width:1176px){
-    #sidebar {
-        height:900px;
+    /*#sidebar {*/
+    /*    height:900px;*/
 
-    }
+    /*}*/
 }

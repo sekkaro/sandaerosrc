@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" dir="ltr">
-<head lang="en">
-	<title>상대로</title>
-	<th:block th:replace="common/header :: head"/>
+<head>
+	<th:block th:replace="common/head.html"/>
 	<link rel="stylesheet" href="/css/insertAct.css">
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
-	<header th:replace="common/header :: header"/>
+	<header th:replace="common/menu :: header"></header>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
@@ -151,12 +150,25 @@
 					</div>
 				</div>
 
-<!--				<div id="agree">-->
-<!--					<input type="checkbox" id="locationShare" name="locationShare" value="agree">-->
-<!--					<label for="locationShare">위치 공유 동의</label>-->
-<!--					<input type="checkbox" id="PNumberShare" name="PNumberShare" value="agree">-->
-<!--					<label for="PNumberShare">전화번호 공유 동의</label>-->
-<!--				</div>-->
+				<hr class="divgap">
+
+				<div class="infoContent deliveryGroup" style="display: none;">
+					<div class="subtitle">나눔 내용</div>
+					<div class="sectionLeft">
+						<div class="subcontent">수령 방법</div>
+							<input type="radio" id="direct" name="delivery" value="0" checked>
+							<label for="direct">직접 수령</label>
+							<input type="radio" id="through" name="delivery" value="1">
+							<label for="through">봉사사 통해 전달</label>
+					</div>
+					<div class="sectionRight">
+						<div class="subcontent">물건 사진</div>
+							<input th:if="${productImage == null}" type="file" name="files" multiple>
+							<img th:if="${productImage}" alt="image" th:src="@{${'/images/' + productImage}}" width="250" height="250">
+							<input th:if="${productImage}" type="text" style="display:none;" name="file" th:value="${productImage}" >
+					</div>
+				</div>
+
 			</div>
 			<div id="buttonSet">
 				<button id="reset" type="button" name="button" onclick="goBack()"><img src="/img/cancel.png"/></button>

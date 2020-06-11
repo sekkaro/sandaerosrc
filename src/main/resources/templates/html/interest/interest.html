@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" dir="ltr">
-<head lang="en">
-    <title>상대로</title>
-    <th:block th:replace="common/header :: head"/>
+<head>
+    <th:block th:replace="common/head.html"/>
 </head>
-
 <body>
-    <header th:replace="common/header :: header"/>
+    <header th:replace="common/menu :: header"></header>
 
     <div lang="en" th:replace="common/menu :: menu"></div>
 
@@ -122,7 +120,7 @@
                 $('#editBtn'+id).html('완료');
             } else{
                 $('#editBtn'+id).html('수정');
-                $.post("/interest/edit", {
+                $.post("/interestdata/edit", {
                     id: id,
                     name: $(editName).val()
                 }, function(data) {

@@ -35,6 +35,15 @@
 <!--        <a th:href="@{/ask}" class="w3-bar-item w3-button w3-border-bottom menu">문의</a>-->
 <!--    </div>-->
 <!--</div>-->
+<header th:fragment="header">
+    <div id="logo">S A N G D A E R O</div>
+    <div id="button">
+        <a class="authenticated"><img id="onoff" src="/img/on.png" alt="on"></a>
+        <a class="unauthenticated" th:href="@{/login}"><img id="loginout" src="/img/login.png" alt="on"></a>
+        <a class="authenticated" th:href="@{/logout}"><img id="loginout" src="/img/logout.png" alt="on"></a>
+    </div>
+</header>
+
 <div id="sidebar" th:fragment="menu">
     <ul>
         <li class="firstMenu menu"><span>활동 관리</span> <img src = "/img/arrow.png"></li>

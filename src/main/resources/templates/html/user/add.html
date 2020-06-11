@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="common/header :: header">
-    <meta charset="UTF-8">
-    <title>상대로 프로젝트</title>
-    <style>
-        .container {
-            max-width: 100%;
-        }
-    </style>
+<head>
+    <th:block th:replace="common/head.html"/>
 </head>
 <body>
+    <header th:replace="common/menu :: header"></header>
+
     <div lang="en" th:replace="common/menu :: menu"></div>
 
     <div id="main" style="margin-left: 15%"></div>

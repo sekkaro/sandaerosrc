@@ -55,7 +55,7 @@ public class ActivityService {
 	private RequestRepository mRequestRepository;
 	
 	private static final int BLOCK_PAGE_NUMCOUNT = 12; // 블럭에 존재하는 페이지 수
-    private static final int PAGE_POSTCOUNT = 3;  // 한 페이지에 존재하는 게시글 수
+    private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public ActivityService(ActivityRepository activityRepository, InterestRepository interestRepository, 

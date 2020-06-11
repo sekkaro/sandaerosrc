@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-
-<head lang="en" th:replace="common/header :: header">
-<link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
-<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+<head>
+	<th:block th:replace="common/head.html"/>
 </head>
 <body>
-	<div lang="en" th:replace="common/menu :: menu"></div>
+<header th:replace="common/menu :: header"></header>
+
+<div lang="en" th:replace="common/menu :: menu"></div>
 	<div id="main" style="margin-left: 15%">
 		<div class="w3-teal">
 			<button id="openNav" style="display: none"

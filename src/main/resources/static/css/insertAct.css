@@ -1,59 +1,8 @@
 @import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
 
-html{
-}
-body {
-  font-family: "Noto Sans KR", sans-serif !important;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
-}
-
-/*header*/
-header {
-  height: 50px;
-  padding: 10px 15px 0 15px;
-  background: url("/img/bar.png") no-repeat;
-}
-
-#logo {
-  float: left;
-  padding-top: 10px;
-  color: white;
-}
 
 #button {
   float: right;
-}
-
-#onoff {
-  display: inline-block;
-  position: relative;
-  float: left;
-  margin-right: 5px;
-  width: 60px;
-}
-
-#loginout {
-  width: 85px;
-  display: inline-block;
-  position: relative;
-  float: right;
-}
-
-/*sidebar*/
-#sidebar {
-  display: inline-block;
-  position: static;
-  background-color: white;
-  float: left;
-  width: 17%;
-  min-width: 190px;
-  padding: 20px 20px 20px 0;
-  margin: 0;
-  box-shadow: 5px 2px 15px rgb(192, 192, 192, 0.5);
-  height: 750px;
-  margin-right: 0;
 }
 
 ul {
@@ -109,18 +58,6 @@ ul {
   border-bottom-right-radius: 25px;
 }
 
-/*main*/
-#main {
-  display: inline-block;
-  text-align: center;
-  padding-right: 20px;
-  width: 80%;
-  position: static;
-  float: right;
-  margin-top: 10px;
-  font-size: 20px;
-  color: #019783;
-}
 h4{
   text-align: left;
 }
@@ -134,6 +71,7 @@ form{
   width: 100%;
   height: 630px;
   text-align: left;
+  overflow: auto;
 }
 
 .infoContent {
@@ -391,9 +329,6 @@ hr {
     float: left;
     width: 56%;
   }
-  #main{
-    width:70%;
-  }
   #actInfo{
     height: 630px;
   }
@@ -419,9 +354,6 @@ hr {
   }
 }
 @media (max-width:1176px){
-  #main{
-    width: 70%;
-  }
   .sub{
       width: 70%;
   }
@@ -453,15 +385,6 @@ hr {
   #fileUpload{
     width: 70%;
     margin-left: 68px;
-  }
-  #sidebar {
-    height:900px;
-
-  }
-}
-@media (max-width:930px){
-  body{
-    width: 940px;
   }
 }
 

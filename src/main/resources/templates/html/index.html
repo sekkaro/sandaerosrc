@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
-<head lang="en">
-  <title>상대로</title>
-  <th:block th:replace="common/header :: head"/>
-
-  <script type="text/javascript" src="/static/js/sidebar.js" charset="utf-8"></script>
+<head>
+  <th:block th:replace="common/head.html"/>
 </head>
 
 <body>
-  <header th:replace="common/header :: header"></header>
+  <header th:replace="common/menu :: header"></header>
 
   <div lang="en" th:replace="common/menu :: menu"></div>
 
