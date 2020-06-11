@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-	<title>상대로</title>
-	<th:block th:replace="common/header :: head"/>
-	<link rel="stylesheet" href="/css/insertAct.css">
-	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<head>
+	<th:block th:replace="common/head.html"/>
 </head>
 <body>
-	<header th:replace="common/header :: header"/>
+<header th:replace="common/menu :: header"></header>
 
-	<div lang="en" th:replace="common/menu :: menu"></div>
+<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main">
 		<h4>모금 활동</h4>

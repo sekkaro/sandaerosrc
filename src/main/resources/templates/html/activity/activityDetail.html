@@ -1,66 +1,61 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-	<title>상대로</title>
-	<th:block th:replace="common/header :: head"/>
+<head>
+	<th:block th:replace="common/head.html"/>
+	<link rel="stylesheet" href="/css/manageAct.css">
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0794c5090c6554a68e453d22b1837f5&libraries=services"></script>
+
 </head>
 <body>
-	<header th:replace="common/header :: header"/>
+	<header th:replace="common/menu :: header"></header>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main">
+
+		<div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+			<span id="mContent">메시지</span>
+			<button onclick="hideMessage()" type="button" class="close" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
 		<h4>활동 상세</h4>
 
-		<div id="basicBody">
-			<div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-				<span id="mContent">메시지</span>
-				<button onclick="hideMessage()" type="button" class="close" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<input type="hidden" id="activityId" th:value="${activityDto.id}" />
+		<input type="hidden" id="activityId" th:value="${activityDto.id}"/>
 
-			<div class="row">
-				<div class="col-md-3">
-					<h4 id="titleText" th:text="${activityDto.title}" style="display: inline"></h4>
-					<input id="editTitleField" type="text" th:value="${activityDto.title}"
-						   style="display: none;">
-					<!--					<button id="editTitleButton">수정</button>-->
-					<!--					<button id="cancelTitleButton" style="display: none;">취소</button>-->
-				</div>
-				<div class="col-md-7">
-					<p id="status" th:switch="${activityDto.status}" style="display:inline;">
-						<span th:case="'0'">매칭 전</span> <span th:case="'1'">매칭 중</span> <span
-							th:case="'2'">매칭 완료</span> <span th:case="'3'">활동 진행 중</span><span
-							th:case="'4'">활동 완료</span> <span th:case="'5'">취소된 활동</span>
-					</p>
-					<select id="editStatus" style="display: none;">
-						<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
-						<option th:value="1" th:selected="${activityDto.status} == 1">매칭 중</option>
-						<option th:value="2" th:selected="${activityDto.status} == 2">매칭 완료</option>
-						<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
-						<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
-						<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
-					</select>
-					<!--					<button id="editStatusButton">수정</button>-->
-					<!--					<button id="cancelStatusButton" style="display: none;">취소</button>-->
-				</div>
-				<div class="col-md-2">
-					<a href="#" id="editTitleGroupBtn">편집</a>
-					<a href="#" id="cancelTitleGroupBtn" style="display: none;">취소</a>
-				</div>
-			</div>
-			<hr>
-			<div class="row">
-				<div class="col-md-5">
-					<label for="category">카테고리</label>
+		<div style="width: 90%">
+		<div class="bar">
+			<div class="heading" id="titleText" th:text="${activityDto.title}"></div>
+			<input id="editTitleField" type="text" th:value="${activityDto.title}" style="display: none;">
 
-					<p id="category" th:if="${activityDto.interestCategory}"
-					   th:text="${activityDto.interestCategory.name}" style="display: inline"></p>
-					<p id="category" th:if="${activityDto.interestCategory==null}" style="display: inline">카테고리 없음</p>
+			<span id="status" th:if="${activityDto.status == 0}"><img id="tag" src="/img/13.png"></span>
+			<span id="status" th:if="${activityDto.status == 1}"><img id="tag" src="/img/12.png"></span>
+			<span id="status" th:if="${activityDto.status == 2}"><img id="tag" src="/img/9.png"></span>
+			<span id="status" th:if="${activityDto.status == 3}"><img id="tag" src="/img/11.png"></span>
+			<span id="status" th:if="${activityDto.status == 4}"><img id="tag" src="/img/10.png"></span>
+			<span id="status" th:if="${activityDto.status == 5}"><img id="tag" src="/img/8.png"></span>
+
+			<select id="editStatus" style="display: none;">
+				<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
+				<option th:value="1" th:selected="${activityDto.status} == 1">매칭 중</option>
+				<option th:value="2" th:selected="${activityDto.status} == 2">매칭 완료</option>
+				<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
+				<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
+				<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
+			</select>
+			<button id="editTitleGroupBtn" class="inlinebox edit">편집</button>
+			<button id="cancelTitleGroupBtn" class="inlinebox edit" style="display: none;">취소</button>
+		</div>
+
+		<div id="actManage">
+			<div class="row1">
+				<div class="endtimemenu inlinebox">
+					<div class="inlinebox">
+						<div class="sub_heading">카테고리</div>
+					</div>
+					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory.name}" disabled>
 
 					<select id="editCategory" style="display: none;">
 						<option value="0">관심사를 선택하세요</option>
@@ -68,99 +63,75 @@
 								th:text="${interest.name}"
 								th:selected="${interest.id} == ${activityDto.interestCategory?.id}"></option>
 					</select>
-					<!--				<button id="editCategoryButton">수정</button>-->
-					<!--				<button id="cancelCategoryButton" style="display: none;">취소</button>-->
 				</div>
-				<div class="col-md-5">
-					<label for="deadline">마감 기한</label>
-					<p id="deadline" th:if="${activityDto.deadline==null}" style="display: inline">마감시간 없음</p>
-					<p id="deadline" th:if="${activityDto.deadline}" style="display: inline">[[${#temporals.format(activityDto.deadline, 'yyyy-MM-dd HH:mm')}]]</p>
-					<div id="editDeadline" style="display: none;">
-						<input type="date" name="deadlineDate" th:value="${activityDto.deadline?.toLocalDate()}">
-						<input type="time" name="deadlineTime" th:value="${activityDto.deadline?.toLocalTime()}">
+				<div class="endtimemenu inlinebox">
+					<div class="inlinebox">
+						<div class="sub_heading">마감기한</div>
 					</div>
-					<!--				<button id="editDeadlineButton">수정</button>-->
-					<!--				<button id="cancelDeadlineButton" style="display: none;">취소</button>-->
-				</div>
-				<div class="col-md-2">
-					<a th:if="${activityDto.status} == 0" href="#" id="editCategoryGroupBtn">편집</a>
-					<a href="#" id="cancelCategoryGroupBtn" style="display: none;">취소</a>
-				</div>
-			</div>
-			<hr>
-			<div class="row">
-				<h4>담당 인원</h4>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="row">
-						<label for="userList">이용자</label>
-						<p id="userList" th:if="${activityDto.activityUsers.size()} == 0" style="display:inline;">이용자 없음</p>
-						<table id="userList" th:if="${activityDto.activityUsers.size()} > 0">
-							<tr th:each="activityUser : ${activityDto.activityUsers}">
-								<td class="userIds" style="display:none;" th:text="${activityUser.user?.id}"></td>
-								<td>
-									<a th:text="${activityUser.user?.name}" data-fancybox th:data-src="${'#userDetail' + activityUser.user?.id}" href="javascript:;"></a>
-									<div style="display: none;" th:id="${'userDetail' + activityUser.user?.id}">
-										<h2>이용자 디테일</h2>
-										이름: <span>[[${activityUser.user.name}]]</span><br>
-										전화번호: <span>[[${activityUser.user.phone}]]</span><br>
-										전화번호 공유 동의: <span th:text="${activityUser.phoneAgree == 0} ? 'X' : 'O'"></span><br>
-										위치 공유 동의: <span th:text="${activityUser.locationAgree == 0} ? 'X' : 'O'"></span><br>
-										상태: <span th:switch="${activityUser.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
-										시작 사진: <img style="display:block;" th:if="${activityUser.startImage}" alt="image" th:src="@{${'/images/' + activityUser.startImage}}" width="250" height="300">
-										<span th:if="${activityUser.startImage==null}">없음</span>
-										<br>
-										끝 사진: <img style="display:block;" th:if="${activityUser.endImage}" alt="image" th:src="@{${'/images/' + activityUser.endImage}}" width="250" height="300">
-										<span th:if="${activityUser.endImage==null}">없음</span>
-									</div>
-								</td>
-								<td th:text="${activityUser.user?.phone}"></td>
-								<!--								<td class="text-center" th:text="${activityUser.phoneAgree == 0} ? 'X' : 'O'"></td>-->
-								<!--								<td class="text-center" th:text="${activityUser.locationAgree == 0} ? 'X' : 'O'"></td>-->
-								<!--								<td th:switch="${activityUser.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span-->
-								<!--										th:case="'2'">거절</span></td>-->
-							</tr>
-						</table>
-						<div id="editUsers" style="display: none;">
-							<input id="searchUsers" type="text" placeholder="유저 이름으로 검색">
-							<ul id="users" style="list-style-type: none;">
-
-							</ul>
-							<div id="pagingUsers">
-
-							</div>
-							<!--  <li th:each="user : ${users}"><input type="checkbox"
-										th:id="${user.id}" th:value="${user.id}" name="userId"
-										th:checked="${activityDto.userIds.contains(user.id)}"
-										autocomplete="off" /> <label th:for="${user.id}"
-										th:text="${user.name}"></label></li> -->
+					<div class="inlinebox">
+						<p id="deadline" th:if="${activityDto.deadline==null}" style="display: inline">마감시간 없음</p>
+						<p id="deadline" th:if="${activityDto.deadline}" style="display: inline">[[${#temporals.format(activityDto.deadline, 'yyyy-MM-dd HH:mm')}]]</p>
+						<div id="editDeadline" style="display: none;">
+							<input id="enddate" type="date" name="deadlineDate" th:value="${activityDto.deadline?.toLocalDate()}">
+							<input id="endtime" type="time" name="deadlineTime" th:value="${activityDto.deadline?.toLocalTime()}">
 						</div>
-						<!--					<button id="editUsersButton">수정</button>-->
-						<!--					<button id="cancelUsersButton" style="display: none;">취소</button>-->
-					</div>
-					<div class="row">
-						<label for="manager">관리자</label>
-						<p id="manager" th:if="${activityDto.manager==null}" style="display: inline">관리자 없음</p>
-						<p id="manager" th:if="${activityDto.manager}" th:text="${activityDto.manager.name}"></p>
-						<select id="editManager" style="display: none;">
-							<option value="0">관리자를 선택하세요</option>
-							<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" th:selected="${manager.id} == ${activityDto.manager?.id}"></option>
-						</select>
-						<!--					<button id="editManagerButton">수정</button>-->
-						<!--					<button id="cancelManagerButton" style="display: none;">취소</button>-->
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="row">
-						<div class="col-md-6">
-							<label for="volunteerList">봉사자</label>
-							<p id="volunteerList" th:if="${activityDto.activityVolunteers.size()} == 0" style="display: inline">봉사자 없음</p>
-							<table id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
-								<tr th:each="activityVolunteer : ${activityDto.activityVolunteers}">
-									<td class="volunteerIds" style="display:none;" th:text="${activityVolunteer.user?.id}"></td>
-									<td>
+				<button th:if="${activityDto.status} == 0" id="editCategoryGroupBtn" class="edit">편집</button>
+				<button id="cancelCategoryGroupBtn" class="edit" style="display: none;">취소</button>
+			</div>
+
+			<hr class="line">
+
+			<div class="sub_contentbox">
+				<div class="sub_heading">담당 인원</div>
+				<button th:if="${activityDto.status} <= 1" id="editUserGroupBtn" class="edit">편집</button>
+				<button id="cancelUserGroupBtn" class="edit" style="display: none;">취소</button>
+				<div class="leftmenu">
+					<div class="inlinebox">
+						<div class="menu_name">이용자</div>
+					</div>
+					<div class="inlinebox">
+						<div id="userList" class="members user" th:if="${activityDto.activityUsers.size()} == 0" style="display:inline;">
+							이용자 없음
+						</div>
+
+						<div id="userList" th:if="${activityDto.activityUsers.size()} > 0">
+							<div class="members user" th:each="activityUser : ${activityDto.activityUsers}">
+								<span th:text="${activityUser.user?.name}"></span>
+								<span th:text="${activityUser.user?.phone}"></span>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="inlinebox">
+						<div class="menu_name">담당 관제사</div>
+					</div>
+					<div class="inlinebox">
+						<div class="members charge">
+							<span id="manager" th:text="${activityDto.manager.name}+' '+${activityDto.manager.phone}"></span>
+							<select id="editManager" style="display: none;">
+								<option value="0">관리자를 선택하세요</option>
+								<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" th:selected="${manager.id} == ${activityDto.manager?.id}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="rightmenu2">
+					<div class="menu_name workertext">봉사자</div>
+
+					<div class="workerblock" style="width: 80%">
+						<div class="inlinebox">
+							<div id="volunteerList" class="members worker" th:if="${activityDto.activityVolunteers.size()} == 0">
+								봉사자 없음
+							</div>
+							<div id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
+								<div class="members worker" th:each="activityVolunteer : ${activityDto.activityVolunteers}">
+									<input type="hidden" class="volunteerIds" th:value="${activityVolunteer.user?.id}"/>
+									<div>
 										<a th:text="${activityVolunteer.user?.name}" data-fancybox th:data-src="${'#volunteerDetail' + activityVolunteer.user?.id}" href="javascript:;"></a>
+										<span th:text="${activityVolunteer.user?.phone}"></span>
 										<div style="display: none;" th:id="${'volunteerDetail' + activityVolunteer.user?.id}">
 											<h2>봉사자 디테일</h2>
 											이름: <span>[[${activityVolunteer.user.name}]]</span><br>
@@ -168,1283 +139,1264 @@
 											전화번호 공유 동의: <span th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></span><br>
 											위치 공유 동의: <span th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></span><br>
 											상태: <span th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
-											시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="250" height="300">
+											시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.startImage}}" width="250" height="300">
 											<span th:if="${activityVolunteer.startImage == null}">없음</span>
 											<br>
-											끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="250" height="300">
+											끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.endImage}}" width="250" height="300">
 											<span th:if="${activityVolunteer.endImage == null }">없음</span>
 										</div>
-									</td>
-									<td th:text="${activityVolunteer.user?.phone}"></td>
-									<!--							<td class="text-center" th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></td>-->
-									<!--							<td class="text-center" th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></td>-->
-									<!--							<td th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span-->
-									<!--									th:case="'2'">거절</span></td>-->
-								</tr>
-							</table>
-							<div id="editVolunteers" style="display: none;">
-								<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색">
-								<ul id="volunteers" style="list-style-type: none;">
 
-								</ul>
-								<div id="pagingVolunteers">
-
+									</div>
 								</div>
-								<!--  <li th:each="volunteer : ${users}"><input type="checkbox"
-										  th:id="${volunteer.id}" th:value="${volunteer.id}"
-										  name="volunteerId"
-										  th:checked="${activityDto.volunteerIds.contains(volunteer.id)}" /> <label
-										  th:for="${volunteer.id}" th:text="${volunteer.name}"></label></li> -->
 							</div>
-							<!--				<button id="editVolunteersButton">수정</button>-->
-							<!--				<button id="cancelVolunteersButton" style="display: none;">취소</button>-->
-						</div>
-						<ul style="display:none;" id="clickedUsers" class="list-group mt-2 col-md-3">
-						</ul>
-						<ul style="display:none;" id="clickedVolunteers" class="list-group mt-2 col-md-3">
-						</ul>
-					</div>
 
-				</div>
-				<div class="col-md-2">
-					<a th:if="${activityDto.status} <= 1" href="#" id="editUserGroupBtn">편집</a>
-					<a  href="#" id="cancelUserGroupBtn" style="display: none;">취소</a>
+						</div>
+					</div>
 				</div>
 			</div>
-			<hr>
-			<div class="row">
-				<h4>활동 내용</h4>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
-					<div class="row">
-						<label for="volunteerTime">활동 시간</label>
+
+			<hr class="line">
+
+			<div class="sub_contentbox">
+				<div class="sub_heading" style="margin-right: 0px">활동 내용
+					<button id="editActivityGroupBtn" class="edit">편집</button>
+					<button id="cancelActivityGroupBtn" class="edit" style="display: none;">취소</button>
+				</div>
+
+				<div class="leftmenu">
+					<div class="inlinebox">
+						<div class="menu_name">활동 시간</div>
+					</div>
+					<div class="inlinebox">
 						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime==null}">시작 시간 없음 ~ 끝 시간 없음</p>
 						<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime==null}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ 끝 시간 없음</p>
 						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime}">시작 시간 없음 ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
 						<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
+
 						<div id="editVolunteerTime" style="display: none;">
-							시작 시간: <input type="date" name="startDate" th:value="${activityDto.startTime?.toLocalDate()}">
-							<input type="time" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}"> <br>
-							끝 시간: <input type="date" name="endDate" th:value="${activityDto.endTime?.toLocalDate()}">
-							<input type="time" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}">
+							<input type="date" id="startdate" name="startDate" th:value="${activityDto.startTime?.toLocalDate()}">
+							<input type="time" id="starttime" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}">
+							<span id="sign">~</span>
+							<input type="date" id="enddate" name="endDate" th:value="${activityDto.endTime?.toLocalDate()}">
+							<input type="time" id="endtime" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}">
 						</div>
-						<!--					<button id="editVolunteerTimeButton">수정</button>-->
-						<!--					<button id="cancelVolunteerTimeButton" style="display: none;">취소</button>-->
 					</div>
-					<div class="row">
-						<label for="content">세부내용</label>
-						<p id="content" th:if="${activityDto.content.isEmpty()}">세부내용 없음</p>
-						<p id="content" th:if="${activityDto.content != ''}" th:text="${activityDto.content}"></p>
-						<textarea id="editContent" name="content" style="display: none;">[[${activityDto.content}]]</textarea>
-						<!--					<button id="editContentButton">수정</button>-->
-						<!--					<button id="cancelContentButton" style="display: none;">취소</button>-->
+					<div class="explanationbox">
+						<div class="inlinebox">
+							<div class="menu_name explain">상세설명</div>
+						</div>
+						<div class="inlinebox explain_textarea">
+							<p id="content" th:if="${activityDto.content.isEmpty()}">세부내용 없음</p>
+							<p id="content" th:if="${activityDto.content != ''}" th:text="${activityDto.content}"></p>
+							<input type="textarea" id="explianation" name="explanation" th:value="${activityDto.content}" style="display: none;">
+						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="row">
-						<label for="place">장소</label>
-						<p id="place" th:if="${activityDto.place.isEmpty()}">장소 없음</p>
-						<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
 
-						<div id="editPlace" name="place" style="display: none;">
-							<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}">
-							<input type="button" onclick="execPostcode()" value="주소 검색"><br>
-							<input type="hidden" id="coordi_x">
-							<input type="hidden" id="coordi_y">
+				<div class="rightmenu" style="top: 0px">
+					<div class="search_box">
+						<div class="inlinebox">
+							<div class="menu_name">장소</div>
 						</div>
-						<!--  <button id="editPlaceButton">수정</button>
-						<button id="cancelPlaceButton" style="display: none;">취소</button> -->
+						<div class="inlinebox searchbox">
+							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
+							<div id="editPlace" name="place" style="display: none;">
+								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" onclick="execPostcode()">
+								<input type="hidden" id="coordi_x">
+								<input type="hidden" id="coordi_y">
+							</div>
+						</div>
 					</div>
-					<div class="row">
-						<div id="kakaomap" style="width:300px;height:300px;margin-top:10px;"></div>
-						<input type="hidden" id="original_place" th:value="${activityDto.place}">
-					</div>
-				</div>
-				<div class="col-md-2">
-					<a href="#" id="editActivityGroupBtn">편집</a>
-					<a href="#" id="cancelActivityGroupBtn" style="display: none;">취소</a>
+					<div class="map" id="kakaomap" style="width:300px;height:300px;"></div>
+					<input type="hidden" id="original_place" th:value="${activityDto.place}">
 				</div>
 			</div>
-			<hr>
-			<div class="row deliveryGroup" style="display:none;">
-				<h4>나눔 내용</h4>
-			</div>
-			<div class="row deliveryGroup" style="display:none;">
-				<div class="col-md-6">
-					전달 여부:
-					<span id="delivery" th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" ></span>
-					<div id="editDelivery" style="display: none;">
-						<input type="radio" id="direct" name="delivery" value="0" th:checked="${activityDto.deliveryFlag} == 0">
-						<label for="direct">직접 수령</label>
-						<input type="radio" id="through" name="delivery" value="1" th:checked="${activityDto.deliveryFlag} == 1">
-						<label for="through">봉사사 통해 전달</label>
+
+			<hr class="line">
+
+			<div class="sub_contentbox deliveryGroup">
+				<div class="sub_heading">나눔 내용</div>
+				<div class="leftmenu">
+					<div class="inlinebox">
+						<div class="menu_name">전달 여부</div>
+					</div>
+					<div class="inlinebox">
+						<span id="delivery" th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" ></span>
+						<div id="editDelivery" style="display: none;">
+							<input type="radio" id="direct" name="delivery" value="0" th:checked="${activityDto.deliveryFlag} == 0">
+							<label for="direct">직접 수령</label>
+							<input type="radio" id="through" name="delivery" value="1" th:checked="${activityDto.deliveryFlag} == 1">
+							<label for="through">봉사사 통해 전달</label>
+						</div>
 					</div>
 				</div>
-				<div class="col-md-6" id="images" th:if="${files.size()} > 0">
-					<img alt="image" th:each="file: ${files}" th:src="@{${'/images/' + file}}" width="250" height="250">
+				<div class="rightmenu thing">
+					<div class="inlinebox">
+						<div class="menu_name">물건 사진</div>
+					</div>
+					<div id="images" th:if="${files.size()} > 0">
+						<img alt="image" th:each="file: ${files}" th:src="@{${'/images/' + file}}" width="250" height="250">
+					</div>
 				</div>
 			</div>
+
+			<hr class="divgap2">
+
+		</div>
+		<div id="buttonSet">
+			<button id="submit" type="button" name="button" onclick="goList()"><img src="/img/29.png"></button>
+		</div>
 		</div>
 
-		<div>
-			<a th:href="@{/activity}">
-				<button>목록</button>
-			</a>
-		</div>
+	</div>
 
-		<!--  전화번호 공유 동의:
-	   <p id="phoneAgree" th:text="${activityDto.phoneAgree == 0} ? 'X' : 'O'" />
-	   <div id="editPhoneAgree" style="display: none;">
-		   <input type="checkbox" id="phoneAgree" name="phoneAgree"
-			   th:checked="${activityDto.phoneAgree} == 1" /> <label
-			   for="phoneAgree">전화번호 공유 동의</label>
-	   </div>
-	   <button id="editPhoneAgreeButton">수정</button>
-	   <button id="cancelPhoneAgreeButton" style="display: none;">취소</button>
-	   <br>
-	   <br>
-		<a th:href="@{'/activity/activityForm/edit/' + ${activityDto.id}}">
-		   <button>수정</button>
-	   </a> -->
+	<div lang="en" th:replace="common/footer :: footer"></div>
+	<script>
 
-		<script th:inline="javascript">
+		var origin_place = document.getElementById('original_place').value;
 
-			var origin_place = document.getElementById('original_place').value;
+		var mapContainer = document.getElementById('kakaomap'), // 지도를 표시할 div
+				mapOption = {
+					center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+					level: 5 // 지도의 확대 레벨
+				};
 
-			var mapContainer = document.getElementById('kakaomap'), // 지도를 표시할 div
-					mapOption = {
-						center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-						level: 5 // 지도의 확대 레벨
-					};
+		//지도를 미리 생성
+		var map = new daum.maps.Map(mapContainer, mapOption);
+		//주소-좌표 변환 객체를 생성
+		var geocoder = new daum.maps.services.Geocoder();
+		//마커를 미리 생성
+		var marker = new daum.maps.Marker({
+			position: new daum.maps.LatLng(37.537187, 127.005476),
+			map: map
+		});
 
-			//지도를 미리 생성
-			var map = new daum.maps.Map(mapContainer, mapOption);
-			//주소-좌표 변환 객체를 생성
-			var geocoder = new daum.maps.services.Geocoder();
-			//마커를 미리 생성
-			var marker = new daum.maps.Marker({
-				position: new daum.maps.LatLng(37.537187, 127.005476),
-				map: map
+		findCoordi(origin_place);
+
+		function changeMap(y, x) {
+			// 해당 주소에 대한 좌표를 받아서
+			var coords = new daum.maps.LatLng(y, x);
+			// 지도를 보여준다.
+			mapContainer.style.display = "block";
+			map.relayout();
+			// 지도 중심을 변경한다.
+			map.setCenter(coords);
+			// 마커를 결과값으로 받은 위치로 옮긴다.
+			marker.setPosition(coords)
+		}
+
+		function findCoordi(addr) {
+
+			console.log(addr);
+			geocoder.addressSearch(addr, function(results, status) {
+				// 정상적으로 검색이 완료됐으면
+				if (status === daum.maps.services.Status.OK) {
+
+					var result = results[0]; //첫번째 결과의 값을 활용
+					document.getElementById("coordi_x").value = result.x;
+					document.getElementById("coordi_y").value = result.y;
+
+					// // 해당 주소에 대한 좌표를 받아서
+					var coords = new daum.maps.LatLng(result.y, result.x);
+					// 지도를 보여준다.
+					mapContainer.style.display = "block";
+					map.relayout();
+					// 지도 중심을 변경한다.
+					map.setCenter(coords);
+					// 마커를 결과값으로 받은 위치로 옮긴다.
+					marker.setPosition(coords)
+				}
 			});
+		}
+
+		function execPostcode() {
+			new daum.Postcode({
+				oncomplete: function(data) {
+					var addr = data.address; // 최종 주소 변수
+
+					// 주소 정보를 해당 필드에 넣는다.
+					document.getElementById("address").value = addr;
+					// 주소로 상세 정보를 검색
+					geocoder.addressSearch(addr, function(results, status) {
+						// 정상적으로 검색이 완료됐으면
+						if (status === daum.maps.services.Status.OK) {
+
+							var result = results[0]; //첫번째 결과의 값을 활용
+							document.getElementById("coordi_x").value = result.x;
+							document.getElementById("coordi_y").value = result.y;
+							changeMap(result.y, result.x);
+						}
+					});
+				}
+			}).open();
+		}
+
+		function goList() {
+			window.history.back();
+		}
+
+
+		function hideMessage() {
+			$('#message').hide();
+		}
+
+		var statusValue;
+
+		$('#editTitleGroupBtn').click(function() {
+
+			$('#editTitleField').toggle();
+
+			$('#titleText').toggle();
+
+			statusValue = $('#editStatus').val();
+
+			$('#editStatus').toggle();
+
+			$('#status').toggle();
+
+			$('#cancelTitleGroupBtn').toggle();
+
+			if ($('#editTitleGroupBtn').html() == '편집') {
+				$('#editTitleGroupBtn').html('완료');
+			} else {
+				if ($('#editTitleField').val().length == 0) {
+
+					$('#editTitleField').toggle();
+
+					$('#titleText').toggle();
+
+					$('#editStatus').toggle();
+
+					$('#status').toggle();
+
+					$('#cancelTitleGroupBtn').toggle();
+
+					$('#message').removeClass("alert-info");
+					$('#message').addClass("alert-danger");
+					$('#mContent').html("제목은 1글자 이상이어야 합니다");
+					$('#message').show();
+
+					setTimeout(function () {
+						hideMessage();
+					}, 2000);
+
+				} else {
+					$('#editTitleGroupBtn').html('편집');
+					$.post("/activitydata/setTitleAndStatus", {
+						id: $('#activityId').val(),
+						title: $('#editTitleField').val(),
+						status: statusValue
+					}, function (data) {
+						var arr = data.split("|");
+						$('#titleText').html(arr[0]);
+						var status;
+						switch (Number(arr[1])) {
+							case 0:
+								status = 0;
+								$('#editCategoryGroupBtn').show();
+								$('#editUserGroupBtn').show();
+								break;
+							case 1:
+								status = 1;
+								$('#editCategoryGroupBtn').hide();
+								$('#editUserGroupBtn').show();
+								break;
+							case 2:
+								status = 2;
+								$('#editCategoryGroupBtn').hide();
+								$('#editUserGroupBtn').hide();
+								break;
+							case 3:
+								status = 3;
+								$('#editCategoryGroupBtn').hide();
+								$('#editUserGroupBtn').hide();
+								break;
+							case 4:
+								status = 4;
+								$('#editCategoryGroupBtn').hide();
+								$('#editUserGroupBtn').hide();
+
+								$.post("/userdata/addtime", {
+									id: id,
+									time: document.getElementById("currentTime").value
+								}, function (data) {
+									console.log(data);
+								});
+
+								break;
+							case 5:
+								status = 5;
+								$('#editCategoryGroupBtn').hide();
+								$('#editUserGroupBtn').hide();
+						}
+						$('#status').val(status);
+
+						$('#message').removeClass("alert-danger");
+						$('#message').addClass("alert-info");
+						$('#mContent').html("제목과 상태를 수정하였습니다.");
+						$('#message').show();
+
+						setTimeout(function () {
+							hideMessage();
+						}, 2000);
+
+					});
+				}
+
+			}
+		})
+
+		$('#cancelTitleGroupBtn').click(function(){
+			$('#editTitleField').toggle();
+			$('#editTitleField').val($('#titleText').html());
+			$('#titleText').toggle();
+			$('#editStatus').toggle();
+			$('#editStatus').val(statusValue);
+			$('#status').toggle();
+
+			$('#cancelTitleGroupBtn').toggle();
+			$('#editTitleGroupBtn').html('편집');
+		})
+
+
+		var categoryValue;
+		var deadlineDate;
+		var deadlineTime;
+
+		$('#editCategoryGroupBtn').click(function() {
+
+			categoryValue = $('#editCategory').val();
+
+			$('#editCategory').toggle();
+
+			$('#category').toggle();
+
+			deadlineDate = $('input[name="deadlineDate"]').val();
+			deadlineTime = $('input[name="deadlineTime"]').val();
+
+			$('#editDeadline').toggle();
+
+			$('#deadline').toggle();
+
+			$('#cancelCategoryGroupBtn').toggle();
+
+			if($('#editCategoryGroupBtn').html() == '편집'){
+				$('#editCategoryGroupBtn').html('완료');
+			}
+			else{
+
+				if(categoryValue == 0 || deadlineDate == "" || deadlineTime == ""){
+					$('#editCategory').toggle();
+
+					$('#category').toggle();
+
+					$('#editDeadline').toggle();
+
+					$('#deadline').toggle();
+
+					$('#cancelCategoryGroupBtn').toggle();
+
+					$('#message').removeClass("alert-info");
+					$('#message').addClass("alert-danger");
+					if(categoryValue == 0){
+						$('#mContent').html("지정한 카테고리는 없는 카테고리입니다");
+					}
+					else if(deadlineDate == ""){
+						$('#mContent').html("마감 날짜가 입력되지 않았습니다");
+					}
+					else{
+						$('#mContent').html("마감 시간이 입력되지 않았습니다");
+					}
+					$('#message').show();
+
+					setTimeout(function() {
+						hideMessage();
+					}, 2000);
+				}
+				else{
+					$('#editCategoryGroupBtn').html('편집');
+					$.post("/activitydata/setCategoryAndDeadline",
+							{ id: $('#activityId').val(),
+								category: categoryValue,
+								deadlineDate: deadlineDate,
+								deadlineTime: deadlineTime
+							},
+							function(data) {
+								var arr = data.split(".");
+								$('#category').val(arr[0]);
+								$('#deadline').text((arr[1] === "" || arr[2] === "")?"마감시간 없음":arr[1] + " " + arr[2]);
+
+								$('#message').removeClass("alert-danger");
+								$('#message').addClass("alert-info");
+								$('#mContent').html("카테고리와 마감 기한을 수정하였습니다.");
+								$('#message').show();
+
+								setTimeout(function() {
+									hideMessage();
+								}, 2000);
+							});
+				}
+
+			}
+		})
+
+		$('#cancelCategoryGroupBtn').click(function(){
+			$('#editCategory').toggle();
+			$('#editCategory').val(categoryValue);
+			$('#category').toggle();
+
+			getUsers(true, categoryValue);
+
+			$('#editDeadline').toggle();
+			var deadlineText = $('#deadline').text();
+
+			if(deadlineText.includes("마감시간 없음")){
+				$('input[name="deadlineDate"]').val("");
+				$('input[name="deadlineTime"]').val("");
+			}
+			else{
+				$('input[name="deadlineDate"]').val(deadlineDate);
+				$('input[name="deadlineTime"]').val(deadlineTime);
+			}
+			$('#deadline').toggle();
+
+			$('#cancelCategoryGroupBtn').toggle();
+			$('#editCategoryGroupBtn').html('편집');
+		})
+
+
+		const usersPerPage = 4;
+		var numOfPages = 0;
+		var numOfPagesVolunteers = 0;
+		var users = [];
+		var volunteers = [];
+		var clickedUsers = [];
+		var clickedVolunteers = [];
+		var userList = [];
+		var volunteerList = [];
+		var userStatusList = [];
+
+		$('.userIds').each(function(){
+			clickedUsers.push($(this).text());
+			userList.push($(this).text());
+		});
+
+		$('.volunteerIds').each(function(){
+			clickedVolunteers.push($(this).text());
+			volunteerList.push($(this).text());
+		});
+
+		function fancyClickUsers(){
+			try{
+				var innerHtml = (clickedUsers.length>0)?"이용자:":"";
+				if(userStatusList.length > 0){
+					userStatusList.forEach(function(user){
+						if(clickedUsers.indexOf(user.id.toString()) > -1){
+							innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";
+						}
+					});
+				}
+
+			}
+			finally{
+				$('#clickedUsers').html(innerHtml);
+			}
+		}
+
+		function fancyClickVolunteers(){
+			try{
+				var innerHtml = (clickedVolunteers.length>0)?"봉사자:":"";
+				var color="";
+				if(userStatusList.length > 0){
+					userStatusList.forEach(function(user){
+						if(clickedVolunteers.indexOf(user.id.toString()) > -1){
+							if($('#volunteer'+ user.id).val() == 0){
+								color = "warning";
+							}
+							else if($('#volunteer'+ user.id).val() == 1){
+								color = "success";
+							}
+							else{
+								color = "danger";
+							}
+							innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";
+						}
+					});
+				}
+
+			}
+			finally{
+				$('#clickedVolunteers').html(innerHtml);
+			}
+		}
+
+		function addEventListenersToUsers(){
+			$('input[name="userId"]').each(function(){
+
+				/*if($(this).prop('checked')){
+                    $('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
+				if(clickedUsers.indexOf($(this).val()) > -1){
+					$(this).prop('checked', true);
+					//$('#user'+ $(this).val()).toggle();
+				}
+
+				$(this).click(function(){
+					$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
+					$('#user'+ $(this).val()).toggle();
+
+					if($(this).prop('checked')){
+						if(clickedUsers.indexOf($(this).val()) == -1){
+							clickedUsers.push($(this).val());
+						}
+					}
+					else{
+						if(clickedUsers.indexOf($(this).val()) > -1){
+							clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
+						}
+					}
+
+					fancyClickUsers();
+
+				})
+
+			})
+
+			/*$('input[name="userId"]+label+select').each(function(){
+                $(this).change(function(){
+
+                    for(var i = 0; i < users.length ; i++){
+                        if(users[i].id == $(this).attr('id').replace("user","")){
+                            users[i].status = $(this).val();
+                            break;
+                        }
+                    }
+
+                });
+            })*/;
+		}
+
+		function addEventListenersToVolunteers(){
+
+			$('input[name="volunteerId"]').each(function(){
+
+				/*if($(this).prop('checked')){
+                    $('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
+				if(clickedVolunteers.indexOf($(this).val()) > -1){
+					$(this).prop('checked', true);
+					$('#volunteer'+ $(this).val()).toggle();
+				}
+
+				$(this).click(function(){
+					$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
+					$('#volunteer'+ $(this).val()).toggle();
+
+					if($(this).prop('checked')){
+						if(clickedVolunteers.indexOf($(this).val()) == -1){
+							clickedVolunteers.push($(this).val());
+						}
+					}
+					else{
+						if(clickedVolunteers.indexOf($(this).val()) > -1){
+							clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
+						}
+					}
+
+					fancyClickVolunteers();
+
+				})
+
+			})
+
+			$('input[name="volunteerId"]+label+select').each(function(){
+				$(this).change(function(){
+
+					for(var i = 0; i < volunteers.length ; i++){
+						if(volunteers[i].id == $(this).attr('id').replace("volunteer","")){
+							volunteers[i].status = $(this).val();
+							break;
+						}
+					}
+
+					fancyClickVolunteers();
+				});
+			});
+
+		}
+
+		function addEventListenersToUserPagingButtons(){
+			$('#pagingUsers button.page').each(function(){
+
+				$(this).click(function(){
+					var pageNumber = $(this).text();
+					var innerHtml = "";
+					try{
+
+						for(var i = 0; i < users.length ; i++ ){
+
+							if(i >= ((pageNumber-1)*usersPerPage) && i < (pageNumber*usersPerPage)){
+								innerHtml += "<li><input type='checkbox' id='"+ users[i].id + "' value='"+ users[i].id +"' name='userId'";
+							}
+							else{
+								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ users[i].id + "' value='"+ users[i].id +"' name='userId'";
+							}
+
+							if(clickedVolunteers.indexOf(users[i].id.toString()) > -1){
+								innerHtml += " disabled> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
+							}
+							else{
+								innerHtml += "> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
+							}
+
+							/*if(users[i].status==null || users[i].status == 0){
+                                innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+                            }
+                            else if(users[i].status == 1){
+                                innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+                            }
+                            else{
+                                innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+                            }*/
+
+						}
+
+					}
+					finally{
+						$('#users').html(innerHtml);
+						addEventListenersToUsers();
+					}
+				})
+
+			})
+
+		}
+
+		function addEventListenersToVolunteerPagingButtons(){
+			$('#pagingVolunteers button.page').each(function(){
+
+				$(this).click(function(){
+					var pageNumber = $(this).text();
+					var innerHtml = "";
+					try{
+
+						for(var i = 0; i < volunteers.length ; i++ ){
+
+							if(i >= ((pageNumber-1)*usersPerPage) && i < (pageNumber*usersPerPage)){
+								innerHtml += "<li><input type='checkbox' id='"+ volunteers[i].id + "' value='"+ volunteers[i].id +"' name='volunteerId'";
+							}
+							else{
+								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ volunteers[i].id + "' value='"+ volunteers[i].id +"' name='volunteerId'";
+							}
+
+							if(clickedUsers.indexOf(volunteers[i].id.toString()) > -1){
+								innerHtml += " disabled> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
+							}
+							else{
+								innerHtml += "> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
+							}
+
+							if(volunteers[i].status==null || volunteers[i].status == 0){
+								innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else if(volunteers[i].status == 1){
+								innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+							}
+							else{
+								innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+							}
+
+						}
+
+					}
+					finally{
+						$('#volunteers').html(innerHtml);
+						addEventListenersToVolunteers();
+					}
+				})
+
+			})
+
+		}
+
+		function searchUsers(keyword){
+			var innerHtml = "";
+			var innerPage = "";
+			var pages = 0;
+			users = [];
+
+			try{
+
+				userStatusList.forEach(function(user){
+					if(user.name.includes(keyword) && (user.type == null || user.type == 0)){
+						users.push(user);
+					}
+				});
+
+				if(users.length > 0){
+					var count = 0;
+					users.forEach(function(item){
+						if(pages<1){
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
+						}
+						else{
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
+						}
+
+						if(clickedVolunteers.indexOf(item.id.toString()) > -1){
+							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+						}
+						else{
+							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+						}
+
+
+						/*if(item.status==null || item.status == 0){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else if(item.status == 1){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else{
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+                        }*/
+
+						count++;
+
+						if(count == usersPerPage){
+							pages++;
+							count = 0;
+						}
+					})
+
+					numOfPages = (count>0)?pages+1:pages;
+
+					for(var i = 0; i < numOfPages ; i++){
+						innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
+					}
+				}
+				else{
+					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
+				}
+
+			}
+			finally{
+
+				$('#users').html(innerHtml);
+				$('#pagingUsers').html(innerPage);
+
+				addEventListenersToUsers();
+				addEventListenersToUserPagingButtons();
+
+			}
+
+		}
+
+		function searchVolunteers(keyword){
+			var innerHtml = "";
+			var innerPage = "";
+			var pages = 0;
+			volunteers = [];
+
+			try{
+
+				userStatusList.forEach(function(user){
+					if(user.name.includes(keyword) && (user.type == null || user.type == 1)){
+						volunteers.push(user);
+					}
+				});
+
+				if(volunteers.length > 0){
+
+					var count = 0;
+					volunteers.forEach(function(item){
+						if(pages<1){
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
+						}
+						else{
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
+						}
+
+						if(clickedUsers.indexOf(item.id.toString()) > -1){
+							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
+						}
+						else{
+							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
+						}
+
+						if(item.status==null || item.status == 0){
+							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+						}
+						else if(item.status == 1){
+							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+						}
+						else{
+							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+						}
+
+						count++;
+
+						if(count == usersPerPage){
+							pages++;
+							count = 0;
+						}
+					})
+
+					numOfPagesVolunteers = (count>0)?pages+1:pages;
+
+					for(var i = 0; i < numOfPagesVolunteers ; i++){
+						innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
+					}
+
+				}
+				else{
+					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
+				}
+
+			}
+			finally{
+
+				$('#volunteers').html(innerHtml);
+				$('#pagingVolunteers').html(innerPage);
+
+				addEventListenersToVolunteers();
+				addEventListenersToVolunteerPagingButtons();
+
+			}
+
+		}
+
+		function getUsers(isSearch, category){
+			$.get("/activitydata/getUsers", {id: $('#activityId').val(), category: category}, function(data) {
+
+				userStatusList = data;
+
+				if(isSearch){
+					searchUsers("");
+					searchVolunteers("");
+
+					fancyClickUsers();
+					fancyClickVolunteers();
+
+					var userIdList = [];
+
+					try{
+
+						if(userStatusList!=null && userStatusList.length > 0){
+							userStatusList.forEach(function(user){
+								userIdList.push(user.id.toString());
+							});
+						}
+
+					}
+					finally{
+
+						for(var i = clickedUsers.length -1; i >= 0 ; i--){
+							if(userIdList.indexOf(clickedUsers[i]) == -1){
+								clickedUsers.splice(i, 1);
+							}
+						}
+
+						for(var i = clickedVolunteers.length -1; i >= 0 ; i--){
+							if(userIdList.indexOf(clickedVolunteers[i]) == -1){
+								clickedVolunteers.splice(i, 1);
+							}
+						}
+
+					}
+				}
+
+			});
+		}
+
+		getUsers(false, $('#editCategory').val());
+
+		$('#editCategory').on('change', function() {
+
+			getUsers(true, $('#editCategory').val());
+
+		});
+
+		if($('#editCategory option:selected').html().toString().includes("물건")){
+			$('.deliveryGroup').show();
+		}
+		else{
+			$('.deliveryGroup').hide();
+		}
+
+
+		$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
+
+		$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
+
+		$('#editUserGroupBtn').click(function() {
+
+			//var userStatusList = [];
+			var volunteerStatusList = [];
+
+			/*if(clickedUsers!=null && clickedUsers.length > 0){
+                clickedUsers.forEach(function(userId){
+                    userStatusList.push($('#user' + userId).val());
+                });
+            }*/
+
+			if(clickedVolunteers!=null && clickedVolunteers.length > 0){
+				clickedVolunteers.forEach(function(volunteerId){
+					volunteerStatusList.push($('#volunteer' + volunteerId).val());
+				});
+			}
+
+			$('#editUsers').toggle();
+
+			$('#userList').toggle();
+
+			$('#clickedUsers').toggle();
+
+			searchUsers("");
+
+			$('#editVolunteers').toggle();
+
+			$('#volunteerList').toggle();
+
+			$('#clickedVolunteers').toggle();
+
+			searchVolunteers("");
+
+			fancyClickUsers();
+			fancyClickVolunteers();
+
+			managerValue = $('#editManager').val();
+
+			$('#editManager').toggle();
+
+			$('#manager').toggle();
+
+			$('#cancelUserGroupBtn').toggle();
+
+			if($('#editUserGroupBtn').html() == '편집'){
+				$('#editUserGroupBtn').html('완료');
+			}
+			else{
+
+				$('#editUserGroupBtn').html('편집');
+				$.post("/activitydata/setPeople", {id: $('#activityId').val(), users: clickedUsers, /*userStatusList: userStatusList,*/ volunteers: clickedVolunteers, volunteerStatusList: volunteerStatusList, manager: managerValue}, function(data) {
+					var innerUsersHtml = "";
+					var innerVolunteersHtml = "";
+					try{
+						if(data.users.length > 0){
+							data.users.forEach(function(item){
+								innerUsersHtml += "<tr><td><a data-fancybox data-src='#userDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><div style='display: none;' id='userDetail" + item.user.id +"'><h2>이용자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
+
+								var phoneAgree = (item.phoneAgree==0)?"X":"O";
+								var locationAgree = (item.locationAgree==0)?"X":"O";
+								var status = "";
+								var startImage = "시작 사진: <span>없음</span><br>";
+								var endImage = "끝 사진: <span>없음</span>";
+								switch(item.status){
+									case 0: status ="대기";
+										break;
+									case 1: status ="승인";
+										break;
+									case 2: status ="거절";
+								}
+								if(item.startImage != null){
+									startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
+								}
+								if(item.endImage != null){
+									endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
+								}
+
+								innerUsersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + "</div></td><td>" + item.user.phone + "</td></tr>";
+							})
+						}
+						else{
+							innerUsersHtml = "이용자 없음";
+						}
+
+						if(data.volunteers.length > 0){
+							data.volunteers.forEach(function(item){
+								innerVolunteersHtml += "<tr><td><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><div style='display: none;' id='volunteerDetail" + item.user.id +"'><h2>봉사자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
+
+								var phoneAgree = (item.phoneAgree==0)?"X":"O";
+								var locationAgree = (item.locationAgree==0)?"X":"O";
+								var status = "";
+								var startImage = "시작 사진: <span>없음</span><br>";
+								var endImage = "끝 사진: <span>없음</span>";
+								switch(item.status){
+									case 0: status ="대기";
+										break;
+									case 1: status ="승인";
+										break;
+									case 2: status ="거절";
+								}
+								if(item.startImage != null){
+									startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
+								}
+								if(item.endImage != null){
+									endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
+								}
+
+								innerVolunteersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + "</div></td><td>" + item.user.phone + "</td></tr>";
+
+							})
+						}
+						else{
+							innerVolunteersHtml = "봉사자 없음";
+						}
+					}
+					finally{
+						$('#userList').html(innerUsersHtml);
+						userList = clickedUsers;
+						$('#volunteerList').html(innerVolunteersHtml);
+						volunteerList = clickedVolunteers;
+						$('#manager').text(data.managerName);
+						getUsers(false, $('#editCategory').val());
+
+						$('#message').removeClass("alert-danger");
+						$('#message').addClass("alert-info");
+						$('#mContent').html("담당 인원을 수정하였습니다.");
+						$('#message').show();
+
+						setTimeout(function() {
+							hideMessage();
+						}, 2000);
+					}
+				});
+			}
+		})
+
+		$('#cancelUserGroupBtn').click(function(){
+
+			$('#editUsers').toggle();
+			if(userList.length != 0){
+				userList.forEach(function(item){
+					$('#editUsers ul li input[value="'+ item +'"]').prop('checked', true);
+					$('#editVolunteers ul li input[value="'+ item +'"]').prop('disabled', true);
+				})
+			}
+			else{
+				$('#editUsers ul li input').each(function(){
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
+						$('#editVolunteers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
+					}
+				})
+			}
+			$('#userList').toggle();
+			$('#clickedUsers').toggle();
+			$('#users').html("");
+			$('#searchUsers').val("");
+			$('#pagingUsers').html("");
+			clickedUsers = userList;
+
+			$('#editVolunteers').toggle();
+			if(volunteerList.length != 0){
+				volunteerList.forEach(function(item){
+					$('#editVolunteers ul li input[value="'+ item +'"]').prop('checked', true);
+					$('#editUsers ul li input[value="'+ item +'"]').prop('disabled', true);
+				})
+			}
+			else{
+				$('#editVolunteers ul li input').each(function(){
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
+						$('#editUsers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
+					}
+				})
+			}
+			$('#volunteerList').toggle();
+			$('#clickedVolunteers').toggle();
+			$('#volunteers').html("");
+			$('#searchVolunteers').val("");
+			$('#pagingVolunteers').html("");
+			clickedVolunteers = volunteerList;
+
+			$('#editManager').toggle();
+			$('#editManager').val(managerValue);
+			$('#manager').toggle();
+
+			$('#cancelUserGroupBtn').toggle();
+			$('#editUserGroupBtn').html('편집');
+		})
+
+
+		var startDate;
+		var startTime;
+		var endDate;
+		var endTime;
+
+		$('#editActivityGroupBtn').click(function() {
+
+			startDate = $('input[name="startDate"]').val();
+			startTime = $('input[name="startTime"]').val();
+			endDate = $('input[name="endDate"]').val();
+			endTime = $('input[name="endTime"]').val();
+
+			$('#editVolunteerTime').toggle();
+
+			$('#volunteerTime').toggle();
+
+			$('#editPlace').toggle();
+
+			$('#place').toggle();
+
+			$('#explianation').toggle();
+
+			$('#content').toggle();
+
+			$('#cancelActivityGroupBtn').toggle();
+
+			if($('#editActivityGroupBtn').html() == '편집'){
+				$('#editActivityGroupBtn').html('완료');
+			}
+			else{
+				if(startDate == "" || startTime == "" || endDate == "" || endTime == "" || $('#address').val().length == 0){
+
+					$('#editVolunteerTime').toggle();
+
+					$('#volunteerTime').toggle();
+
+					$('#editPlace').toggle();
+
+					$('#place').toggle();
+
+					$('#explianation').toggle();
+
+					$('#content').toggle();
+
+					$('#cancelActivityGroupBtn').toggle();
+
+					$('#message').removeClass("alert-info");
+					$('#message').addClass("alert-danger");
+
+					if(startDate == ""){
+						$('#mContent').html("시작 날짜가 입력되지 않았습니다");
+					}
+					else if(startTime == ""){
+						$('#mContent').html("시작 시간이 입력되지 않았습니다");
+					}
+					else if(endDate == ""){
+						$('#mContent').html("끝 날짜가 입력되지 않았습니다");
+					}
+					else if(endTime == ""){
+						$('#mContent').html("끝 시간이 입력되지 않았습니다");
+					}
+					else{
+						$('#mContent').html("장소가 입력되지 않았습니다");
+					}
+					$('#message').show();
+
+					setTimeout(function() {
+						hideMessage();
+					}, 2000);
+				}
+				else{
+					$('#editActivityGroupBtn').html('편집');
+					$.post("/activitydata/setVolunteerTimeAndPlaceAndContent",
+							{ id: $('#activityId').val(),
+								startDate: startDate,
+								startTime: startTime,
+								endDate: endDate,
+								endTime: endTime,
+								place: $('#address').val(),
+								content: $('#explianation').val()
+							},
+							function(data) {
+								var arr = data.split("|");
+								if(arr[0] !== ""){
+									$('#place').html(arr[0]);
+								}
+								else{
+									$('#place').text("장소 없음");
+								}
+								if(arr[1] !== ""){
+									$('#content').text(arr[1]);
+								}
+								else{
+									$('#content').text("세부내용 없음");
+								}
+
+								var start = (arr[2] === "" || arr[3] === "")?"시작 시간 없음":arr[2] + " " + arr[3];
+								var end = (arr[4] === "" || arr[5] === "")?"끝 시간 없음":arr[4] + " " + arr[5];
+								$('#volunteerTime').text(start + " ~ " + end);
+
+								$('#message').removeClass("alert-danger");
+								$('#message').addClass("alert-info");
+								$('#mContent').html("활동 내용을 수정하였습니다.");
+								$('#message').show();
+
+								setTimeout(function() {
+									hideMessage();
+								}, 2000);
+							});
+					var y = document.getElementById("coordi_y").value;
+					var x = document.getElementById("coordi_x").value;
+					changeMap(y, x);
+				}
+
+			}
+		})
+
+		$('#cancelActivityGroupBtn').click(function(){
+			$('#editVolunteerTime').toggle();
+			var volunteerTimeText = $('#volunteerTime').text();
+
+			if(volunteerTimeText.includes("시작 시간 없음") && volunteerTimeText.includes("끝 시간 없음")){
+				$('input[name="startDate"]').val("");
+				$('input[name="startTime"]').val("");
+				$('input[name="endDate"]').val("");
+				$('input[name="endTime"]').val("");
+			}
+			else if(volunteerTimeText.includes("시작 시간 없음")){
+				$('input[name="startDate"]').val("");
+				$('input[name="startTime"]').val("");
+				$('input[name="endDate"]').val(endDate);
+				$('input[name="endTime"]').val(endTime);
+			}
+			else if(volunteerTimeText.includes("끝 시간 없음")){
+				$('input[name="startDate"]').val(startDate);
+				$('input[name="startTime"]').val(startTime);
+				$('input[name="endDate"]').val("");
+				$('input[name="endTime"]').val("");
+			}
+			else{
+				$('input[name="startDate"]').val(startDate);
+				$('input[name="startTime"]').val(startTime);
+				$('input[name="endDate"]').val(endDate);
+				$('input[name="endTime"]').val(endTime);
+			}
+
+			$('#volunteerTime').toggle();
+
+			$('#editPlace').toggle();
+			var placeText = $('#place').text();
+			if(placeText == "장소 없음"){
+				$('#address').val("");
+			}
+			else{
+				$('#address').val($('#place').text());
+			}
+			$('#place').toggle();
+
+			$('#explianation').toggle();
+			var contentText = $('#content').text();
+			if(contentText == "세부내용 없음"){
+				$('#explianation').val("");
+			}
+			else{
+				$('#explianation').val($('#content').text());
+			}
+			$('#content').toggle();
 
 			findCoordi(origin_place);
 
-			function changeMap(y, x) {
-				// 해당 주소에 대한 좌표를 받아서
-				var coords = new daum.maps.LatLng(y, x);
-				// 지도를 보여준다.
-				mapContainer.style.display = "block";
-				map.relayout();
-				// 지도 중심을 변경한다.
-				map.setCenter(coords);
-				// 마커를 결과값으로 받은 위치로 옮긴다.
-				marker.setPosition(coords)
-			}
+			$('#cancelActivityGroupBtn').toggle();
+			$('#editActivityGroupBtn').html('편집');
 
-			function findCoordi(addr) {
+		})
 
-				console.log(addr);
-				geocoder.addressSearch(addr, function(results, status) {
-					// 정상적으로 검색이 완료됐으면
-					if (status === daum.maps.services.Status.OK) {
-
-						var result = results[0]; //첫번째 결과의 값을 활용
-						document.getElementById("coordi_x").value = result.x;
-						document.getElementById("coordi_y").value = result.y;
-
-						// // 해당 주소에 대한 좌표를 받아서
-						var coords = new daum.maps.LatLng(result.y, result.x);
-						// 지도를 보여준다.
-						mapContainer.style.display = "block";
-						map.relayout();
-						// 지도 중심을 변경한다.
-						map.setCenter(coords);
-						// 마커를 결과값으로 받은 위치로 옮긴다.
-						marker.setPosition(coords)
-					}
-				});
-			}
-
-			function execPostcode() {
-				new daum.Postcode({
-					oncomplete: function(data) {
-						var addr = data.address; // 최종 주소 변수
-
-						// 주소 정보를 해당 필드에 넣는다.
-						document.getElementById("address").value = addr;
-						// 주소로 상세 정보를 검색
-						geocoder.addressSearch(addr, function(results, status) {
-							// 정상적으로 검색이 완료됐으면
-							if (status === daum.maps.services.Status.OK) {
-
-								var result = results[0]; //첫번째 결과의 값을 활용
-								document.getElementById("coordi_x").value = result.x;
-								document.getElementById("coordi_y").value = result.y;
-								changeMap(result.y, result.x);
-							}
-						});
-					}
-				}).open();
-			}
-
-
-			function hideMessage() {
-				$('#message').hide();
-			}
-
-			var statusValue;
-
-			$('#editTitleGroupBtn').click(function() {
-
-				$('#editTitleField').toggle();
-
-				$('#titleText').toggle();
-
-				statusValue = $('#editStatus').val();
-
-				$('#editStatus').toggle();
-
-				$('#status').toggle();
-
-				$('#cancelTitleGroupBtn').toggle();
-
-				if($('#editTitleGroupBtn').html() == '편집'){
-					$('#editTitleGroupBtn').html('완료');
-				}
-				else{
-					if($('#editTitleField').val().length == 0){
-
-						$('#editTitleField').toggle();
-
-						$('#titleText').toggle();
-
-						$('#editStatus').toggle();
-
-						$('#status').toggle();
-
-						$('#cancelTitleGroupBtn').toggle();
-
-						$('#message').removeClass("alert-info");
-						$('#message').addClass("alert-danger");
-						$('#mContent').html("제목은 1글자 이상이어야 합니다");
-						$('#message').show();
-
-						setTimeout(function() {
-							hideMessage();
-						}, 2000);
-
-					}
-					else{
-						$('#editTitleGroupBtn').html('편집');
-						$.post("/activitydata/setTitleAndStatus", {id: $('#activityId').val(), title: $('#editTitleField').val(), status: statusValue}, function(data) {
-							var arr = data.split("|");
-							$('#titleText').html(arr[0]);
-							var status;
-							switch(Number(arr[1])){
-								case 0: status = "매칭 전";
-									$('#editCategoryGroupBtn').show();
-									$('#editUserGroupBtn').show();
-									break;
-								case 1: status = "매칭 중";
-									$('#editCategoryGroupBtn').hide();
-									$('#editUserGroupBtn').show();
-									break;
-								case 2: status = "매칭 완료";
-									$('#editCategoryGroupBtn').hide();
-									$('#editUserGroupBtn').hide();
-									break;
-								case 3: status = "활동 진행 중";
-									$('#editCategoryGroupBtn').hide();
-									$('#editUserGroupBtn').hide();
-									break;
-								case 4: status = "활동 완료";
-									$('#editCategoryGroupBtn').hide();
-									$('#editUserGroupBtn').hide();
-
-									$.post("/userdata/addtime", {
-										id: id,
-										time: document.getElementById("currentTime").value
-									}, function(data) {
-										console.log(data);
-									});
-
-									break;
-								case 5: status = "취소된 활동";
-									$('#editCategoryGroupBtn').hide();
-									$('#editUserGroupBtn').hide();
-							}
-							$('#status').html(status);
-
-							$('#message').removeClass("alert-danger");
-							$('#message').addClass("alert-info");
-							$('#mContent').html("제목과 상태를 수정하였습니다.");
-							$('#message').show();
-
-							setTimeout(function() {
-								hideMessage();
-							}, 2000);
-
-						});
-					}
-
-				}
-			})
-
-			$('#cancelTitleGroupBtn').click(function(){
-				$('#editTitleField').toggle();
-				$('#editTitleField').val($('#titleText').html());
-				$('#titleText').toggle();
-				$('#editStatus').toggle();
-				$('#editStatus').val(statusValue);
-				$('#status').toggle();
-
-				$('#cancelTitleGroupBtn').toggle();
-				$('#editTitleGroupBtn').html('편집');
-			})
-
-
-			var categoryValue;
-			var deadlineDate;
-			var deadlineTime;
-
-			$('#editCategoryGroupBtn').click(function() {
-
-				categoryValue = $('#editCategory').val();
-
-				$('#editCategory').toggle();
-
-				$('#category').toggle();
-
-				deadlineDate = $('input[name="deadlineDate"]').val();
-				deadlineTime = $('input[name="deadlineTime"]').val();
-
-				$('#editDeadline').toggle();
-
-				$('#deadline').toggle();
-
-				$('#cancelCategoryGroupBtn').toggle();
-
-				if($('#editCategoryGroupBtn').html() == '편집'){
-					$('#editCategoryGroupBtn').html('완료');
-				}
-				else{
-
-					if(categoryValue == 0 || deadlineDate == "" || deadlineTime == ""){
-						$('#editCategory').toggle();
-
-						$('#category').toggle();
-
-						$('#editDeadline').toggle();
-
-						$('#deadline').toggle();
-
-						$('#cancelCategoryGroupBtn').toggle();
-
-						$('#message').removeClass("alert-info");
-						$('#message').addClass("alert-danger");
-						if(categoryValue == 0){
-							$('#mContent').html("지정한 카테고리는 없는 카테고리입니다");
-						}
-						else if(deadlineDate == ""){
-							$('#mContent').html("마감 날짜가 입력되지 않았습니다");
-						}
-						else{
-							$('#mContent').html("마감 시간이 입력되지 않았습니다");
-						}
-						$('#message').show();
-
-						setTimeout(function() {
-							hideMessage();
-						}, 2000);
-					}
-					else{
-						$('#editCategoryGroupBtn').html('편집');
-						$.post("/activitydata/setCategoryAndDeadline",
-								{ id: $('#activityId').val(),
-									category: categoryValue,
-									deadlineDate: deadlineDate,
-									deadlineTime: deadlineTime
-								},
-								function(data) {
-									var arr = data.split(".");
-									$('#category').html(arr[0]);
-									$('#deadline').text((arr[1] === "" || arr[2] === "")?"마감시간 없음":arr[1] + " " + arr[2]);
-
-									$('#message').removeClass("alert-danger");
-									$('#message').addClass("alert-info");
-									$('#mContent').html("카테고리와 마감 기한을 수정하였습니다.");
-									$('#message').show();
-
-									setTimeout(function() {
-										hideMessage();
-									}, 2000);
-								});
-					}
-
-				}
-			})
-
-			$('#cancelCategoryGroupBtn').click(function(){
-				$('#editCategory').toggle();
-				$('#editCategory').val(categoryValue);
-				$('#category').toggle();
-
-				getUsers(true, categoryValue);
-
-				$('#editDeadline').toggle();
-				var deadlineText = $('#deadline').text();
-
-				if(deadlineText.includes("마감시간 없음")){
-					$('input[name="deadlineDate"]').val("");
-					$('input[name="deadlineTime"]').val("");
-				}
-				else{
-					$('input[name="deadlineDate"]').val(deadlineDate);
-					$('input[name="deadlineTime"]').val(deadlineTime);
-				}
-				$('#deadline').toggle();
-
-				$('#cancelCategoryGroupBtn').toggle();
-				$('#editCategoryGroupBtn').html('편집');
-			})
-
-
-			const usersPerPage = 4;
-			var numOfPages = 0;
-			var numOfPagesVolunteers = 0;
-			var users = [];
-			var volunteers = [];
-			var clickedUsers = [];
-			var clickedVolunteers = [];
-			var userList = [];
-			var volunteerList = [];
-			var userStatusList = [];
-
-			$('.userIds').each(function(){
-				clickedUsers.push($(this).text());
-				userList.push($(this).text());
-			});
-
-			$('.volunteerIds').each(function(){
-				clickedVolunteers.push($(this).text());
-				volunteerList.push($(this).text());
-			});
-
-			function fancyClickUsers(){
-				try{
-					var innerHtml = (clickedUsers.length>0)?"이용자:":"";
-					if(userStatusList.length > 0){
-						userStatusList.forEach(function(user){
-							if(clickedUsers.indexOf(user.id.toString()) > -1){
-								innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";
-							}
-						});
-					}
-
-				}
-				finally{
-					$('#clickedUsers').html(innerHtml);
-				}
-			}
-
-			function fancyClickVolunteers(){
-				try{
-					var innerHtml = (clickedVolunteers.length>0)?"봉사자:":"";
-					var color="";
-					if(userStatusList.length > 0){
-						userStatusList.forEach(function(user){
-							if(clickedVolunteers.indexOf(user.id.toString()) > -1){
-								if($('#volunteer'+ user.id).val() == 0){
-									color = "warning";
-								}
-								else if($('#volunteer'+ user.id).val() == 1){
-									color = "success";
-								}
-								else{
-									color = "danger";
-								}
-								innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";
-							}
-						});
-					}
-
-				}
-				finally{
-					$('#clickedVolunteers').html(innerHtml);
-				}
-			}
-
-			function addEventListenersToUsers(){
-				$('input[name="userId"]').each(function(){
-
-					/*if($(this).prop('checked')){
-						$('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
-					}*/
-
-					if(clickedUsers.indexOf($(this).val()) > -1){
-						$(this).prop('checked', true);
-						//$('#user'+ $(this).val()).toggle();
-					}
-
-					$(this).click(function(){
-						$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
-						$('#user'+ $(this).val()).toggle();
-
-						if($(this).prop('checked')){
-							if(clickedUsers.indexOf($(this).val()) == -1){
-								clickedUsers.push($(this).val());
-							}
-						}
-						else{
-							if(clickedUsers.indexOf($(this).val()) > -1){
-								clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
-							}
-						}
-
-						fancyClickUsers();
-
-					})
-
-				})
-
-				/*$('input[name="userId"]+label+select').each(function(){
-					$(this).change(function(){
-
-						for(var i = 0; i < users.length ; i++){
-							if(users[i].id == $(this).attr('id').replace("user","")){
-								users[i].status = $(this).val();
-								break;
-							}
-						}
-
-					});
-				})*/;
-			}
-
-			function addEventListenersToVolunteers(){
-
-				$('input[name="volunteerId"]').each(function(){
-
-					/*if($(this).prop('checked')){
-						$('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
-					}*/
-
-					if(clickedVolunteers.indexOf($(this).val()) > -1){
-						$(this).prop('checked', true);
-						$('#volunteer'+ $(this).val()).toggle();
-					}
-
-					$(this).click(function(){
-						$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
-						$('#volunteer'+ $(this).val()).toggle();
-
-						if($(this).prop('checked')){
-							if(clickedVolunteers.indexOf($(this).val()) == -1){
-								clickedVolunteers.push($(this).val());
-							}
-						}
-						else{
-							if(clickedVolunteers.indexOf($(this).val()) > -1){
-								clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
-							}
-						}
-
-						fancyClickVolunteers();
-
-					})
-
-				})
-
-				$('input[name="volunteerId"]+label+select').each(function(){
-					$(this).change(function(){
-
-						for(var i = 0; i < volunteers.length ; i++){
-							if(volunteers[i].id == $(this).attr('id').replace("volunteer","")){
-								volunteers[i].status = $(this).val();
-								break;
-							}
-						}
-
-						fancyClickVolunteers();
-					});
-				});
-
-			}
-
-			function addEventListenersToUserPagingButtons(){
-				$('#pagingUsers button.page').each(function(){
-
-					$(this).click(function(){
-						var pageNumber = $(this).text();
-						var innerHtml = "";
-						try{
-
-							for(var i = 0; i < users.length ; i++ ){
-
-								if(i >= ((pageNumber-1)*usersPerPage) && i < (pageNumber*usersPerPage)){
-									innerHtml += "<li><input type='checkbox' id='"+ users[i].id + "' value='"+ users[i].id +"' name='userId'";
-								}
-								else{
-									innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ users[i].id + "' value='"+ users[i].id +"' name='userId'";
-								}
-
-								if(clickedVolunteers.indexOf(users[i].id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
-								}
-								else{
-									innerHtml += "> <label for='"+ users[i].id +"'>"+ users[i].name +"</label></li>";
-								}
-
-								/*if(users[i].status==null || users[i].status == 0){
-									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
-								}
-								else if(users[i].status == 1){
-									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
-								}
-								else{
-									innerHtml += "<select style='display: none;' id='user"+ users[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
-								}*/
-
-							}
-
-						}
-						finally{
-							$('#users').html(innerHtml);
-							addEventListenersToUsers();
-						}
-					})
-
-				})
-
-			}
-
-			function addEventListenersToVolunteerPagingButtons(){
-				$('#pagingVolunteers button.page').each(function(){
-
-					$(this).click(function(){
-						var pageNumber = $(this).text();
-						var innerHtml = "";
-						try{
-
-							for(var i = 0; i < volunteers.length ; i++ ){
-
-								if(i >= ((pageNumber-1)*usersPerPage) && i < (pageNumber*usersPerPage)){
-									innerHtml += "<li><input type='checkbox' id='"+ volunteers[i].id + "' value='"+ volunteers[i].id +"' name='volunteerId'";
-								}
-								else{
-									innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ volunteers[i].id + "' value='"+ volunteers[i].id +"' name='volunteerId'";
-								}
-
-								if(clickedUsers.indexOf(volunteers[i].id.toString()) > -1){
-									innerHtml += " disabled> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
-								}
-								else{
-									innerHtml += "> <label for='"+ volunteers[i].id +"'>"+ volunteers[i].name +"</label>";
-								}
-
-								if(volunteers[i].status==null || volunteers[i].status == 0){
-									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
-								}
-								else if(volunteers[i].status == 1){
-									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
-								}
-								else{
-									innerHtml += "<select style='display: none;' id='volunteer"+ volunteers[i].id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
-								}
-
-							}
-
-						}
-						finally{
-							$('#volunteers').html(innerHtml);
-							addEventListenersToVolunteers();
-						}
-					})
-
-				})
-
-			}
-
-			function searchUsers(keyword){
-				var innerHtml = "";
-				var innerPage = "";
-				var pages = 0;
-				users = [];
-
-				try{
-
-					userStatusList.forEach(function(user){
-						if(user.name.includes(keyword) && (user.type == null || user.type == 0)){
-							users.push(user);
-						}
-					});
-
-					if(users.length > 0){
-						var count = 0;
-						users.forEach(function(item){
-							if(pages<1){
-								innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
-							}
-							else{
-								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
-							}
-
-							if(clickedVolunteers.indexOf(item.id.toString()) > -1){
-								innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-							}
-							else{
-								innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
-							}
-
-
-							/*if(item.status==null || item.status == 0){
-								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
-							}
-							else if(item.status == 1){
-								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
-							}
-							else{
-								innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
-							}*/
-
-							count++;
-
-							if(count == usersPerPage){
-								pages++;
-								count = 0;
-							}
-						})
-
-						numOfPages = (count>0)?pages+1:pages;
-
-						for(var i = 0; i < numOfPages ; i++){
-							innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
-						}
-					}
-					else{
-						innerHtml = "그 이름의 이용자를 찾지 못했습니다";
-					}
-
-				}
-				finally{
-
-					$('#users').html(innerHtml);
-					$('#pagingUsers').html(innerPage);
-
-					addEventListenersToUsers();
-					addEventListenersToUserPagingButtons();
-
-				}
-
-			}
-
-			function searchVolunteers(keyword){
-				var innerHtml = "";
-				var innerPage = "";
-				var pages = 0;
-				volunteers = [];
-
-				try{
-
-					userStatusList.forEach(function(user){
-						if(user.name.includes(keyword) && (user.type == null || user.type == 1)){
-							volunteers.push(user);
-						}
-					});
-
-					if(volunteers.length > 0){
-
-						var count = 0;
-						volunteers.forEach(function(item){
-							if(pages<1){
-								innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
-							}
-							else{
-								innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
-							}
-
-							if(clickedUsers.indexOf(item.id.toString()) > -1){
-								innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
-							}
-							else{
-								innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
-							}
-
-							if(item.status==null || item.status == 0){
-								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
-							}
-							else if(item.status == 1){
-								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
-							}
-							else{
-								innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
-							}
-
-							count++;
-
-							if(count == usersPerPage){
-								pages++;
-								count = 0;
-							}
-						})
-
-						numOfPagesVolunteers = (count>0)?pages+1:pages;
-
-						for(var i = 0; i < numOfPagesVolunteers ; i++){
-							innerPage += "<button type='button' class='page'>"+ (i+1) +"</button>";
-						}
-
-					}
-					else{
-						innerHtml = "그 이름의 이용자를 찾지 못했습니다";
-					}
-
-				}
-				finally{
-
-					$('#volunteers').html(innerHtml);
-					$('#pagingVolunteers').html(innerPage);
-
-					addEventListenersToVolunteers();
-					addEventListenersToVolunteerPagingButtons();
-
-				}
-
-			}
-
-			function getUsers(isSearch, category){
-				$.get("/activitydata/getUsers", {id: $('#activityId').val(), category: category}, function(data) {
-
-					userStatusList = data;
-
-					if(isSearch){
-						searchUsers("");
-						searchVolunteers("");
-
-						fancyClickUsers();
-						fancyClickVolunteers();
-
-						var userIdList = [];
-
-						try{
-
-							if(userStatusList!=null && userStatusList.length > 0){
-								userStatusList.forEach(function(user){
-									userIdList.push(user.id.toString());
-								});
-							}
-
-						}
-						finally{
-
-							for(var i = clickedUsers.length -1; i >= 0 ; i--){
-								if(userIdList.indexOf(clickedUsers[i]) == -1){
-									clickedUsers.splice(i, 1);
-								}
-							}
-
-							for(var i = clickedVolunteers.length -1; i >= 0 ; i--){
-								if(userIdList.indexOf(clickedVolunteers[i]) == -1){
-									clickedVolunteers.splice(i, 1);
-								}
-							}
-
-						}
-					}
-
-				});
-			}
-
-			getUsers(false, $('#editCategory').val());
-
-			$('#editCategory').on('change', function() {
-
-				getUsers(true, $('#editCategory').val());
-
-			});
-
-			if($('#editCategory option:selected').html().toString().includes("물건")){
-				$('.deliveryGroup').show();
-			}
-			else{
-				$('.deliveryGroup').hide();
-			}
-
-
-			$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
-
-			$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
-
-			$('#editUserGroupBtn').click(function() {
-
-				//var userStatusList = [];
-				var volunteerStatusList = [];
-
-				/*if(clickedUsers!=null && clickedUsers.length > 0){
-					clickedUsers.forEach(function(userId){
-						userStatusList.push($('#user' + userId).val());
-					});
-				}*/
-
-				if(clickedVolunteers!=null && clickedVolunteers.length > 0){
-					clickedVolunteers.forEach(function(volunteerId){
-						volunteerStatusList.push($('#volunteer' + volunteerId).val());
-					});
-				}
-
-				$('#editUsers').toggle();
-
-				$('#userList').toggle();
-
-				$('#clickedUsers').toggle();
-
-				searchUsers("");
-
-				$('#editVolunteers').toggle();
-
-				$('#volunteerList').toggle();
-
-				$('#clickedVolunteers').toggle();
-
-				searchVolunteers("");
-
-				fancyClickUsers();
-				fancyClickVolunteers();
-
-				managerValue = $('#editManager').val();
-
-				$('#editManager').toggle();
-
-				$('#manager').toggle();
-
-				$('#cancelUserGroupBtn').toggle();
-
-				if($('#editUserGroupBtn').html() == '편집'){
-					$('#editUserGroupBtn').html('완료');
-				}
-				else{
-
-					$('#editUserGroupBtn').html('편집');
-					$.post("/activitydata/setPeople", {id: $('#activityId').val(), users: clickedUsers, /*userStatusList: userStatusList,*/ volunteers: clickedVolunteers, volunteerStatusList: volunteerStatusList, manager: managerValue}, function(data) {
-						var innerUsersHtml = "";
-						var innerVolunteersHtml = "";
-						try{
-							if(data.users.length > 0){
-								data.users.forEach(function(item){
-									innerUsersHtml += "<tr><td><a data-fancybox data-src='#userDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><div style='display: none;' id='userDetail" + item.user.id +"'><h2>이용자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
-
-									var phoneAgree = (item.phoneAgree==0)?"X":"O";
-									var locationAgree = (item.locationAgree==0)?"X":"O";
-									var status = "";
-									var startImage = "시작 사진: <span>없음</span><br>";
-									var endImage = "끝 사진: <span>없음</span>";
-									switch(item.status){
-										case 0: status ="대기";
-											break;
-										case 1: status ="승인";
-											break;
-										case 2: status ="거절";
-									}
-									if(item.startImage != null){
-										startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
-									}
-									if(item.endImage != null){
-										endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
-									}
-
-									innerUsersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + "</div></td><td>" + item.user.phone + "</td></tr>";
-								})
-							}
-							else{
-								innerUsersHtml = "이용자 없음";
-							}
-
-							if(data.volunteers.length > 0){
-								data.volunteers.forEach(function(item){
-									innerVolunteersHtml += "<tr><td><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><div style='display: none;' id='volunteerDetail" + item.user.id +"'><h2>봉사자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
-
-									var phoneAgree = (item.phoneAgree==0)?"X":"O";
-									var locationAgree = (item.locationAgree==0)?"X":"O";
-									var status = "";
-									var startImage = "시작 사진: <span>없음</span><br>";
-									var endImage = "끝 사진: <span>없음</span>";
-									switch(item.status){
-										case 0: status ="대기";
-											break;
-										case 1: status ="승인";
-											break;
-										case 2: status ="거절";
-									}
-									if(item.startImage != null){
-										startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
-									}
-									if(item.endImage != null){
-										endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
-									}
-
-									innerVolunteersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + "</div></td><td>" + item.user.phone + "</td></tr>";
-
-								})
-							}
-							else{
-								innerVolunteersHtml = "봉사자 없음";
-							}
-						}
-						finally{
-							$('#userList').html(innerUsersHtml);
-							userList = clickedUsers;
-							$('#volunteerList').html(innerVolunteersHtml);
-							volunteerList = clickedVolunteers;
-							$('#manager').text(data.managerName);
-							getUsers(false, $('#editCategory').val());
-
-							$('#message').removeClass("alert-danger");
-							$('#message').addClass("alert-info");
-							$('#mContent').html("담당 인원을 수정하였습니다.");
-							$('#message').show();
-
-							setTimeout(function() {
-								hideMessage();
-							}, 2000);
-						}
-					});
-				}
-			})
-
-			$('#cancelUserGroupBtn').click(function(){
-
-				$('#editUsers').toggle();
-				if(userList.length != 0){
-					userList.forEach(function(item){
-						$('#editUsers ul li input[value="'+ item +'"]').prop('checked', true);
-						$('#editVolunteers ul li input[value="'+ item +'"]').prop('disabled', true);
-					})
-				}
-				else{
-					$('#editUsers ul li input').each(function(){
-						if($(this).prop('checked')){
-							$(this).prop('checked', false);
-							$('#editVolunteers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-						}
-					})
-				}
-				$('#userList').toggle();
-				$('#clickedUsers').toggle();
-				$('#users').html("");
-				$('#searchUsers').val("");
-				$('#pagingUsers').html("");
-				clickedUsers = userList;
-
-				$('#editVolunteers').toggle();
-				if(volunteerList.length != 0){
-					volunteerList.forEach(function(item){
-						$('#editVolunteers ul li input[value="'+ item +'"]').prop('checked', true);
-						$('#editUsers ul li input[value="'+ item +'"]').prop('disabled', true);
-					})
-				}
-				else{
-					$('#editVolunteers ul li input').each(function(){
-						if($(this).prop('checked')){
-							$(this).prop('checked', false);
-							$('#editUsers ul li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-						}
-					})
-				}
-				$('#volunteerList').toggle();
-				$('#clickedVolunteers').toggle();
-				$('#volunteers').html("");
-				$('#searchVolunteers').val("");
-				$('#pagingVolunteers').html("");
-				clickedVolunteers = volunteerList;
-
-				$('#editManager').toggle();
-				$('#editManager').val(managerValue);
-				$('#manager').toggle();
-
-				$('#cancelUserGroupBtn').toggle();
-				$('#editUserGroupBtn').html('편집');
-			})
-
-
-			var startDate;
-			var startTime;
-			var endDate;
-			var endTime;
-
-			$('#editActivityGroupBtn').click(function() {
-
-				startDate = $('input[name="startDate"]').val();
-				startTime = $('input[name="startTime"]').val();
-				endDate = $('input[name="endDate"]').val();
-				endTime = $('input[name="endTime"]').val();
-
-				$('#editVolunteerTime').toggle();
-
-				$('#volunteerTime').toggle();
-
-				$('#editPlace').toggle();
-
-				$('#place').toggle();
-
-				$('#editContent').toggle();
-
-				$('#content').toggle();
-
-				$('#cancelActivityGroupBtn').toggle();
-
-				if($('#editActivityGroupBtn').html() == '편집'){
-					$('#editActivityGroupBtn').html('완료');
-				}
-				else{
-					if(startDate == "" || startTime == "" || endDate == "" || endTime == "" || $('#address').val().length == 0){
-
-						$('#editVolunteerTime').toggle();
-
-						$('#volunteerTime').toggle();
-
-						$('#editPlace').toggle();
-
-						$('#place').toggle();
-
-						$('#editContent').toggle();
-
-						$('#content').toggle();
-
-						$('#cancelActivityGroupBtn').toggle();
-
-						$('#message').removeClass("alert-info");
-						$('#message').addClass("alert-danger");
-
-						if(startDate == ""){
-							$('#mContent').html("시작 날짜가 입력되지 않았습니다");
-						}
-						else if(startTime == ""){
-							$('#mContent').html("시작 시간이 입력되지 않았습니다");
-						}
-						else if(endDate == ""){
-							$('#mContent').html("끝 날짜가 입력되지 않았습니다");
-						}
-						else if(endTime == ""){
-							$('#mContent').html("끝 시간이 입력되지 않았습니다");
-						}
-						else{
-							$('#mContent').html("장소가 입력되지 않았습니다");
-						}
-						$('#message').show();
-
-						setTimeout(function() {
-							hideMessage();
-						}, 2000);
-					}
-					else{
-						$('#editActivityGroupBtn').html('편집');
-						$.post("/activitydata/setVolunteerTimeAndPlaceAndContent",
-								{ id: $('#activityId').val(),
-									startDate: startDate,
-									startTime: startTime,
-									endDate: endDate,
-									endTime: endTime,
-									place: $('#address').val(),
-									content: $('#editContent').val()
-								},
-								function(data) {
-									var arr = data.split("|");
-									if(arr[0] !== ""){
-										$('#place').text(arr[0]);
-									}
-									else{
-										$('#place').text("장소 없음");
-									}
-									if(arr[1] !== ""){
-										$('#content').text(arr[1]);
-									}
-									else{
-										$('#content').text("세부내용 없음");
-									}
-
-									var start = (arr[2] === "" || arr[3] === "")?"시작 시간 없음":arr[2] + " " + arr[3];
-									var end = (arr[4] === "" || arr[5] === "")?"끝 시간 없음":arr[4] + " " + arr[5];
-									$('#volunteerTime').text(start + " ~ " + end);
-
-									$('#message').removeClass("alert-danger");
-									$('#message').addClass("alert-info");
-									$('#mContent').html("활동 내용을 수정하였습니다.");
-									$('#message').show();
-
-									setTimeout(function() {
-										hideMessage();
-									}, 2000);
-								});
-						var y = document.getElementById("coordi_y").value;
-						var x = document.getElementById("coordi_x").value;
-						changeMap(y, x);
-					}
-
-				}
-			})
-
-			$('#cancelActivityGroupBtn').click(function(){
-				$('#editVolunteerTime').toggle();
-				var volunteerTimeText = $('#volunteerTime').text();
-
-				if(volunteerTimeText.includes("시작 시간 없음") && volunteerTimeText.includes("끝 시간 없음")){
-					$('input[name="startDate"]').val("");
-					$('input[name="startTime"]').val("");
-					$('input[name="endDate"]').val("");
-					$('input[name="endTime"]').val("");
-				}
-				else if(volunteerTimeText.includes("시작 시간 없음")){
-					$('input[name="startDate"]').val("");
-					$('input[name="startTime"]').val("");
-					$('input[name="endDate"]').val(endDate);
-					$('input[name="endTime"]').val(endTime);
-				}
-				else if(volunteerTimeText.includes("끝 시간 없음")){
-					$('input[name="startDate"]').val(startDate);
-					$('input[name="startTime"]').val(startTime);
-					$('input[name="endDate"]').val("");
-					$('input[name="endTime"]').val("");
-				}
-				else{
-					$('input[name="startDate"]').val(startDate);
-					$('input[name="startTime"]').val(startTime);
-					$('input[name="endDate"]').val(endDate);
-					$('input[name="endTime"]').val(endTime);
-				}
-
-				$('#volunteerTime').toggle();
-
-				$('#editPlace').toggle();
-				var placeText = $('#place').text();
-				if(placeText == "장소 없음"){
-					$('#address').val("");
-				}
-				else{
-					$('#address').val($('#place').text());
-				}
-				$('#place').toggle();
-
-				$('#editContent').toggle();
-				var contentText = $('#content').text();
-				if(contentText == "세부내용 없음"){
-					$('#editContent').val("");
-				}
-				else{
-					$('#editContent').val($('#content').text());
-				}
-				$('#content').toggle();
-
-				findCoordi(origin_place);
-
-				$('#cancelActivityGroupBtn').toggle();
-				$('#editActivityGroupBtn').html('편집');
-
-			})
-
-		</script>
-
-		<div lang="en" th:replace="common/footer :: footer"></div>
-	</div>
+	</script>
 </body>
 </html>

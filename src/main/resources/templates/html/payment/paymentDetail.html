@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-
-<head lang="en" th:replace="common/header :: header">
-
-<!-- bootstrap -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<head>
+	<th:block th:replace="common/head.html"/>
 </head>
 <body>
+<header th:replace="common/menu :: header"></header>
 
-	<div lang="en" th:replace="common/menu :: menu"></div>
+<div lang="en" th:replace="common/menu :: menu"></div>
 	<div id="main" style="margin-left: 15%">
 
 		<div class="w3-teal">

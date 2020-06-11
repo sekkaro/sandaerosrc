@@ -1,0 +1,86 @@
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>상대로</title>
+
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+<!--    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>-->
+<!--    <link rel="stylesheet" href="/node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css"/>-->
+<!--    <link rel="stylesheet" href="/node_modules/w3-css/w3.css">-->
+    <link rel="stylesheet" href="/node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css" >
+
+
+    <script src="https://kit.fontawesome.com/ef6d04f75a.js" crossorigin="anonymous"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/js-cookie/src/js.cookie.js"></script>
+    <script src="/node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+	<script src="/node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script src="/js/sidebar.js"></script>
+
+
+	<script th:inline="javascript">
+
+        var logout = function() {
+            $.post("/logout", function() {
+                //$("#user").html('');
+                $(".unauthenticated").show();
+                $(".authenticated").hide();
+            })
+            return true;
+        }
+
+        $.get("/userdata/getBasicInfo", function(data) {
+            if(typeof data.name != "undefined"){
+                //$("#user").html(data.name);
+                $(".unauthenticated").hide();
+                $(".authenticated").show();
+
+                if(data.userType != 1){
+                    $('a.menu').hide();
+
+                    if(window.location.pathname != "/"){
+                        window.location.replace("/");
+                    }
+
+                }
+
+                if(data.status == 0){
+                    $('#toggle-event').bootstrapToggle('off');
+                }
+
+
+            }
+            else{
+                logout();
+            }
+        });
+
+        $( document ).ready(function() {
+            $.ajaxSetup({
+                  beforeSend : function(xhr, settings) {
+                    if (settings.type == 'POST' || settings.type == 'PUT'
+                        || settings.type == 'DELETE') {
+                      if (!(/^http:.*/.test(settings.url) || /^https:.*/
+                        .test(settings.url))) {
+                        // Only send the token to relative URLs i.e. locally.
+                        xhr.setRequestHeader("X-XSRF-TOKEN",
+                          Cookies.get('XSRF-TOKEN'));
+                      }
+                    }
+                  }
+                });
+
+                $('#toggle-event').change(function() {
+                    $.post("/userdata/setStatus", {isOn: $(this).prop('checked')}, function(data) {
+                        console.log(data);
+                    });
+                })
+        });
+	</script>

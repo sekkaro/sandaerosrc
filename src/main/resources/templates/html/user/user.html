@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-  <title>상대로</title>
-  <th:block th:replace="common/header :: head"/>
+<head>
+  <th:block th:replace="common/head.html"/>
+  <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
-  <header th:replace="common/header :: header"></header>
+  <header th:replace="common/menu :: header"></header>
 
   <div lang="en" th:replace="common/menu :: menu"></div>
 
   <div id="main">
-    <h4>유저 관리</h4>
-
-    <form class="well form-search" th:action="@{'/user'}" method="GET">
-      <select name="condition">
-        <option value="1">유저이름</option>
-        <option value="2">닉네임</option>
-      </select>
-      <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
-      <button>검색하기</button>
-    </form>
-
-      <div id="basicBody">
-
-        <table class="table">
+    <div style="width: 90%">
+      <div class="upper">
+        <div>
+          <h4 class="header">유저 관리</h4>
+        </div>
+        <div class="menus">
+          <form class="searchmenu" th:action="@{'/user'}" method="GET">
+            <select class="searchtype" name="condition">
+              <option value="1">유저이름</option>
+              <option value="2">닉네임</option>
+            </select>
+            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+<!--            <button>검색하기</button>-->
+          </form>
+        </div>
+      </div>
+      <div class="list">
+        <table>
           <thead>
           <tr>
             <th scope="col">#</th>
@@ -48,13 +52,14 @@
               <span th:text="${userInfo.nickname}"></span>
             </td>
             <td>
-              <span th:if="${userInfo.userType==1}" th:text="관제사"></span>
-              <span th:if="${userInfo.userType==0}" th:text="이용자"></span>
+              <span th:if="${userInfo.userType==1}"><img src="/img/admin.png"></span>
+              <span th:if="${userInfo.userType==0}"><img src="/img/user.png"></span>
             </td>
           </tr>
           </tbody>
         </table>
-
+      </div>
+      <div class="down">
         <div>
           <ul class="pagination">
           <span th:if="${!simpleUserList.first}">
@@ -69,14 +74,14 @@
           </span>
           </ul>
         </div>
+        <div>
+          <a th:href="@{/user/add}">
+            <button>유저추가</button>
+          </a>
+        </div>
       </div>
-      <div>
-        <a th:href="@{/user/add}">
-          <button>유저추가</button>
-        </a>
-      </div>
+    </div>
   </div>
-
   <div lang="en" th:replace="common/footer :: footer"></div>
 </body>
 </html>

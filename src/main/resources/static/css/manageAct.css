@@ -11,8 +11,6 @@
 
 }
 
-
-
 #actManage {
   background-color: white;
   padding-left: 30px;
@@ -163,7 +161,22 @@ input[type=textarea] {
   top: -15px;
 }
 
+img {
+  width: 100%;
+}
 
+#buttonSet {
+  float: right;
+  position: relative;
+  right: -40px;
+  margin-top: 10px;
+}
+
+#submit {
+  border: none;
+  width: 130px;
+  background: transparent;
+}
 
 .user{
   background: url('/img/28.png');
@@ -176,7 +189,7 @@ input[type=textarea] {
   margin-bottom: 20px;
 }
 
-:placeholder {
+.placeholder {
   color: #a5a5a5;
 }
 
@@ -190,8 +203,8 @@ input[type=textarea] {
   position: relative;
 }
 
-.searchbox input#search{
-  width: 300px;
+.searchbox input#address{
+  width: 75%;
   height: 28px;
   border: 1px solid #a5a5a5;
   float: left;
@@ -224,6 +237,12 @@ input[type=textarea] {
   margin-bottom: 20px;
 }
 
+.thing {
+  float: right;
+  margin-right: 43%;
+  top: 0px
+}
+
 .explanationbox{
   margin-top: 20px;
 }
@@ -250,6 +269,11 @@ input[type=textarea] {
     margin-left: 0;
     margin-top: 10px;
     width: 100%;
+  }
+  .thing {
+    width: 30%;
+    margin-right: 20%;
+    top: -10px;
   }
   .workblock{
     margin-left: 50px;
@@ -289,6 +313,14 @@ input[type=textarea] {
     margin-left: 0;
     margin-top: 20px;
     width: 100%;
+  }
+  .thing {
+    width: 80%;
+    margin-right: 20%;
+  }
+  #images {
+    float: right;
+    margin-right: 53%;
   }
   .workblock{
     margin-left: 50px;

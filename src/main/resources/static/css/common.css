@@ -1,32 +1,46 @@
 @import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
 
 html{
+    margin:0;
+    padding:0;
+    overflow-x: auto;
 }
 body {
     font-family: "Noto Sans KR", sans-serif !important;
     background-color: #f2f2f2;
     margin: 0;
     padding: 0;
+    padding-top: 50px;
 }
 
 /*main*/
 #main {
     display: inline-block;
     text-align: center;
-    padding-right: 20px;
-    width: 80%;
+    width: 75%;
     position: static;
     float: right;
-    margin-top: 10px;
+    margin-top: 30px;
     font-size: 20px;
     color: #019783;
+    padding-left: 5%;
+    padding-right: 4%;
+}
+
+hr {
+    position: static;
+    width:90%;
+    border: 0.5px solid #e6e6e6;
 }
 
 h4{
     text-align: left;
 }
-form{
-    width: 90%;
+/*form{*/
+/*    width: 90%;*/
+/*}*/
+#infoForm{
+    width: 100%;
 }
 
 #basicBody {
@@ -39,9 +53,7 @@ form{
 }
 
 @media (max-width:1411px){
-    #main{
-        width:70%;
-    }
+
     #basicBody{
         height: 630px;
     }
@@ -51,8 +63,9 @@ form{
 }
 
 @media (max-width:1176px){
-    #main{
-        width: 70%;
+    #sidebar {
+        height:900px;
+
     }
     #basicBody{
         height: 750px;
@@ -60,7 +73,7 @@ form{
 }
 @media (max-width:930px){
     body{
-        width: 940px;
+        width: 940px !important;
     }
 }
 
