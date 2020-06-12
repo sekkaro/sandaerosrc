@@ -10,15 +10,8 @@ public interface SimpleUser {
 
     Byte getUserType();
 
+    String getPhone();
+
     Integer getVolunteerTime();
 
-    void setId(Long id);
-
-    void setName(String name);
-
-    void setNickname(String nickname);
-
-    void setUserType(Byte type);
-
-    void setVolunteerTime(Integer time);
 }

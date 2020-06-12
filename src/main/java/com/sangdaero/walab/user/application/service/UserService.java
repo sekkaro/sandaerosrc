@@ -5,14 +5,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
-import com.sangdaero.walab.request.domain.repository.RequestRepository;
+import com.sangdaero.walab.ranking.service.RankingService;
+
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
 import com.sangdaero.walab.user.application.dto.UserDto;
+import com.sangdaero.walab.user.application.dto.VolunteerRanking;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,15 +29,18 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService extends OidcUserService {
 	
 	private final InterestRepository mInterestRepository;
     private final UserRepository mUserRepository;
     private final UserInterestRepository mUserInterestRepository;
-    private final RequestRepository mRequestRepository;
-    private final UserEventMapperRepository mUserEventRepository;
+    private final ActivityRepository mActivityRepository;
+    private final UserEventMapperRepository mUserEventMapperRepository;
 	
 	@Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -185,27 +191,53 @@ public class UserService extends OidcUserService {
                 .build();
     }
 
-    public List<SimpleUser> getUserRankingList() {
-        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+    public List<VolunteerRanking> getVolunteerRankingList() {
+        List<User> userList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+//        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
 
-        return userRankingList;
+        List<VolunteerRanking> result = new ArrayList<>();
+
+        for(User u : userList) {
+            VolunteerRanking build = VolunteerRanking.builder()
+                    .id(u.getId())
+                    .name(u.getName())
+                    .volunteerTime(u.getVolunteerTime())
+                    .build();
+            result.add(build);
+        }
+
+        return result;
     }
 
-    public List<SimpleUser> getMonthlyRanking(int scope) {
-        LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime endDate = LocalDateTime.now().plusDays(7);
+//    public List<SimpleUser> getUserRankingList() {
+//        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
+//
+//        return userRankingList;
+//    }
 
-        List<EventEntity> list = mRequestRepository.findAllByStatusAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual((byte)scope, currentDate, endDate);
+    public List<VolunteerRanking> getRanking(int scope) {
+        LocalDateTime currentDate=LocalDateTime.now();
+        LocalDateTime endDate=LocalDateTime.now();
+
+        if(scope==3) {
+            currentDate = LocalDateTime.parse(RankingService.getCurMonday()+"T00:00:00");
+            endDate = LocalDateTime.parse(RankingService.getCurSunday()+"T23:59:59");
+        } else if(scope==2) {
+            currentDate = LocalDateTime.parse(RankingService.getFirstDayMonth()+"T00:00:00");
+            endDate = LocalDateTime.parse(RankingService.getLastDayMonth()+"T23:59:59");
+        }
+
+        List<EventEntity> list = mActivityRepository.findAllByStatusAndStartTimeGreaterThanEqualAndEndTimeLessThanEqual((byte)scope, currentDate, endDate);
         Map<Long, Integer> map = new HashMap<>();
 
         for(EventEntity event : list) {
-            // TODO 이벤트 아이디로 -> 봉사자 리스트 가져오기
+            // 이벤트 아이디로 -> 봉사자 리스트 가져오기
             Long id = event.getId();
 
-            List<UserEventMapper> eventList = mUserEventRepository.findAllByUserTypeAndEvent_id((byte) 1, id);
+            List<UserEventMapper> eventList = mUserEventMapperRepository.findAllByUserTypeAndEvent_id((byte) 1, id);
 
-            // TODO 가져온 봉사자 리스트 없는 유저면 map에 추가
-            // TODO 있는 유저면 누적합
+            // 가져온 봉사자 리스트 없는 유저면 map에 추가
+            // 있는 유저면 누적합
             for(UserEventMapper a : eventList) {
                 LocalTime start = a.getEvent().getStartTime().toLocalTime();
                 LocalTime end = a.getEvent().getEndTime().toLocalTime();
@@ -216,27 +248,132 @@ public class UserService extends OidcUserService {
             }
         }
 
-        List<SimpleUser> result = new ArrayList<>();
+        List<VolunteerRanking> result = new ArrayList<>();
 
-//        for(Long id : map.keySet()) {
-//            SimpleUser simpleUser = new SimpleUser();
-//            simpleUser.setVolunteerTime(map.get(id));
-//            simpleUser.setId(id);
-//            result.add(simpleUser);
-//        }
+        for(Long id : map.keySet()) {
+            VolunteerRanking build = VolunteerRanking.builder()
+                    .id(id)
+                    .name(mUserRepository.findById(id).get().getName())
+                    .volunteerTime(mUserRepository.findById(id).get().getVolunteerTime())
+                    .build();
+            result.add(build);
+        }
 
         return result;
     }
 
-    public List<SimpleUser> getWeeklyRanking(Integer scope) {
-        return getUserRankingList();
+    public User findUserEntity(Long id) {
+        Optional<User> userData = mUserRepository.findById(id);
+        User user = userData.get();
+
+        return user;
+    }
+
+    public void addInterest(Long id, InterestCategory interest) {
+        User user = mUserRepository.getOne(id);
+        UserInterest userInterest = new UserInterest();
+        userInterest.setUser(user);
+        userInterest.setInterest(interest);
+
+        mUserInterestRepository.save(userInterest);
+    }
+
+    public void removeInterest(Long id, InterestCategory interest) {
+        mUserInterestRepository.deleteByUser_IdAndInterestId(id, interest.getId());
+    }
+
+    public void changeVolunteerTime(Long id, Integer time) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setVolunteerTime(time));
+    }
+
+    public void changeNickname(Long id, String nickname) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setNickname(nickname));
+    }
+
+    public void changeName(Long id, String name) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setName(name));
+    }
+
+    public void changePhone(Long id, String phone) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setPhone(phone));
+    }
+
+    public void changeUserType(Long id, Byte type) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setUserType(type));
     }
     
-    // added
-    public User findUserEntity(Long id) {
-       Optional<User> userData = mUserRepository.findById(id);
-       User user = userData.get();
-       
-       return user;
+    public List<UserDetailDto> findUsers(String keyword) {
+		List<User> users = mUserRepository.findAllByNameContaining(keyword);
+		List<UserDetailDto> userList = new ArrayList<>();
+		
+		for(User user: users) {
+			UserDetailDto userDetailDTO = UserDetailDto.builder()
+   	                .id(user.getId())
+   	                .name(user.getName())
+   	                .nickname(user.getNickname())
+   	                .socialId(user.getSocialId())
+   	                .phone(user.getPhone())
+   	                .userType(user.getUserType())
+   	                .volunteerTime(user.getVolunteerTime())
+   	                .interestName(null)
+   	                .build();
+		
+			userList.add(userDetailDTO);
+		}
+				
+		return userList;
+	}
+
+    public UserDto createUser(String email, String name) {
+        UserDto userDto = new UserDto();
+        userDto.setSocialId(email);
+        userDto.setName(name);
+
+        updateUser(userDto);
+
+        User user = mUserRepository.findBySocialId(email);
+
+        return convertEntityToDto(user);
+
+    }
+
+    public List<SimpleUser> getSimpleUserListWithInterestOnOff(Long interestCategoryId) {
+        List<SimpleUser> simpleUserList = mUserRepository.findAllByOrderByName();
+
+        if(interestCategoryId!=0) {
+            Iterator<SimpleUser> iter = simpleUserList.iterator();
+            while (iter.hasNext()) {
+                SimpleUser user = iter.next();
+                UserInterest userInterest = mUserInterestRepository.findByUserIdAndInterestId(user.getId(), interestCategoryId);
+
+                if(userInterest!=null) {
+                    Byte on_Off = userInterest.getOn_off();
+
+                    if(on_Off == 0) {
+                        iter.remove();
+                    }
+                }
+
+            }
+        }
+
+        return simpleUserList;
+    }
+
+
+    @Transactional
+    public void setStartImage(Long id, UserDto userDto, String fileDownloadUri) {
+        UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
+        list.setStartImage(fileDownloadUri);
+    }
+
+    public void setEndImage(Long id, UserDto userDto, String fileDownloadUri) {
+        UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
+        list.setEndImage(fileDownloadUri);
     }
 }

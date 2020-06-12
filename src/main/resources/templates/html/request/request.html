@@ -1,90 +1,118 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+<head>
+	<th:block th:replace="common/head.html"/>
+</head>
 <body>
+	<header th:replace="common/menu :: header"></header>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
-	<div id="main" style="margin-left: 15%">
-
-		<div class="w3-teal">
-			<button id="openNav" style="display: none"
-				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h1>활동 관리 페이지</h1>
-			</div>
-		</div>
-
-		<div class="w3-container">
+	<div id="main" >
+		<h4>앱에서 들어온 요청</h4>
 
 			<form action="/request" method="GET">
-        		<div class="search">
-            		<input name="keyword" type="text" placeholder="제목으로 검색" th:value="${keyword}">
-        			<button>검색하기</button>
-        		</div>
-        		카테고리: <select onchange="this.form.submit()" name="interestType">
-    						<option value="0">관심사를 선택하세요</option>
-    						<option th:selected="${interestType==interest.id}" th:each="interest : ${interests}" th:value="${interest.id}" th:text="${interest.name}"></option>
-    					</select>
-    			상태: <select onchange="this.form.submit()" name="status">
-    					<option value="0">상태를 선택하세요</option>
-						<option th:selected="${status==1}" value="1">매칭 전</option>
-						<option th:selected="${status==2}" value="2">진행중</option>
-						<option th:selected="${status==3}" value="3">매칭 완료</option>
-						<option th:selected="${status==4}" value="4">모집 마감</option>
-					</select>
-        		<select onchange="this.form.submit()" name="sort">
-					<option th:selected="${sort==1}" value="1">최신순</option>
-					<option th:selected="${sort==2}" value="2">오래된순</option>
-				</select>
-    		</form>
+				<div class="row">
+					<div class="col-md-8">
+						카테고리:
+						<select onchange="this.form.submit()" name="interestType">
+							<option value="0">관심사를 선택하세요</option>
+							<option th:selected="${interestType==interest.id}"
+									th:each="interest : ${interests}" th:value="${interest.id}"
+									th:text="${interest.name}"></option>
+						</select>
+						<select onchange="this.form.submit()" name="sort">
+							<option th:selected="${sort==1}" value="1">최신순</option>
+							<option th:selected="${sort==2}" value="2">오래된순</option>
+						</select>
+					</div>
+					<div class="search col-md-4">
+						<input name="keyword" type="text" placeholder="제목으로 검색"
+							   th:value="${keyword}">
+						<button>검색하기</button>
+					</div>
+				</div>
+			</form>
 
 			<!-- payment list  -->
 			<form action="/request" method="GET">
 				<!-- update checked record's 'paymentCheck' status. -->
 
-				<table>
-					<thead>
+				<div id="basicBody">
+					<table class="table">
+						<thead>
 						<tr>
-							<th>id(번호)</th>
-							<th>제목</th>
-							<th>카테고리</th>
-							<th>상태</th>
-							<th>등록 날짜</th>
+							<th scope="col">#</th>
+							<th scope="col">제목</th>
+							<th scope="col">카테고리</th>
+							<th scope="col">신청자</th>
+							<th scope="col">요청 날짜</th>
+							<th scope="col">상태</th>
+							<th scope="col">이미지 첨부</th>
 						</tr>
-					</thead>
+						</thead>
 
-					<tbody>
+						<tbody>
 
-						<!-- CONTENTS !-->
+						<!-- CONTENTS -->
 						<tr th:each="request : ${requestList}">
-							<td><span th:text="${request.id}"></span></td>
-							<td><a th:href="@{'/request/' + ${request.id}}"> <span
-									th:text="${request.title}"></span>
-							</a></td>
-							<td><span th:text="${request.interestCategory.name}"></span></td>
-							<td><span th:if="${request.status == 0}">매칭 전</span> <span
-								th:if="${request.status == 1}">진행중</span><span
-								th:if="${request.status == 2}">매칭 완료</span><span
-								th:if="${request.status == 3}">모집 마감</span></td>
+							<th scope="row">
+								<span th:text="${totalNum}-3*(${currentPage}-1)-${requestStat.count}+1"></span>
+							</th>
+							<!--							<td><span th:text="${request.id}"></span></td>-->
+							<td><span th:text="${request.title}"></span></td>
+							<td><span th:if="${request.interestCategory}"
+									  th:text="${request.interestCategory.name}"></span> <span
+									th:if="${request.interestCategory==null}">——</span></td>
+							<td><span th:if="${request.client}"
+									  th:text="${request.client.name}"></span> <span
+									th:if="${request.client==null}">——</span></td>
 							<td><span
-								th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
+									th:text="${#temporals.format(request.regDate, 'yyyy-MM-dd HH:mm')}"></span>
 							</td>
+							<td><span th:if="${request.status == 0}">대기</span> <span
+									th:if="${request.status == 1}">등록</span><span
+									th:if="${request.status == 2}">거절</span></td>
+							<td>
+								<span th:if="${request.productImage == null}">--</span>
+								<a th:if="${request.productImage}" data-fancybox th:data-src="${'#image' + request.id}" href="javascript:;">사진 보기</a>
+								<div th:if="${request.productImage}" style="display: none;" th:id="${'image' + request.id}">
+									<img alt="image" th:src="@{${'/images/' + request.productImage}}" width="250" height="250">
+								</div>
+							</td>
+							<td th:if="${request.status == 0} and ${request.event == null}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/register/' + ${request.id}}">활동 등록</a></td>
+							<td th:if="${request.status == 0} and ${request.event}"><a class="btn btn-outline-success btn-sm" th:href="@{'/request/permit/' + ${request.id}}">승인</a></td>
+							<td th:if="${request.status == 0}"><button type="button" th:data-requestId="${request.id}" class="btn btn-outline-danger btn-sm" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">거절</button></td>
+							<td th:if="${request.status == 1}"><a class="btn btn-outline-primary btn-sm" th:href="@{'/activity/' + ${request.event?.id}}">등록된 활동 보기</a></td>
 						</tr>
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
+
 			</form>
 
-			<!-- paging -->
-			 <div>
-	    		<span th:each="pageNum : ${pageList}" th:inline="text">
-	        		<a th:href="@{'/request?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
-	    		</span>
-    		</div>
+			<!--  paging -->
+			<div>
+				<span th:each="pageNum : ${pageList}" th:inline="text"> <a
+					th:href="@{'/request?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${pageNum}]]</a>
+				</span>
+			</div>
 			<!-- paging end -->
 			
-			<a th:href="@{/request/requestForm}">활동 등록</a> 
+			<script th:inline="javascript">
+			
+				function rejectRequest(id, event){
+					$.post("/requestdata/setStatus", {id: id, status: 2}, function(data) {
+						if(data == 2){
+							$(event).parent().prev().prev().text("거절");
+							$(event).toggle();
+							$(event).parent().prev().toggle();
+						}
+						
+	            	});
+				}
+			
+			</script>
 
 		</div>
 

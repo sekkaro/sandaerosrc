@@ -10,10 +10,29 @@ public class HomeController {
 	public String homePage() {
 		return "html/index.html";
 	}
-
-	@GetMapping("/test/map")
-	public String naverMap() {
-		return "html/request/naverMap";
-	}
 	
+	@GetMapping("/login")
+    public String loginPage() {
+        return "html/login.html";
+    }
+
+//	@GetMapping("/test/map")
+//	public String naverMap() {
+//		return "html/request/naverMap";
+//	}
+
+	@GetMapping("/test/juso")
+	public String jusoSearch() {
+		return "html/activity/jusoSearch";
+	}
+
+	@GetMapping("/test/tagify")
+	public String testTagify() {
+		return "html/test";
+	}
+
+	@GetMapping("/test/addAct")
+	public String addAct() {
+		return "html/test/insertAct";
+	}
 }

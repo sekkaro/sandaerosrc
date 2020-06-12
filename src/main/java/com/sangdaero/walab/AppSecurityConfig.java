@@ -1,5 +1,7 @@
 package com.sangdaero.walab;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,14 +31,14 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
         .authorizeRequests(a -> a
-        		.antMatchers("/","/error").permitAll()
+        		.antMatchers("/error","/test/**", "/interestdata/**", "/requestdata/**", "/activitydata/**", "/notification/**", "/downloadFile/**").permitAll()
         		.anyRequest().authenticated()
         )
         .logout(l -> l
-        		.logoutSuccessUrl("/").permitAll()
+        		.logoutSuccessUrl("/login").permitAll()
         )
         .csrf().disable()
-        .oauth2Login()
+        .oauth2Login().loginPage("/login")
         .userInfoEndpoint()
         .oidcUserService(mUserService);
 		

@@ -2,14 +2,13 @@ package com.sangdaero.walab.common.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sangdaero.walab.common.entity.UserInterest;
 
 import lombok.AccessLevel;
@@ -21,9 +20,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User extends TimeEntity {
-
+	
+	// 2020-05-11 added
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="userId")
+	@JsonIgnore
+	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
+	
 	@Id @GeneratedValue
     private Long id;
 
@@ -44,6 +48,7 @@ public class User extends TimeEntity {
     private Integer volunteerTime;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<UserInterest> userInterestList = new ArrayList<>();
 
     private String service;

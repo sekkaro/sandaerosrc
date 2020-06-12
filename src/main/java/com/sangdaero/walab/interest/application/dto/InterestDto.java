@@ -19,8 +19,8 @@ public class InterestDto {
     private String name;
 
     private Byte type;
-    private Byte on_off;
     private Long count;
+    private Byte on_off;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -35,12 +35,12 @@ public class InterestDto {
     }
 
     @Builder
-    public InterestDto(Long id, String name, Byte type, Byte on_off, Long count, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public InterestDto(Long id, String name, Byte type, Long count, Byte on_off, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.on_off = on_off;
         this.count = count;
+        this.on_off = on_off;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

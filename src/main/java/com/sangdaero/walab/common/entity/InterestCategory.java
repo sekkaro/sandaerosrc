@@ -1,5 +1,6 @@
 package com.sangdaero.walab.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sangdaero.walab.common.entity.UserInterest;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class InterestCategory extends TimeEntity {
     private Byte on_off;
 
     @OneToMany(mappedBy = "interest")
+    @JsonIgnore
     private List<UserInterest> userInterestList = new ArrayList<>();
 
     @Builder
@@ -33,12 +35,16 @@ public class InterestCategory extends TimeEntity {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.on_off = 1;
+        this.on_off = on_off;
     }
 
     public InterestCategory update(String name) {
         this.setName(name);
         this.setModDate(LocalDateTime.now());
         return this;
+    }
+
+    public void changeOnOff(Byte value) {
+        this.setOn_off(value);
     }
 }

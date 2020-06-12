@@ -1,50 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-
-<script type="text/javascript" th:inline="javascript">
-	var isChecked = false;
-</script>
-
-<head lang="en" th:replace="common/header :: header"></head>
+<head>
+	<th:block th:replace="common/head.html"/>
+</head>
 <body>
+<header th:replace="common/menu :: header"></header>
 
-	<div lang="en" th:replace="common/menu :: menu"></div>
+<div lang="en" th:replace="common/menu :: menu"></div>
 
-	<div id="main" style="margin-left: 15%">
+	<div id="main">
+		<h4>모금 활동</h4>
 
-		<div class="w3-teal">
-			<button id="openNav" style="display: none"
-				class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-			<div class="w3-container">
-				<h1>모금활동 생성 페이지</h1>
-			</div>
-		</div>
+		<div>
+			<form action="/payment/search" method="GET">
+				<!-- sort -->
 
-		<div class="w3-container">
-			<div>
-				<form action="/payment/search" method="GET">
-					<!-- sort -->
-					<input name="keyword" type="text" placeholder="검색어를 입력하세요.">
-					
+				<div class="form-group row">
+					<div class="col-md-4">
+						<input class="form-control" name="keyword" type="text"
+							   placeholder="검색어를 입력하세요.">
+					</div>
+
 					<select name="sortBy">
 						<option value=2>전체</option>
 						<option value=1>닫힘</option>
 						<option value=0>열림</option>
-					</select> 
+					</select> <input type="hidden" name="pageNum">
 
-					<input type="hidden" name="pageNum">
-					
-					<button id="searchBtn">검색</button>
-				</form>
-			</div>
-			<br>
+					<div style="margin-left: 20px">
+						<button id="searchBtn">검색</button>
+					</div>
+
+				</div>
+			</form>
+		</div>
+
+		<div id="basicBody">
+
 
 			<!-- payment list  -->
-			<form action="/payment/paymentUpdateChecked" method="GET" name="form1">
+			<form action="/payment/paymentUpdateChecked" method="GET"
+				name="form1">
 				<!-- update checked record's 'paymentCheck' status. -->
 
-				<table>
+				<table class="table table-striped  table-hover">
 					<thead>
 						<tr>
 							<th class="one wide">id(번호)</th>
@@ -55,7 +54,7 @@
 							<th class="two wide">책임자</th>
 							<th class="three wide">메모</th>
 							<th class="three wide">최종 수정일</th>
-							<th><input type="checkbox" name="paymentCheckBox" th:onclick="'javascript:checkAll('form1',true);'"></th>
+							<th><input type="checkbox" name="paymentTopCheckBox" id="id_checkAll" th:onclick="checkAll();"></th>
 						</tr>
 					</thead>
 
@@ -64,42 +63,47 @@
 						<!-- CONTENTS !-->
 						<tr th:each="payment, iterState : ${paymentList}">
 							<td><span th:text="${(pageNum-1)*5 + iterState.count}"></span></td>
-							
-							<td>
-							<span th:if="${payment.status == 0}">열림</span> 
-							<span th:if="${payment.status == 1}">닫힘</span></td>
-							
-							<td>
-							<a th:href="@{'/paymentDetail/' + ${payment.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
-							<span th:text="${payment.title}"></span>
-							</a>
-							</td>
-							
+
+							<td><span th:if="${payment.status == 0}">열림</span> <span
+								th:if="${payment.status == 1}">닫힘</span></td>
+
+							<td><a
+								th:href="@{'/paymentDetail/' + ${payment.id} + '/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy}}">
+									<span th:text="${payment.title}"></span>
+							</a></td>
+
 							<td><span th:text="${payment.donationPrice}"></span></td>
-							
-							<td>
-							<span th:if="${payment.selectSupport==1}">후원</span> 
-							<span th:if="${payment.selectSupport==0}">오락</span>
-							</td>
-			
+
+							<td><span th:if="${payment.selectSupport==1}">후원</span> <span
+								th:if="${payment.selectSupport==0}">오락</span></td>
+
 							<!-- <td><span th:text="${payment.manager}"></span></td> -->
-							<td><span th:each="manager : ${payment.manager}" th:text="${manager.name}"></span></td>
+							<td><span th:each="manager : ${payment.manager}"
+								th:text="${manager.name}"></span></td>
 							<td><span th:text="${payment.content}"></span></td>
 							<td><span
 								th:text="${#temporals.format(payment.modDate, 'yyyy-MM-dd')}"></span>
 							</td>
-							<td><input type="checkbox" name="paymentCheckBox"
+							<td><input type="checkbox" name="paymentCheckBox" id="id_checkAll"
 								th:value="${payment.id}"></td>
 						</tr>
 					</tbody>
 				</table>
 
 				<!-- When list is empty, show a message -->
-				<div th:if="${#lists.isEmpty(paymentList)}"><br><br><h3>조건에 맞는 항목이 없습니다.</h3><br><br></div>
-				
+				<div th:if="${#lists.isEmpty(paymentList)}">
+					<br> <br>
+					<h3>조건에 맞는 항목이 없습니다.</h3>
+					<br> <br>
+				</div>
+
 				<button id="paymentCheckBoxBtn">체크 열림/닫힘 변환</button>
 
 			</form>
+
+			<ul class="pagination">
+				<th:block th:each="pageNum : ${pageList}" th:inline="text"></th:block>
+			</ul>
 
 			<!-- paging -->
 			<div>
@@ -108,37 +112,27 @@
 				</span>
 			</div>
 			<!-- paging end -->
-			<br> <a
-				th:href="@{'/paymentForm/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy} }"><button>모금활동 생성</button></a>
-			<br>
-
 
 		</div>
+		<br> <a
+			th:href="@{'/paymentForm/?pageNum=' + ${pageNum} + '&keyword=' + ${keyword} + '&sortBy=' + ${sortBy} }"><button>모금활동
+		생성</button></a> <br>
 
 		<div lang="en" th:replace="common/footer :: footer"></div>
 
 	</div>
-</body>
-
-<script type="text/javascript" th:inline="javascript">
 	
-	function test(){
-		console.print("clicked");
-	}
+	<script src="/js/jquery-3.5.1.js" type="text/javascript"></script>
+	<script type="text/javascript" th:inline="javascript">
 	
-	function checkAll(formName, checkToggle) {
-
-		test();
-		console.log("clicked");
-		var checkBoxes = new Array();
-		checkBoxes = document[formName].getElementByTagName('input');
-
-		for (var i = 0; i < checkboxes.length; i++) {
-			if (checkboxes[i].type == 'paymentCheckbox') {
-				checkboxes[i].checked = checktoggle;
+	function checkAll(){
+			if ( $("#id_checkAll").is(':checked') ){
+				$("input[name=paymentCheckBox]").prop("checked", true);
+		      }else{
+		        $("input[name=paymentCheckBox]").prop("checked", false);
 			}
 		}
-	}
-</script>
+	</script>
+</body>
 </html>
 

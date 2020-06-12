@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head lang="en" th:replace="common/header :: header">
-    <meta charset="UTF-8">
-    <title>상대로 프로젝트</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <style>
-        .container {
-            max-width: 100%;
-        }
-    </style>
+<head>
+    <th:block th:replace="common/head.html"/>
 </head>
 <body>
+    <header th:replace="common/menu :: header"></header>
+
     <div lang="en" th:replace="common/menu :: menu"></div>
 
     <div id="main" style="margin-left: 15%"></div>
@@ -18,27 +13,59 @@
     <div class="container">
         <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
         <div class="py-5 text-center">
-            <h2>유저 정보 수정</h2>
+            <h2>유저 정보</h2>
         </div>
-        <div class="row justify-content-center">
-            <form id="form" class="needs-validation col-sm-6" th:action="@{'/user/edit/' + ${userInfo.id}}" th:object="${userInfo}" method="post" novalidate>
-                <input type="hidden" name="_method" value="put"/>
-                <input type="hidden" name="id" th:value="${userInfo.id}"/>
+        <div class="justify-content-center" style="margin-left: 15%">
+
+            <div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <span id="mContent">메시지</span>
+                <button onclick="hideMessage()" type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+<!--            <form id="form" class="needs-validation col-sm-6" th:action="@{'/user/edit/' + ${userInfo.id}}" th:object="${userInfo}" method="post" novalidate>-->
+<!--                <input type="hidden" name="_method" value="put"/>-->
+                <input type="hidden" name="id" id="uid" th:value="${userInfo.id}"/>
 
                 <div class="form-group">
                     <label for="name">이름</label>
-                    <h4 id="name" th:text="${userInfo.name}" th:value="${userInfo.name}"></h4>
-                    <input type="hidden" name="name" th:value="${userInfo.name}"/>
+
+                    <h5 id="name" th:text="${userInfo.name}" style="display: inline"></h5>
+                    <input id="editName" type="text" name="name" th:value="${userInfo.name}"
+                           style="display: none;" placeholder="이름을 입력하세요."
+                           aria-describedby="nameHelp" required minlength="2">
+
+                    <small id="nameHelp" style="display: none;">
+                        한글로 입력해주세요.
+                    </small>
+<!--                    <small th:id="nameError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
+
+                    <button id="nameEditBtn" th:onclick="|javascript:editName()|">수정</button>
+                    <button id="nameCancleBtn" th:onclick="|javascript:cancleName()|" style="display: none;">취소</button>
+
+<!--                    <h4 id="name" th:text="${userInfo.name}" th:value="${userInfo.name}"></h4>-->
+<!--                    <input type="hidden" name="name" th:value="${userInfo.name}"/>-->
                 </div>
                 <hr>
                 <div class="form-group">
                     <label for="nickname">닉네임</label>
-                    <input id="nickname" type="text" name="nickname" th:value="${userInfo.nickname}" placeholder="닉네임을 입력하세요." aria-describedby="nicknameHelp" required minlength="2">
-                    <small id="nicknameHelp">
-                        2글자 이상 입력해주세요.
+
+                    <h5 id="nickname" th:text="${userInfo.nickname}" style="display: inline"></h5>
+                    <input id="editNickname" type="text" name="nickname" th:value="${userInfo.nickname}"
+                           style="display: none;" placeholder="닉네임을 입력하세요."
+                           aria-describedby="nicknameHelp" required minlength="2">
+
+<!--                    <input id="nickname" type="text" name="nickname" th:value="${userInfo.nickname}" placeholder="닉네임을 입력하세요." aria-describedby="nicknameHelp" required minlength="2">-->
+                    <small id="nicknameHelp" style="display: none;">
+                        3글자 이상 10글자 미만으로 입력해주세요.
                     </small>
-                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
+<!--                    <small th:id="nicknameError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
+<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>-->
+
+                    <button id="nicknameEditBtn" th:onclick="|javascript:editNickname()|">수정</button>
+                    <button id="nicknameCancleBtn" th:onclick="|javascript:cancleNickname()|" style="display: none;">취소</button>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -48,13 +75,29 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <label for="phone">전화번호</label>
-                    <input id="phone" type="text" name="phone" th:value="${userInfo.phone}" placeholder="전화번호를 입력하세요." aria-describedby="phoneHelp" required>
-                    <small id="phoneHelp">
-                        전화번호를 입력해주세요.
+                    <label for="phone">전화 번호</label>
+
+                    <h5 id="phone" th:text="${userInfo.phone}" style="display: inline"></h5>
+                    <input id="editPhone" type="text" name="phone" th:value="${userInfo.phone}"
+                           style="display: none;" placeholder="전화번호를 입력하세요."
+                           aria-describedby="phoneHelp" required minlength="2">
+
+                    <small id="phoneHelp" style="display: none;">
+                        010-xxxx-xxxx 형식으로 입력해주세요.
                     </small>
-                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>
-                    <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small>
+<!--                    <small th:id="phoneError" style="display: none;color: red">-->
+<!--                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>-->
+
+                    <button id="phoneEditBtn" th:onclick="|javascript:editPhone()|">수정</button>
+                    <button id="phoneCancleBtn" th:onclick="|javascript:canclePhone()|" style="display: none;">취소</button>
+
+<!--                    <label for="phone">전화번호</label>-->
+<!--                    <input id="phone" type="text" name="phone" th:value="${userInfo.phone}" placeholder="전화번호를 입력하세요." aria-describedby="phoneHelp" required>-->
+<!--                    <small id="phoneHelp">-->
+<!--                        전화번호를 입력해주세요.-->
+<!--                    </small>-->
+<!--                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>-->
+<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small>-->
                 </div>
                 <hr>
                 <div class="form-group">
@@ -63,6 +106,7 @@
                         <option th:value="1" th:selected="${userInfo.userType==1}">관제사</option>
                         <option th:value="0" th:selected="${userInfo.userType==0}">이용자</option>
                     </select>
+                    <button id="userTypeEditBtn" th:onclick="|javascript:editUserType()|">수정</button>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -77,14 +121,10 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <label for="interest">관심사</label>
-                    <span id="interest" th:each="interestName  : ${allInterest}" >
-                        <input type="checkbox"
-                               th:value="${interestName.name}"
-                                name="interest"
-                                th:checked="${userInfo.interestName.contains(interestName.name)}"/>
-                        <label th:text="${interestName.name}"></label>
-                    </span>
+                    <label for="tags">관심사</label>
+                    <div id="whitelist" th:text="${whitelist}" hidden></div>
+                    <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(userInfo.interestName, ',')}"
+                           class="tagify-outside" aria-describedby="tagHelp"/>
                 </div>
                 <hr>
                 <div class="form-group">
@@ -95,51 +135,269 @@
                     커뮤니티:
                 </div>
                 <hr>
-                <div class="form-group">
-                    <input type="submit" value="수정">
-                </div>
-            </form>
+                <button>
+                    <a href="javascript:history.back()">뒤로가기</a>
+                </button>
+<!--                <div class="form-group">-->
+<!--                    <input type="submit" value="수정">-->
+<!--                </div>-->
+<!--            </form>-->
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script th:replace="common/fragments.html :: form-validation"></script>
     <script type="application/javascript">
-        (function () {
-            'use strict';
+        $(function () {
+            var id = document.getElementById('uid').value;
 
-            window.addEventListener('load', function () {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
+            function tagRequest(url, interestName) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "/user/interest" + url +"/"+id,
+                    data: JSON.stringify({'interestName': interestName})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
 
-                // Loop over them and prevent submission
-                Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-            }, false)
-        }())
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            function onSuggestionsListUpdate({ detail:suggestionsElm }){
+                console.log(  suggestionsElm  )
+            }
+
+            function onSuggestionsListHide(){
+                console.log("hide dropdown")
+            }
+
+            function onDropdownScroll(e){
+                console.log(e.detail)
+            }
+
+            function renderSuggestionsList(){
+                tagify.dropdown.show.call(tagify) // load the list
+                tagify.DOM.scope.parentNode.appendChild(tagify.DOM.dropdown)
+            }
+
+            var tagInput = document.querySelector("#tags");
+
+            var tagify = new Tagify(tagInput, {
+                enforceWhitelist: true,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                dropdown : {
+                    position: "manual",
+                    maxItems: Infinity,
+                    enabled: 0,
+                    classname: "customSuggestionsList"
+                } // map tags
+            });
+
+            tagify.on("dropdown:show", onSuggestionsListUpdate)
+                  .on("dropdown:hide", onSuggestionsListHide)
+                  .on('dropdown:scroll', onDropdownScroll);
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+
+            renderSuggestionsList();
+
+            // add a class to Tagify's input element
+            tagify.DOM.input.classList.add('form-control');
+            // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+        });
+    </script>
+    <script type="application/javascript">
 
         function plus() {
+            var id = document.getElementById('uid').value;
             var testValue = document.getElementById("currentTime").value;
             var addTime = document.getElementById("time").value;
             document.getElementById("volunteerTime").innerHTML = String(Number(testValue)+Number(addTime))+" 시간";
             document.getElementById("currentTime").value=Number(testValue)+Number(addTime);
             document.getElementById("time").value=null;
+
+            $.post("/userdata/change", {
+                id: id,
+                time: document.getElementById("currentTime").value
+            }, function(data) {
+                console.log(data);
+            });
         }
 
         function minus() {
+            var id = document.getElementById('uid').value;
             var testValue = document.getElementById("currentTime").value;
             var addTime = document.getElementById("time").value;
-
             document.getElementById("volunteerTime").innerHTML = String(Number(testValue)-Number(addTime));
             document.getElementById("currentTime").value=Number(testValue)-Number(addTime);
             document.getElementById("time").value=null;
+
+            $.post("/userdata/change", {
+                id: id,
+                time: document.getElementById("currentTime").value
+            }, function(data) {
+                console.log(data);
+            });
+        }
+
+        function editName() {
+            var id = document.getElementById('uid').value;
+
+            $('#editName').toggle();
+
+            $('#name').toggle();
+
+            $('#nameCancleBtn').toggle();
+
+            $('#nameHelp').toggle();
+
+            if($('#nameEditBtn').html() == '수정'){
+                $('#nameEditBtn').html('완료');
+            } else{
+                $('#nameEditBtn').html('수정');
+                $.post("/userdata/name", {
+                    id: id,
+                    name: $('#editName').val()
+                }, function(data) {
+                    if(data.message==null) {
+                        $('#name').html(data.name);
+                        $('#mContent').html("이름을 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+                });
+            }
+        }
+
+        function cancleName() {
+            $('#editName').toggle();
+            $('#name').toggle();
+            $('#nameCancleBtn').toggle();
+            $('#nameHelp').toggle();
+            $('#nameEditBtn').html('수정');
+        }
+
+        function editNickname() {
+            var id = document.getElementById('uid').value;
+
+            $('#editNickname').toggle();
+
+            $('#nickname').toggle();
+
+            $('#nicknameCancleBtn').toggle();
+
+            $('#nicknameHelp').toggle();
+
+            if($('#nicknameEditBtn').html() == '수정'){
+                $('#nicknameEditBtn').html('완료');
+            } else{
+                $('#nicknameEditBtn').html('수정');
+                $.post("/userdata/nickname", {
+                    id: id,
+                    nickname: $('#editNickname').val()
+                }, function(data) {
+                    if(data.message==null) {
+                        $('#nickname').html(data.nickname);
+                        $('#mContent').html("닉네임을 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+                });
+            }
+        }
+
+        function cancleNickname() {
+            $('#editNickname').toggle();
+            $('#nickname').toggle();
+            $('#nicknameCancleBtn').toggle();
+            $('#nicknameHelp').toggle();
+            $('#nicknameEditBtn').html('수정');
+        }
+
+        function editPhone() {
+            var id = document.getElementById('uid').value;
+
+            $('#editPhone').toggle();
+
+            $('#phone').toggle();
+
+            $('#phoneCancleBtn').toggle();
+
+            $('#phoneHelp').toggle();
+
+            if($('#phoneEditBtn').html() == '수정'){
+                $('#phoneEditBtn').html('완료');
+            } else{
+                $('#phoneEditBtn').html('수정');
+                $.post("/userdata/phone", {
+                    id: id,
+                    phone: $('#editPhone').val()
+                }, function(data) {
+                    if(data.message==null) {
+                        $('#phone').html(data.phone);
+                        $('#mContent').html("전화번호를 수정하였습니다.");
+                        $('#message').show();
+                    }else {
+                        $('#mContent').html(data.message);
+                        // $('#message').css("background-color", "red");
+                        $('#message').show();
+                    }
+                    setTimeout(function() {
+                        hideMessage();
+                    }, 2000);
+                });
+            }
+        }
+
+        function canclePhone() {
+            $('#editPhone').toggle();
+            $('#phone').toggle();
+            $('#phoneCancleBtn').toggle();
+            $('#phoneHelp').toggle();
+            $('#phoneEditBtn').html('수정');
+        }
+
+        function editUserType() {
+            var id = document.getElementById('uid').value;
+
+            $.post("/userdata/usertype", {
+                id: id,
+                type: $('#userType').val()
+            }, function(data) {
+                $('#mContent').html("유저 타입을 수정하였습니다.");
+                $('#message').show();
+
+                setTimeout(function() {
+                    hideMessage();
+                }, 2000);
+            });
+        }
+
+        function hideMessage() {
+            $('#message').hide();
         }
     </script>
 </body>

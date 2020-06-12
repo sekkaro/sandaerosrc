@@ -14,4 +14,7 @@ public interface InterestRepository extends JpaRepository<InterestCategory, Long
 
     List<InterestName> findAllByOrderByName();
 
+    InterestCategory findByName(String interestName);
+
+    boolean existsByName(String name);
 }

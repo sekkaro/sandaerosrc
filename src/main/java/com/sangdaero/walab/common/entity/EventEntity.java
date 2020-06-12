@@ -1,7 +1,7 @@
 package com.sangdaero.walab.common.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,6 +39,11 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventEntity extends TimeEntity {
 
+	// 2020-05-11 added
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="eventId")
+	@JsonIgnore
+	private Set<FundraisingEntity> fundraising = new HashSet<FundraisingEntity>();
+	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -51,16 +57,15 @@ public class EventEntity extends TimeEntity {
 	@Column(name="event_category", nullable=false)
 	private Integer eventCategory;
 	
-	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, 
-			CascadeType.PERSIST, CascadeType.REFRESH})
+	@ManyToOne
 	@JoinColumn(name="interest_category", nullable=true)
 	private InterestCategory interestCategory;
 	
 	@OneToMany(mappedBy="event")
 	private List<UserEventMapper> userEventList;
-
+  
 	@ManyToOne
-	@JoinColumn(name="manager", nullable=true)
+	@JoinColumn(name = "manager", nullable=true)
 	private User manager;
 
 	@Column(length = 255)
@@ -140,5 +145,6 @@ public class EventEntity extends TimeEntity {
 		this.evaluate = evaluate;
 		this.deadline = deadline;
 	}
+
 	
 }

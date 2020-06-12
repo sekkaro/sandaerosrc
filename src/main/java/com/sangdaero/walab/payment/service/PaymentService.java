@@ -1,6 +1,5 @@
 package com.sangdaero.walab.payment.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,19 +13,17 @@ import org.springframework.stereotype.Service;
 import com.sangdaero.walab.common.entity.EventEntity;
 import com.sangdaero.walab.common.entity.FundraisingEntity;
 import com.sangdaero.walab.common.entity.User;
-import com.sangdaero.walab.payment.domain.repository.FundraisingRepository;
 import com.sangdaero.walab.payment.domain.repository.PaymentRepository;
-import com.sangdaero.walab.payment.dto.FundraisingDto;
 import com.sangdaero.walab.payment.dto.PaymentDto;
 import com.sangdaero.walab.user.application.service.UserService;
-import com.sangdaero.walab.user.domain.repository.UserRepository;
 
 @Service
 public class PaymentService {
 
 	private PaymentRepository mPaymentRepository;
-	private FundraisingRepository mFundraisingRepository;
+	private FundraisingService mFundraisingService;
 	private UserService mUserService;
+	
 
 	// for paging
 	private static final int NUMBER_OF_CONTENTS_IN_ONE_PAGE = 5; // 6 contents are shown, per page.
@@ -36,10 +33,10 @@ public class PaymentService {
 	private static final int PAYMENT_CATEGORY = 2;
 
 	// constructor
-	public PaymentService(PaymentRepository mPaymentRepository, UserService mUserService, FundraisingRepository mFundraisingRepository) {
+	public PaymentService(PaymentRepository mPaymentRepository, UserService mUserService, FundraisingService mFundraisingService) {
 		this.mPaymentRepository = mPaymentRepository;
 		this.mUserService = mUserService;
-		this.mFundraisingRepository = mFundraisingRepository;
+		this.mFundraisingService = mFundraisingService;
 	}
 
 	// Count All
@@ -127,6 +124,8 @@ public class PaymentService {
 	// delete single record
 	@Transactional
 	public void deletePost(Long id) {
+		
+		mFundraisingService.deleteAllFundraisingByEventId(id);
 		mPaymentRepository.deleteById(id); // original
 	}
 
@@ -185,6 +184,7 @@ public class PaymentService {
 	}
 	
 	// Fundraising part
+	@Transactional
 	public void fundraisingUserMatching (String[] userCheckBox, Long eventId) { // checked user's ids are now in String[] userMatchingCheckBox.
 
 		if (userCheckBox == null) {
@@ -217,7 +217,7 @@ public class PaymentService {
 //					.modDate(LocalDateTime.now())
 					.build();
 			
-			mFundraisingRepository.save(fund);
+			mFundraisingService.save(fund);
 		}
 		
 	}
