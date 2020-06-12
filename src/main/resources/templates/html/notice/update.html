@@ -111,31 +111,5 @@
 		        console.error( error );
 		    } );
 	</script>
-  
-    <form th:action="@{'/notice/post/edit/' + ${noticeDto.id}}" method="post">
-        <input type="hidden" name="_method" value="put"/>
-        <input type="hidden" name="id" th:value="${noticeDto.id}"/>
-        <input type="hidden" name="view" th:value="${noticeDto.view}"/>
-
-	       제목 : <input type="text" name="title" th:value="${noticeDto.title}"> <br>
-	       작성자 : <input type="text" name="writer" th:value="${noticeDto.writer}"> <br>
-	    <input type="hidden" value="1" name="topCategory">
-	    Sub: 
-        <select name="categoryId">
-        	<option type="number" value="1">전체</option>
-        	<option type="number" value="2">자원봉사자</option>
-        	<option type="number" value="3">이용자</option>
-        </select><br> 
-        
-    
-        <textarea name="content" th:text="${noticeDto.content}"></textarea><br>
-
-        <input type="submit" value="수정">
-        <a th:href="@{/notice}">목록</a>
-    </form>
-    <div lang="en" th:replace="common/footer :: footer"></div>
-
-</div>
-
 </body>
 </html>
