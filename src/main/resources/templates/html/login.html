@@ -1,8 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
-<head lang="en" th:replace="common/header :: header"></head>
+<head>
+    <th:block th:replace="common/head.html"/>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
 <body>
-<a class="btn btn-block btn-social btn-google" href="/oauth2/authorization/google"><span class="fab fa-google"></span> Sign in with Google</a>
+    <div id = "login_wrapper">
+        <div id = "logo">
+        </div>
+        <div id = "login">
+            <img class="button" src="img/button_zip1.png" alt="login_button" usemap="#Map">
+            <map name="Map">
+                <area shape="rect" coords="12,12,390,61" href="/oauth2/authorization/google">
+            </map>
+<!--            <a href="/oauth2/authorization/google">-->
+<!--                <img class="button" src="img/button_zip1.png" onclick="login()" alt="login_button">-->
+<!--            </a>-->
+        </div>
+    </div>
 </body>
-</html>
+</html> 

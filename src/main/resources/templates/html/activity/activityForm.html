@@ -4,87 +4,87 @@
 	<th:block th:replace="common/head.html"/>
 	<link rel="stylesheet" href="/css/insertAct.css">
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<style th:inline="text">
+		.multiselect {
+			width: 200px;
+		}
+
+		.selectBox {
+			position: relative;
+		}
+
+		.selectBox select {
+			width: 100%;
+			font-weight: bold;
+		}
+
+		.overSelect {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+
+		#users {
+			display: none;
+			border: 1px #dadada solid;
+			max-height:100px;/* you can change as you need it */
+			overflow:auto;/* to get scroll */
+		}
+
+		#volunteers {
+			display: none;
+			border: 1px #dadada solid;
+			max-height:100px;/* you can change as you need it */
+			overflow:auto;/* to get scroll */
+		}
+
+	</style>
 </head>
-<style th:inline="text">
- .multiselect {
-  width: 200px;
-}
-
-.selectBox {
-  position: relative;
-}
-
-.selectBox select {
-  width: 100%;
-  font-weight: bold;
-}
-
-.overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-#users {
-  display: none;
-  border: 1px #dadada solid;
-  max-height:100px;/* you can change as you need it */
-   overflow:auto;/* to get scroll */
-}
-
-#volunteers {
-  display: none;
-  border: 1px #dadada solid;
-  max-height:100px;/* you can change as you need it */
-   overflow:auto;/* to get scroll */
-}
-
-</style>
 <body>
 	<header th:replace="common/menu :: header"></header>
 
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main">
-		<h4>�솢�룞 �벑濡�</h4>
+		<h4>활동 등록</h4>
 
 		<form id="infoForm" name="activity" action="/activity/activityForm" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="requestId" th:value="${requestDto?.id}"/>
 
 			<div id="actInfo">
 				<div class="infoContent">
-					<div class="subtitle">湲곕낯 �젙蹂�</div>
+					<div class="subtitle">기본 정보</div>
 					<div class="sectionLeft">
-						<div class="subcontent">移댄뀒怨좊━
+						<div class="subcontent">카테고리
 							<div class="subsub">
 								<select id="category" name="interestCategoryId">
-									<option value="0">愿��떖�궗瑜� �꽑�깮�븯�꽭�슂</option>
+									<option value="0">관심사를 선택하세요</option>
 									<option th:each="interest : ${interests}" th:value="${interest.id}"
 											th:text="${interest.name}" th:selected="${interest.id} == ${requestDto?.interestCategory?.id}"></option>
 								</select>
 							</div>
 						</div>
-						<div class="subcontent">留덇컧 湲고븳
+						<div class="subcontent">마감 기한
 							<div class="subsub">
 								<input id="date" type="date" name="deadlineDate"> <input id="time" type="time" name="deadlineTime">
 							</div>
 						</div>
 					</div>
 					<div class="sectionRight">
-						<div class="subcontent">�젣紐�
+						<div class="subcontent">제목
 							<div class="subsub2">
-								<input id="titletext" type="text" name="title" th:value="${requestDto?.title}" placeholder="�젣紐⑹쓣 �엯�젰�븯�꽭�슂.">
+								<input id="titletext" type="text" name="title" th:value="${requestDto?.title}" placeholder="제목을 입력하세요.">
 							</div>
 						</div>
-<!--						<div class="subcontent">�긽�깭-->
+<!--						<div class="subcontent">상태-->
 <!--							<div class="subsub2">-->
 <!--								<select id="state" name="state">-->
-<!--									<option value="whole">�쟾泥�</option>-->
-<!--									<option value="what">臾댁뾿�쓣</option>-->
-<!--									<option value="choose">怨좊�쇨퉴�슂?</option>-->
-<!--									<option value="haha">�뀕�뀕</option>-->
+<!--									<option value="whole">전체</option>-->
+<!--									<option value="what">무엇을</option>-->
+<!--									<option value="choose">고를까요?</option>-->
+<!--									<option value="haha">ㅎㅎ</option>-->
 <!--								</select>-->
 <!--							</div>-->
 <!--						</div>-->
@@ -94,31 +94,30 @@
 				<hr class="divgap">
 
 				<div class="infoContent">
-					<div class="subtitle">�떞�떦 �씤�썝</div>
+					<div class="subtitle">담당 인원</div>
 					<div class="sectionLeft">
-						<div class="subcontent">�씠�슜�옄
+						<div class="subcontent">이용자
 							<div class="subsub">
-							이용자:
-							  <div class="multiselect">
-    							<div class="selectBox" onclick="showUserCheckboxes()">
-      								<select id="user"> 
-        								<option>이용자를 선택하세요</option>
-      								</select>
-      								<div class="overSelect"></div>
-    							</div>
-    							<input id="searchUsers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none"> 
-    							<ul id="users" style="list-style-type: none;">
-      								
-    							</ul>
-  							</div>
-  							<ul id="clickedUsers" class="list-group mt-2 col-md-6">
-							</ul>
+								<div class="multiselect">
+									<div class="selectBox" onclick="showUserCheckboxes()">
+										<select id="user">
+											<option>이용자를 선택하세요</option>
+										</select>
+										<div class="overSelect"></div>
+									</div>
+									<input id="searchUsers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
+									<ul id="users" style="list-style-type: none;">
+
+									</ul>
+								</div>
+								<ul id="clickedUsers" class="list-group mt-2 col-md-6">
+								</ul>
 							</div>
 						</div>
-						<div class="subcontent">�떞�떦 愿��젣�궗
+						<div class="subcontent">담당 관제사
 							<div class="subsub">
 								<select name="managerId">
-									<option value="0">愿�由ъ옄瑜� �꽑�깮�븯�꽭�슂</option>
+									<option value="0">관리자를 선택하세요</option>
 									<option th:each="manager : ${managers}" th:value="${manager.id}"
 											th:text="${manager.name}"></option>
 								</select>
@@ -132,23 +131,22 @@
 						</div>
 					</div>
 					<div class="sectionRight">
-						<div class="subcontent">遊됱궗�옄
+						<div class="subcontent">봉사자
 							<div class="subsub2">
-								봉사자:
-							<div class="multiselect">
-    							<div class="selectBox" onclick="showVolunteerCheckboxes()">
-      								<select id="volunteer">
-        								<option>봉사자를 선택하세요</option>
-      								</select>
-      								<div class="overSelect"></div>
-    							</div>
-    							<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
-    							<ul id="volunteers" style="list-style-type: none;">
-      								
-    							</ul>
-  							</div>
-  							<ul id="clickedVolunteers" class="list-group mt-2 col-md-6">
-							</ul>
+								<div class="multiselect">
+									<div class="selectBox" onclick="showVolunteerCheckboxes()">
+										<select id="volunteer">
+											<option>봉사자를 선택하세요</option>
+										</select>
+										<div class="overSelect"></div>
+									</div>
+									<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
+									<ul id="volunteers" style="list-style-type: none;">
+
+									</ul>
+								</div>
+								<ul id="clickedVolunteers" class="list-group mt-2 col-md-6">
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -157,9 +155,9 @@
 				<hr class="divgap">
 
 				<div class="infoContent2">
-					<div class="subtitle">�솢�룞 �궡�슜</div>
+					<div class="subtitle">활동 내용</div>
 					<div class="sectionLeft2">
-						<div class="subcontent">�솢�룞 �떆媛�
+						<div class="subcontent">활동 시간
 							<div class="subsub2 sub1">
 								<input id="start_date" type="date" name="startDate"><input id="start_time" type="time" name="startTime"><span id="and"> ~ </span>
 								<input id="end_date" type="date" name="endDate"><input id="end_time" type="time" name="endTime">
@@ -167,9 +165,9 @@
 						</div>
 					</div>
 					<div class="sectionRight2">
-						<div class="subcontent">�옣�냼
+						<div class="subcontent">장소
 							<div class="subsub2 sub">
-								<input type="text" id="place" name="place" placeholder="二쇱냼瑜� �엯�젰�븯�꽭�슂." onclick="execPostcode()">
+								<input type="text" id="place" name="place" placeholder="주소를 입력하세요." onclick="execPostcode()">
 							</div>
 						</div>
 					</div>
@@ -178,12 +176,12 @@
 				<hr class="divgap2">
 
 				<div class="infoContent2">
-					�긽�꽭 �꽕紐�
+					상세 설명
 					<div id="description">
-<!--						<div id="fileName">�뙆�씪 泥⑤�-->
+<!--						<div id="fileName">파일 첨부-->
 <!--							<input type="file" name="file" id="file" style="display:none"/>-->
-<!--							<div class="button" id = "img" onclick="onclick=document.all.file.click()"><i class="far fa-image"></i>�궗吏�</div>-->
-<!--							<div class="button" id="video" onclick="onclick=document.all.file.click()"><i class="far fa-play-circle"></i> �룞�쁺�긽</div>-->
+<!--							<div class="button" id = "img" onclick="onclick=document.all.file.click()"><i class="far fa-image"></i>사진</div>-->
+<!--							<div class="button" id="video" onclick="onclick=document.all.file.click()"><i class="far fa-play-circle"></i> 동영상</div>-->
 <!--						</div>-->
 <!--						<div>-->
 							<textarea name="content"></textarea>
@@ -194,16 +192,16 @@
 				<hr class="divgap">
 
 				<div class="infoContent deliveryGroup" style="display: none;">
-					<div class="subtitle">�굹�닎 �궡�슜</div>
+					<div class="subtitle">나눔 내용</div>
 					<div class="sectionLeft">
-						<div class="subcontent">�닔�졊 諛⑸쾿</div>
+						<div class="subcontent">수령 방법</div>
 							<input type="radio" id="direct" name="delivery" value="0" checked>
-							<label for="direct">吏곸젒 �닔�졊</label>
+							<label for="direct">직접 수령</label>
 							<input type="radio" id="through" name="delivery" value="1">
-							<label for="through">遊됱궗�궗 �넻�빐 �쟾�떖</label>
+							<label for="through">봉사사 통해 전달</label>
 					</div>
 					<div class="sectionRight">
-						<div class="subcontent">臾쇨굔 �궗吏�</div>
+						<div class="subcontent">물건 사진</div>
 							<input th:if="${productImage == null}" type="file" name="files" multiple>
 							<img th:if="${productImage}" alt="image" th:src="@{${'/images/' + productImage}}" width="250" height="250">
 							<input th:if="${productImage}" type="text" style="display:none;" name="file" th:value="${productImage}" >
@@ -217,14 +215,14 @@
 			</div>
 
 <!--			<div class="row deliveryGroup" style="display: none;">-->
-<!--				<h4>�굹�닎 �궡�슜</h4>-->
+<!--				<h4>나눔 내용</h4>-->
 <!--			</div>-->
 <!--			<div class="row deliveryGroup" style="display: none;">-->
 <!--				<div class="col-md-6">-->
 <!--					<input type="radio" id="direct" name="delivery" value="0" checked>-->
-<!--					<label for="direct">吏곸젒 �닔�졊</label>-->
+<!--					<label for="direct">직접 수령</label>-->
 <!--					<input type="radio" id="through" name="delivery" value="1">-->
-<!--					<label for="through">遊됱궗�궗 �넻�빐 �쟾�떖</label>-->
+<!--					<label for="through">봉사사 통해 전달</label>-->
 <!--				</div>-->
 <!--				<div class="col-md-6">-->
 <!--					<input th:if="${productImage == null}" type="file" name="files" multiple>-->
@@ -256,45 +254,44 @@
 		function execPostcode() {
 			new daum.Postcode({
 				oncomplete: function(data) {
-					var addr = data.address; // 理쒖쥌 二쇱냼 蹂��닔
+					var addr = data.address; // 최종 주소 변수
 
-					// 二쇱냼 �젙蹂대�� �빐�떦 �븘�뱶�뿉 �꽔�뒗�떎.
+					// 주소 정보를 해당 필드에 넣는다.
 					document.getElementById("place").value = addr;
 				}
 			}).open();
 		}
-		
+
 		var expandedUsers = false;
 		var expandedVolunteers = false;
 
 		function showUserCheckboxes() {
-		  var checkboxes = document.getElementById("users");
-		  var searchboxes = document.getElementById("searchUsers");
-		  if (!expandedUsers) {
-		    checkboxes.style.display = "block";
-		    searchboxes.style.display = "block";
-		    expandedUsers = true;
-		  } else {
-		    checkboxes.style.display = "none";
-		    searchboxes.style.display = "none";
-		    expandedUsers = false;
-		  }
-		}
-		
-		function showVolunteerCheckboxes() {
-			  var checkboxes = document.getElementById("volunteers");
-			  var searchboxes = document.getElementById("searchVolunteers");
-			  if (!expandedVolunteers) {
-			    checkboxes.style.display = "block";
-			    searchboxes.style.display = "block";
-			    expandedVolunteers = true;
-			  } else {
-			    checkboxes.style.display = "none";
-			    searchboxes.style.display = "none";
-			    expandedVolunteers = false;
-			  }
+			var checkboxes = document.getElementById("users");
+			var searchboxes = document.getElementById("searchUsers");
+			if (!expandedUsers) {
+				checkboxes.style.display = "block";
+				searchboxes.style.display = "block";
+				expandedUsers = true;
+			} else {
+				checkboxes.style.display = "none";
+				searchboxes.style.display = "none";
+				expandedUsers = false;
 			}
-		
+		}
+
+		function showVolunteerCheckboxes() {
+			var checkboxes = document.getElementById("volunteers");
+			var searchboxes = document.getElementById("searchVolunteers");
+			if (!expandedVolunteers) {
+				checkboxes.style.display = "block";
+				searchboxes.style.display = "block";
+				expandedVolunteers = true;
+			} else {
+				checkboxes.style.display = "none";
+				searchboxes.style.display = "none";
+				expandedVolunteers = false;
+			}
+		}
 
 		function fancyClickUsers(){
 			try{
@@ -302,17 +299,17 @@
 				if(userStatusList.length > 0){
 					userStatusList.forEach(function(user){
 						if(clickedUsers.indexOf(user.id.toString()) > -1){
-							innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";	
+							innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";
 						}
 					});
 				}
-				
+
 			}
 			finally{
 				$('#clickedUsers').html(innerHtml);
 			}
 		}
-		
+
 		function fancyClickVolunteers(){
 			try{
 				var innerHtml = (clickedVolunteers.length>0)?"봉사자:":"";
@@ -321,7 +318,7 @@
 					userStatusList.forEach(function(user){
 						if(clickedVolunteers.indexOf(user.id.toString()) > -1){
 							if($('#volunteer'+ user.id).val() == 0){
-								color = "warning";	
+								color = "warning";
 							}
 							else if($('#volunteer'+ user.id).val() == 1){
 								color = "success";
@@ -329,84 +326,109 @@
 							else{
 								color = "danger";
 							}
-							innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";	
+							innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";
 						}
 					});
 				}
-				
+
 			}
 			finally{
 				$('#clickedVolunteers').html(innerHtml);
 			}
 		}
-	
-		
+
+
 		function addEventListenersToUsers(){
 			$('input[name="userId"]').each(function(){
-				
+
+				/*if($(this).prop('checked')){
+                    $('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
 				if(clickedUsers.indexOf($(this).val()) > -1){
 					$(this).prop('checked', true);
-    			}
-				
+					//$('#user'+ $(this).val()).toggle();
+					//$(this).next().next().attr("name","userStatus");
+				}
+
 				$(this).click(function(){
 					$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
-					
+					//$('#user'+ $(this).val()).toggle();
+
 					if($(this).prop('checked')){
-		    			if(clickedUsers.indexOf($(this).val()) == -1){
-		    				clickedUsers.push($(this).val());
-		    			}
+						if(clickedUsers.indexOf($(this).val()) == -1){
+							clickedUsers.push($(this).val());
+						}
+						//$(this).next().next().attr("name","userStatus");
 					}
 					else{
 						if(clickedUsers.indexOf($(this).val()) > -1){
-		    				clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
-		    			}
+							clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
+						}
+						//$(this).next().next().removeAttr("name");
 					}
-					
+
 					fancyClickUsers();
-					
-					
+
+
 				})
-				
-			})	
-			
+
+			})
+
+			/*$('input[name="userId"]+label+select').each(function(){
+                $(this).change(function(){
+
+                    for(var i = 0; i < users.length ; i++){
+                        if(users[i].id == $(this).attr('id').replace("user","")){
+                            users[i].status = $(this).val();
+                            break;
+                        }
+                    }
+
+                });
+            });*/
 		}
-		
+
 		function addEventListenersToVolunteers(){
-			
+
 			$('input[name="volunteerId"]').each(function(){
-				
+
+				/*if($(this).prop('checked')){
+                    $('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
 				if(clickedVolunteers.indexOf($(this).val()) > -1){
 					$(this).prop('checked', true);
 					$('#volunteer'+ $(this).val()).toggle();
 					$(this).next().next().attr("name","volunteerStatus");
-    			}
-				
+				}
+
 				$(this).click(function(){
 					$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
 					$('#volunteer'+ $(this).val()).toggle();
-					
+
 					if($(this).prop('checked')){
-		    			if(clickedVolunteers.indexOf($(this).val()) == -1){
-		    				clickedVolunteers.push($(this).val());
-		    			}
-		    			$(this).next().next().attr("name","volunteerStatus");
+						if(clickedVolunteers.indexOf($(this).val()) == -1){
+							clickedVolunteers.push($(this).val());
+						}
+						$(this).next().next().attr("name","volunteerStatus");
 					}
 					else{
 						if(clickedVolunteers.indexOf($(this).val()) > -1){
-		    				clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
+							clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
 						}
 						$(this).next().next().removeAttr("name");
 					}
-					
+
 					fancyClickVolunteers();
-					
+
 				})
-				
+
 			})
-			
+
 			$('input[name="volunteerId"]+label+select').each(function(){
 				$(this).change(function(){
-					
+
 					for(var i = 0; i < volunteers.length ; i++){
 						if(volunteers[i].id == $(this).attr('id').replace("volunteer","")){
 							volunteers[i].status = $(this).val();
@@ -416,86 +438,102 @@
 					fancyClickVolunteers();
 				});
 			});
-			
+
 		}
-		
-		
+
+
 		function searchUsers(keyword){
 			var innerHtml = "";
 			var innerPage = "";
 			users = [];
-			
+
 			try{
-				
+
 				userStatusList.forEach(function(user){
 					if(user.type == null || user.type == 0){
 						users.push(user);
 					}
 				});
-				
+
 				if(users.length > 0){
+					var count = 0;
 					users.forEach(function(item){
 						if(item.name.includes(keyword)){
-							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";									
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
 						}
 						else{
-							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";							
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
 						}
-						
+
 						if(clickedVolunteers.indexOf(item.id.toString()) > -1){
 							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 						else{
 							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
-						
+
+
+						/*if(item.status==null || item.status == 0){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else if(item.status == 1){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else{
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+                        }*/
+
+
 					})
-					
+
+
 				}
 				else{
-					innerHtml = "그 이름의 이용자를 찾지 못했습니다";	
+					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
 				}
-				
+
 			}
 			finally{
-				
+
 				$('#users').html(innerHtml);
+
 				addEventListenersToUsers();
-				
-			}	
-		
+
+			}
+
 		}
-		
+
 		function searchVolunteers(keyword){
 			var innerHtml = "";
 			var innerPage = "";
 			volunteers = [];
-			
+
 			try{
-				
+
 				userStatusList.forEach(function(user){
 					if(user.type == null || user.type == 1){
 						volunteers.push(user);
 					}
 				});
-				
+
 				if(volunteers.length > 0){
 
+					var count = 0;
 					volunteers.forEach(function(item){
 						if(item.name.includes(keyword)){
-							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";									
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
 						}
 						else{
-							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";							
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
 						}
-						
+
 						if(clickedUsers.indexOf(item.id.toString()) > -1){
 							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 						else{
 							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
 						}
-						
+
 						if(item.status==null || item.status == 0){
 							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
 						}
@@ -505,56 +543,58 @@
 						else{
 							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
 						}
-						
+
 					})
-					
+
+
 				}
 				else{
 					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
 				}
-				
+
 			}
 			finally{
-				
+
 				$('#volunteers').html(innerHtml);
+
 				addEventListenersToVolunteers();
-				
+
 			}
-			
+
 		}
-		
+
 		function getUsers(isSearch, category){
 			$.get("/activitydata/getUsers", {id: null, category: category}, function(data) {
-				
+
 				userStatusList = data;
-				
+
 				if(isSearch){
-					
+
 					var userIdList = [];
-					
+
 					try{
-						
+
 						if(userStatusList!=null && userStatusList.length > 0){
 							userStatusList.forEach(function(user){
 								userIdList.push(user.id.toString());
 							});
 						}
-						
+
 					}
 					finally{
-						
+
 						for(var i = clickedUsers.length -1; i >= 0 ; i--){
-						    if(userIdList.indexOf(clickedUsers[i]) == -1){
-						        clickedUsers.splice(i, 1);
-						    }
+							if(userIdList.indexOf(clickedUsers[i]) == -1){
+								clickedUsers.splice(i, 1);
+							}
 						}
-						
+
 						for(var i = clickedVolunteers.length -1; i >= 0 ; i--){
-						    if(userIdList.indexOf(clickedVolunteers[i]) == -1){
-						        clickedVolunteers.splice(i, 1);
-						    }
-						}	
-						
+							if(userIdList.indexOf(clickedVolunteers[i]) == -1){
+								clickedVolunteers.splice(i, 1);
+							}
+						}
+
 					}
 				}
 				else{
@@ -568,40 +608,40 @@
 						}
 					}
 				}
-				
+
 				searchUsers("");
 				searchVolunteers("");
-				
+
 				fancyClickUsers();
 				fancyClickVolunteers();
-				
+
 			});
 		}
-		
+
 		getUsers(false, $('select[name="interestCategoryId"]').val());
-		
+
 		$('select[name="interestCategoryId"]').on('change', function() {
-			
+
 			getUsers(true, $('select[name="interestCategoryId"]').val());
-			
+
 			if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 				$('.deliveryGroup').show();
 			}
 			else{
 				$('.deliveryGroup').hide();
 			}
-			 
+
 		});
-		
+
 		if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 			$('.deliveryGroup').show();
 		}
 		else{
 			$('.deliveryGroup').hide();
 		}
-		
+
 		$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
-		
+
 		$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
 
 
