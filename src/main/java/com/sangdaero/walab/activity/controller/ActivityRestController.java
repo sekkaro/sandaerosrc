@@ -176,6 +176,12 @@ public class ActivityRestController {
 		return mActivityService.getActivitylistForUser(userDto);
 	}
 	
+	@GetMapping("/getTop5ActivitiesForUser")
+	public List<ActivityDto> getTop5ActivitiesForUser(@RequestParam("name") String name, @RequestParam("email") String email){
+		UserDto userDto = mUserService.createUser(email, name);
+		return mActivityService.getTop5ActivitylistForUser(userDto);
+	}
+	
 	@PostMapping("/unregister")
 	public String unregister(@RequestBody AppRequest unregisterForm) {
 		UserDto userDto = mUserService.createUser(unregisterForm.getEmail(), unregisterForm.getName());

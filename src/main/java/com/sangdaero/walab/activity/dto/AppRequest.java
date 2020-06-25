@@ -19,9 +19,9 @@ public class AppRequest {
     
     private String title;
     
-    private LocalDateTime startTime;
+    private String startTime;
     
-    private LocalDateTime endTime;
+    private String endTime;
     
     private String memo;
 

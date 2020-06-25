@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -164,6 +165,7 @@ public class RequestService {
     	userEventMapper.setLocationAgree((byte) 1);
     	userEventMapper.setPhoneAgree((byte) 1);
     	userEventMapper.setUserType(request.getUserType());
+    	userEventMapper.setVolunteerTime(0);
     	
     	mUserEventMapperRepository.save(userEventMapper);
     	
@@ -175,7 +177,7 @@ public class RequestService {
 	}
   
 	public void createRequest(Long eventId, Long interestCategoryId, UserDto userDto, MultipartFile multipartFile, Byte userType, 
-			LocalDateTime startTime, LocalDateTime endTime, String title, String memo) {
+			String startTime, String endTime, String title, String memo) {
 		Request request = new Request();
 		
 		User client = mUserRepository.findById(userDto.getId()).orElse(null);
@@ -199,8 +201,16 @@ public class RequestService {
 			request.setTitle(title);
 		}
 		request.setUserType(userType);
-		request.setStartTime(startTime);
-		request.setEndTime(endTime);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		if(startTime!=null) {
+			request.setStartTime(LocalDateTime.parse(startTime, formatter));
+		}
+		if(endTime!=null) {
+			request.setEndTime(LocalDateTime.parse(endTime, formatter));
+		}
+		
 		request.setContent(memo);
 		
 		if(multipartFile!=null && !multipartFile.isEmpty()) {
