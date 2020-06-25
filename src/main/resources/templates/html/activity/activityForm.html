@@ -159,8 +159,8 @@
 					<div class="sectionLeft2">
 						<div class="subcontent">활동 시간
 							<div class="subsub2 sub1">
-								<input id="start_date" type="date" name="startDate"><input id="start_time" type="time" name="startTime"><span id="and"> ~ </span>
-								<input id="end_date" type="date" name="endDate"><input id="end_time" type="time" name="endTime">
+								<input id="start_date" type="date" name="startDate" th:value="${requestDto?.startTime?.toLocalDate()}"><input id="start_time" type="time" name="startTime" th:value="${requestDto?.startTime?.toLocalTime()}"><span id="and"> ~ </span>
+								<input id="end_date" type="date" name="endDate" th:value="${requestDto?.endTime?.toLocalDate()}"><input id="end_time" type="time" name="endTime" th:value="${requestDto?.endTime?.toLocalTime()}">
 							</div>
 						</div>
 					</div>
@@ -184,7 +184,7 @@
 <!--							<div class="button" id="video" onclick="onclick=document.all.file.click()"><i class="far fa-play-circle"></i> 동영상</div>-->
 <!--						</div>-->
 <!--						<div>-->
-							<textarea name="content"></textarea>
+							<textarea name="content">[[${requestDto?.content}]]</textarea>
 <!--						</div>-->
 					</div>
 				</div>
@@ -244,7 +244,8 @@
 		var clickedUsers = [];
 		var clickedVolunteers = [];
 		var userStatusList = [];
-		var permittedVolunteer =/*[[${permittedVolunteer}]]*/'none';
+		var permittedUser =/*[[${permittedUser}]]*/'none';
+		var userType =/*[[${userType}]]*/'none';
 		var productImage =/*[[${productImage}]]*/'none';
 
 		function goBack() {
@@ -598,14 +599,26 @@
 					}
 				}
 				else{
-					if(permittedVolunteer != null){
-						clickedVolunteers.push(permittedVolunteer.id.toString());
-						for(var i = 0; i < userStatusList.length ; i++){
-							if(userStatusList[i].id == permittedVolunteer.id){
-								userStatusList[i].status = 1;
-								break;
+					if(permittedUser != null){
+						if(userType == 1){
+							clickedVolunteers.push(permittedUser.id.toString());
+							for(var i = 0; i < userStatusList.length ; i++){
+								if(userStatusList[i].id == permittedUser.id){
+									userStatusList[i].status = 1;
+									break;
+								}
 							}
 						}
+						else{
+							clickedUsers.push(permittedUser.id.toString());
+							for(var i = 0; i < userStatusList.length ; i++){
+								if(userStatusList[i].id == permittedUser.id){
+									userStatusList[i].status = 1;
+									break;
+								}
+							}
+						}
+						
 					}
 				}
 

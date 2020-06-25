@@ -13,10 +13,10 @@ import com.sangdaero.walab.common.entity.Request;
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "client", "event" })
-	Page<Request> findAllByTitleContaining(String keyword, Pageable page);
+	Page<Request> findAllByTitleContainingOrderByStatusAsc(String keyword, Pageable page);
 
 	@EntityGraph(attributePaths = { "interestCategory", "client", "event" })
-	Page<Request> findAllByTitleContainingAndInterestCategory(String keyword, InterestCategory interestCategory,
+	Page<Request> findAllByTitleContainingAndInterestCategoryOrderByStatusAsc(String keyword, InterestCategory interestCategory,
 			Pageable page);
 
 	Long countByTitleContaining(String keyword);

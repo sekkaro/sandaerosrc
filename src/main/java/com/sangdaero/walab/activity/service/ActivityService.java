@@ -76,12 +76,12 @@ public class ActivityService {
     	
     	if(status == 0) {
     		if(interestType == 0) {
-    			page = mActivityRepository.findAllByEventCategoryAndTitleContaining(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAsc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
     			
-    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategory(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     	}
     	else {
@@ -747,9 +747,8 @@ public class ActivityService {
     	return activityList;
 	}
     
-    public List<ActivityDto> getActivitylistForUser(String email) {
-    	User user = mUserRepository.findBySocialId(email);
-    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByUserId(user.getId());
+    public List<ActivityDto> getActivitylistForUser(UserDto user) {
+    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByUserIdOrderByRegDateDesc(user.getId());
     	List<ActivityDto> activityList = new ArrayList<>();
     	for(UserEventMapper userEventMapper : userEventMapperList) {
     		EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);

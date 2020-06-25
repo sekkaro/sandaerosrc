@@ -1,5 +1,7 @@
 package com.sangdaero.walab.common.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -53,10 +55,19 @@ public class Request extends TimeEntity {
 	@Column(name="userType", nullable = false)
 	@ColumnDefault("1")
 	private Byte userType;
+	
+	@Column(nullable=true)
+	private LocalDateTime startTime;
+	
+	@Column(nullable=true)
+	private LocalDateTime endTime;
+	
+	@Column(columnDefinition = "TEXT", nullable=true)
+	private String content;
 
 	@Builder
 	public Request(Long id, String title, InterestCategory interestCategory, User client, Byte status, EventEntity event,
-			String productImage, Byte userType) {
+			String productImage, Byte userType, LocalDateTime startTime, LocalDateTime endTime, String content) {
 		this.id = id;
 		this.title = title;
 		this.interestCategory = interestCategory;
@@ -65,6 +76,9 @@ public class Request extends TimeEntity {
 		this.event = event;
 		this.productImage = productImage;
 		this.userType = userType;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.content = content;
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,10 +16,10 @@ import com.sangdaero.walab.common.entity.InterestCategory;
 public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContaining(int eventCategory, String keyword, Pageable page);
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingOrderByStatusAsc(int eventCategory, String keyword, Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategory(int eventCategory, String keyword, InterestCategory interestCategory,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(int eventCategory, String keyword, InterestCategory interestCategory,
 			Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })

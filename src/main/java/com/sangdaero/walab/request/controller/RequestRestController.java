@@ -31,14 +31,14 @@ public class RequestRestController {
 	@PostMapping("/register")
 	public String register(@RequestBody AppRequest registerForm) {
 		UserDto userDto = mUserService.createUser(registerForm.getEmail(), registerForm.getName());
-		mRequestService.createRequest(registerForm.getId(), null, userDto, null, registerForm.getType());
+		mRequestService.createRequest(registerForm.getId(), null, userDto, null, registerForm.getType(), null, null, null, null);
 		return "success";
 	}
 
 	@PostMapping("/newRegister")
 	public String newRegister(@RequestBody AppRequest newRegisterForm) {
 		UserDto userDto = mUserService.createUser(newRegisterForm.getEmail(), newRegisterForm.getName());
-		mRequestService.createRequest(null, newRegisterForm.getId(), userDto, null, (byte) 1);
+		mRequestService.createRequest(null, newRegisterForm.getId(), userDto, null, (byte) 1, newRegisterForm.getStartTime() , newRegisterForm.getEndTime() ,newRegisterForm.getTitle(), newRegisterForm.getMemo());
 		return "success";
 	}
 
@@ -47,7 +47,7 @@ public class RequestRestController {
 	public String newProduct(@RequestParam("name") String name, @RequestParam("email") String email,
 							 @RequestParam("image") MultipartFile image, @RequestParam("id") Long id) {
 		UserDto userDto = mUserService.createUser(email, name);
-		mRequestService.createRequest(null, id, userDto, image, (byte) 1);
+		mRequestService.createRequest(null, id, userDto, image, (byte) 1, null, null, null, null);
 		return "success";
 	}
 	

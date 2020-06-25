@@ -11,6 +11,7 @@ import com.sangdaero.walab.common.category.service.CategoryService;
 import com.sangdaero.walab.common.entity.Board;
 import com.sangdaero.walab.common.entity.BoardCategory;
 import com.sangdaero.walab.notice.domain.repository.NoticeRepository;
+import com.sangdaero.walab.notice.dto.NoticeAppDto;
 import com.sangdaero.walab.notice.dto.NoticeDto;
 
 import javax.transaction.Transactional;
@@ -222,4 +223,48 @@ public class NoticeService extends CategoryService {
 
         return noticeDto;
     }
+    
+    public List<NoticeAppDto> getNotices() {
+		List<Board> notices = mNoticeRepository.findAllByTopCategoryOrderByRegDateDesc((byte) 1);
+		List<NoticeAppDto> noticeAppDtoList = new ArrayList<>();
+		
+		for(Board notice: notices) {
+			BoardCategory category = mCategoryRepository.findById(notice.getCategoryId()).orElse(null);
+			
+			noticeAppDtoList.add(convertEntityToAppDto(notice, category));
+		}
+		
+		
+		
+		return noticeAppDtoList;
+	}
+
+	public List<NoticeAppDto> getTop5Notices() {
+		List<Board> notices = mNoticeRepository.findTop5ByTopCategoryOrderByRegDateDesc((byte) 1);
+		List<NoticeAppDto> noticeAppDtoList = new ArrayList<>();
+		
+		for(Board notice: notices) {
+			BoardCategory category = mCategoryRepository.findById(notice.getCategoryId()).orElse(null);
+			
+			noticeAppDtoList.add(convertEntityToAppDto(notice, category));
+		}
+		
+		return noticeAppDtoList;
+	}
+	
+	public NoticeAppDto convertEntityToAppDto(Board notice, BoardCategory category) {
+		return NoticeAppDto.builder()
+				 .id(notice.getId())
+				 .title(notice.getTitle())
+				 .content(notice.getContent())
+				 .writer(notice.getWriter())
+				 .view(notice.getView()+ 1)
+				 .status(notice.getStatus())
+				 .topCategory(notice.getTopCategory())
+				 .categoryId(notice.getCategoryId())
+				 .regDate(notice.getRegDate())
+				 .modDate(notice.getModDate())
+				 .memo(category.getMemo())
+				 .build();
+	}
 }

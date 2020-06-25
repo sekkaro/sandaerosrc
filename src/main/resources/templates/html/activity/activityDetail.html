@@ -91,7 +91,7 @@
 					<div class="inlinebox">
 						<div class="sub_heading">카테고리</div>
 					</div>
-					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory.name}" disabled>
+					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory?.name}" disabled>
 
 					<select id="editCategory" style="display: none;">
 						<option value="0">관심사를 선택하세요</option>
@@ -162,7 +162,8 @@
 					</div>
 					<div class="inlinebox">
 						<div class="members charge">
-							<span id="manager" th:text="${activityDto.manager.name}+' '+${activityDto.manager.phone}"></span>
+							<span th:if="${activityDto.manager == null}" id="manager">관리자 없음</span>
+							<span th:if="${activityDto.manager != null}" id="manager" th:text="${activityDto.manager?.name}+' '+${activityDto.manager?.phone}"></span>
 							<select id="editManager" style="display: none;">
 								<option value="0">관리자를 선택하세요</option>
 								<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" th:selected="${manager.id} == ${activityDto.manager?.id}"></option>
@@ -557,26 +558,31 @@
 						switch (Number(arr[1])) {
 							case 0:
 								status = 0;
+								$('#tag').attr("src","/img/13.png");
 								$('#editCategoryGroupBtn').show();
 								$('#editUserGroupBtn').show();
 								break;
 							case 1:
 								status = 1;
+								$('#tag').attr("src","/img/12.png");
 								$('#editCategoryGroupBtn').hide();
 								$('#editUserGroupBtn').show();
 								break;
 							case 2:
 								status = 2;
+								$('#tag').attr("src","/img/9.png");
 								$('#editCategoryGroupBtn').hide();
 								$('#editUserGroupBtn').hide();
 								break;
 							case 3:
 								status = 3;
+								$('#tag').attr("src","/img/11.png");
 								$('#editCategoryGroupBtn').hide();
 								$('#editUserGroupBtn').hide();
 								break;
 							case 4:
 								status = 4;
+								$('#tag').attr("src","/img/10.png");
 								$('#editCategoryGroupBtn').hide();
 								$('#editUserGroupBtn').hide();
 
@@ -590,6 +596,7 @@
 								break;
 							case 5:
 								status = 5;
+								$('#tag').attr("src","/img/8.png");
 								$('#editCategoryGroupBtn').hide();
 								$('#editUserGroupBtn').hide();
 						}
@@ -1065,6 +1072,7 @@
 		}
 
 		getUsers(false, $('#editCategory').val());
+		$(".unauthenticated").hide();
 
 		$('#editCategory').on('change', function() {
 

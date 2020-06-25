@@ -69,7 +69,8 @@ public class RequestController {
 		model.addAttribute("interests", interestList);
 		model.addAttribute("managers", managerList);
 		model.addAttribute("users", userList);
-		model.addAttribute("permittedVolunteer", requestDto.getClient());
+		model.addAttribute("permittedUser", requestDto.getClient());
+		model.addAttribute("userType", requestDto.getUserType());
 		model.addAttribute("productImage", requestDto.getProductImage());
 		
 		return "html/activity/activityForm.html";

@@ -171,8 +171,9 @@ public class ActivityRestController {
 	}
 	
 	@GetMapping("/getActivitiesForUser")
-	public List<ActivityDto> getActivitiesForUser(@RequestParam("email") String email){
-		return mActivityService.getActivitylistForUser(email);
+	public List<ActivityDto> getActivitiesForUser(@RequestParam("name") String name, @RequestParam("email") String email){
+		UserDto userDto = mUserService.createUser(email, name);
+		return mActivityService.getActivitylistForUser(userDto);
 	}
 	
 	@PostMapping("/unregister")
