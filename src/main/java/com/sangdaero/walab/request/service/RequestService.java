@@ -165,6 +165,7 @@ public class RequestService {
     	userEventMapper.setLocationAgree((byte) 1);
     	userEventMapper.setPhoneAgree((byte) 1);
     	userEventMapper.setUserType(request.getUserType());
+    	userEventMapper.setVolunteerTime(0);
     	
     	mUserEventMapperRepository.save(userEventMapper);
     	
