@@ -5,45 +5,44 @@
 	<link rel="stylesheet" href="/css/manageAct.css">
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f0794c5090c6554a68e453d22b1837f5&libraries=services"></script>
+	<style th:inline="text">
+		.multiselect {
+			width: 200px;
+		}
 
+		.selectBox {
+			position: relative;
+		}
+
+		.selectBox select {
+			width: 100%;
+			font-weight: bold;
+		}
+
+		.overSelect {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+
+		#users {
+			display: none;
+			border: 1px #dadada solid;
+			max-height:100px;/* you can change as you need it */
+			overflow:auto;/* to get scroll */
+		}
+
+		#volunteers {
+			display: none;
+			border: 1px #dadada solid;
+			max-height:100px;/* you can change as you need it */
+			overflow:auto;/* to get scroll */
+		}
+
+	</style>
 </head>
-<style th:inline="text">
- .multiselect {
-  width: 200px;
-}
-
-.selectBox {
-  position: relative;
-}
-
-.selectBox select {
-  width: 100%;
-  font-weight: bold;
-}
-
-.overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-#users {
-  display: none;
-  border: 1px #dadada solid;
-  max-height:100px;/* you can change as you need it */
-   overflow:auto;/* to get scroll */
-}
-
-#volunteers {
-  display: none;
-  border: 1px #dadada solid;
-  max-height:100px;/* you can change as you need it */
-   overflow:auto;/* to get scroll */
-}
-
-</style>
 <body>
 	<header th:replace="common/menu :: header"></header>
 
@@ -52,13 +51,13 @@
 	<div id="main">
 
 		<div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-			<span id="mContent">硫붿떆吏�</span>
+			<span id="mContent">메시지</span>
 			<button onclick="hideMessage()" type="button" class="close" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 
-		<h4>�솢�룞 �긽�꽭</h4>
+		<h4>활동 상세</h4>
 
 		<input type="hidden" id="activityId" th:value="${activityDto.id}"/>
 
@@ -75,27 +74,27 @@
 			<span id="status" th:if="${activityDto.status == 5}"><img id="tag" src="/img/8.png"></span>
 
 			<select id="editStatus" style="display: none;">
-				<option th:value="0" th:selected="${activityDto.status} == 0">留ㅼ묶 �쟾</option>
-				<option th:value="1" th:selected="${activityDto.status} == 1">留ㅼ묶 以�</option>
-				<option th:value="2" th:selected="${activityDto.status} == 2">留ㅼ묶 �셿猷�</option>
-				<option th:value="3" th:selected="${activityDto.status} == 3">�솢�룞 吏꾪뻾 以�</option>
-				<option th:value="4" th:selected="${activityDto.status} == 4">�솢�룞 �셿猷�</option>
-				<option th:value="5" th:selected="${activityDto.status} == 5">痍⑥냼�맂 �솢�룞</option>
+				<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
+				<option th:value="1" th:selected="${activityDto.status} == 1">매칭 중</option>
+				<option th:value="2" th:selected="${activityDto.status} == 2">매칭 완료</option>
+				<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
+				<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
+				<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
 			</select>
-			<button id="editTitleGroupBtn" class="inlinebox edit">�렪吏�</button>
-			<button id="cancelTitleGroupBtn" class="inlinebox edit" style="display: none;">痍⑥냼</button>
+			<button id="editTitleGroupBtn" class="inlinebox edit">편집</button>
+			<button id="cancelTitleGroupBtn" class="inlinebox edit" style="display: none;">취소</button>
 		</div>
 
 		<div id="actManage">
 			<div class="row1">
 				<div class="endtimemenu inlinebox">
 					<div class="inlinebox">
-						<div class="sub_heading">移댄뀒怨좊━</div>
+						<div class="sub_heading">카테고리</div>
 					</div>
 					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory.name}" disabled>
 
 					<select id="editCategory" style="display: none;">
-						<option value="0">愿��떖�궗瑜� �꽑�깮�븯�꽭�슂</option>
+						<option value="0">관심사를 선택하세요</option>
 						<option th:each="interest : ${interests}" th:value="${interest.id}"
 								th:text="${interest.name}"
 								th:selected="${interest.id} == ${activityDto.interestCategory?.id}"></option>
@@ -103,10 +102,10 @@
 				</div>
 				<div class="endtimemenu inlinebox">
 					<div class="inlinebox">
-						<div class="sub_heading">留덇컧湲고븳</div>
+						<div class="sub_heading">마감기한</div>
 					</div>
 					<div class="inlinebox">
-						<p id="deadline" th:if="${activityDto.deadline==null}" style="display: inline">留덇컧�떆媛� �뾾�쓬</p>
+						<p id="deadline" th:if="${activityDto.deadline==null}" style="display: inline">마감시간 없음</p>
 						<p id="deadline" th:if="${activityDto.deadline}" style="display: inline">[[${#temporals.format(activityDto.deadline, 'yyyy-MM-dd HH:mm')}]]</p>
 						<div id="editDeadline" style="display: none;">
 							<input id="enddate" type="date" name="deadlineDate" th:value="${activityDto.deadline?.toLocalDate()}">
@@ -114,23 +113,23 @@
 						</div>
 					</div>
 				</div>
-				<button th:if="${activityDto.status} == 0" id="editCategoryGroupBtn" class="edit">�렪吏�</button>
-				<button id="cancelCategoryGroupBtn" class="edit" style="display: none;">痍⑥냼</button>
+				<button th:if="${activityDto.status} == 0" id="editCategoryGroupBtn" class="edit">편집</button>
+				<button id="cancelCategoryGroupBtn" class="edit" style="display: none;">취소</button>
 			</div>
 
 			<hr class="line">
 
 			<div class="sub_contentbox">
-				<div class="sub_heading">�떞�떦 �씤�썝</div>
+				<div class="sub_heading">담당 인원</div>
 				<button th:if="${activityDto.status} <= 1" id="editUserGroupBtn" class="edit">편집</button>
 				<button id="cancelUserGroupBtn" class="edit" style="display: none;">취소</button>
 				<div class="leftmenu">
 					<div class="inlinebox">
-						<div class="menu_name">�씠�슜�옄</div>
+						<div class="menu_name">이용자</div>
 					</div>
 					<div class="inlinebox">
 						<div id="userList" class="members user" th:if="${activityDto.activityUsers.size()} == 0" style="display:inline;">
-							�씠�슜�옄 �뾾�쓬
+							이용자 없음
 						</div>
 
 						<div id="userList" th:if="${activityDto.activityUsers.size()} > 0">
@@ -141,32 +140,31 @@
 							</div>
 						</div>
 						<div id="editUsers" style="display: none;">
-						<div class="multiselect">
-    						<div class="selectBox" onclick="showUserCheckboxes()">
-      							<select>
-        							<option>이용자를 선택하세요</option>
-      							</select>
-      							<div class="overSelect"></div>
-    						</div>
-    						<input id="searchUsers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none"> 
-    						<ul id="users" style="list-style-type: none;">
-      								
-    						</ul>
-  						</div>
-						<ul style="display:none;" id="clickedUsers" class="list-group mt-2">
-						</ul>
-					</div>
-						
+							<div class="multiselect">
+								<div class="selectBox" onclick="showUserCheckboxes()">
+									<select>
+										<option>이용자를 선택하세요</option>
+									</select>
+									<div class="overSelect"></div>
+								</div>
+								<input id="searchUsers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
+								<ul id="users" style="list-style-type: none;">
+
+								</ul>
+							</div>
+							<ul style="display:none;" id="clickedUsers" class="list-group mt-2">
+							</ul>
+						</div>
 					</div>
 					<br>
 					<div class="inlinebox">
-						<div class="menu_name">�떞�떦 愿��젣�궗</div>
+						<div class="menu_name">담당 관제사</div>
 					</div>
 					<div class="inlinebox">
 						<div class="members charge">
 							<span id="manager" th:text="${activityDto.manager.name}+' '+${activityDto.manager.phone}"></span>
 							<select id="editManager" style="display: none;">
-								<option value="0">愿�由ъ옄瑜� �꽑�깮�븯�꽭�슂</option>
+								<option value="0">관리자를 선택하세요</option>
 								<option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.name}" th:selected="${manager.id} == ${activityDto.manager?.id}"></option>
 							</select>
 						</div>
@@ -174,12 +172,12 @@
 				</div>
 
 				<div class="rightmenu2">
-					<div class="menu_name workertext">遊됱궗�옄</div>
+					<div class="menu_name workertext">봉사자</div>
 
 					<div class="workerblock" style="width: 80%">
 						<div class="inlinebox">
 							<div id="volunteerList" class="members worker" th:if="${activityDto.activityVolunteers.size()} == 0">
-								遊됱궗�옄 �뾾�쓬
+								봉사자 없음
 							</div>
 							<div id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
 								<div class="members worker" th:each="activityVolunteer : ${activityDto.activityVolunteers}">
@@ -188,42 +186,43 @@
 										<a th:text="${activityVolunteer.user?.name}" data-fancybox th:data-src="${'#volunteerDetail' + activityVolunteer.user?.id}" href="javascript:;"></a>
 										<span th:text="${activityVolunteer.user?.phone}"></span>
 										<div style="display: none;" th:id="${'volunteerDetail' + activityVolunteer.user?.id}">
-								<h2>봉사자 디테일</h2>
-								이름: <span>[[${activityVolunteer.user.name}]]</span><br>
-								전화번호: <span>[[${activityVolunteer.user.phone}]]</span><br>
-								전화번호 공유 동의: <span th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></span><br>
-								위치 공유 동의: <span th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></span><br>
-								상태: <span th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
-								시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.startImage}}" width="250" height="300">
-									  	<span th:if="${activityVolunteer.startImage == null}">없음</span>
-									    <br>
-								끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${'/images/' + activityVolunteer.endImage}}" width="250" height="300">
-									  <span th:if="${activityVolunteer.endImage == null }">없음</span><br>
-								봉사시간: <span th:id="${'volunteerTime' + activityVolunteer.user?.id}" th:text="${activityVolunteer.volunteerTime}"></span>시간
-										<input th:id="${'editVolunteerTime' + activityVolunteer.user?.id}" type="text" style="display:none;" th:value="${activityVolunteer.volunteerTime}">
-								<a href="#" th:id="${'editVolunteerTimeBtn' + activityVolunteer.user?.id}" th:onclick="'javascript:editVolunteerTime(\'' + ${activityVolunteer.user?.id} + '\');'">편집</a>
-								<a href="#" th:id="${'cancelVolunteerTimeBtn' + activityVolunteer.user?.id}" th:onclick="'javascript:cancelVolunteerTime(\'' + ${activityVolunteer.user?.id} + '\');'" style="display: none;">취소</a>
-							</div>
+											<h2>봉사자 디테일</h2>
+											이름: <span>[[${activityVolunteer.user.name}]]</span><br>
+											전화번호: <span>[[${activityVolunteer.user.phone}]]</span><br>
+											전화번호 공유 동의: <span th:text="${activityVolunteer.phoneAgree == 0} ? 'X' : 'O'"></span><br>
+											위치 공유 동의: <span th:text="${activityVolunteer.locationAgree == 0} ? 'X' : 'O'"></span><br>
+											상태: <span th:switch="${activityVolunteer.status}"><span th:case="'0'">대기</span> <span th:case="'1'">승인</span> <span th:case="'2'">거절</span></span><br>
+											시작 사진: <img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="250" height="300">
+											<span th:if="${activityVolunteer.startImage == null}">없음</span>
+											<br>
+											끝 사진: <img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="250" height="300">
+											<span th:if="${activityVolunteer.endImage == null }">없음</span><br>
+											봉사시간: <span th:id="${'volunteerTime' + activityVolunteer.user?.id}" th:text="${activityVolunteer.volunteerTime}"></span>시간
+											<input th:id="${'editVolunteerTime' + activityVolunteer.user?.id}" type="text" style="display:none;" th:value="${activityVolunteer.volunteerTime}">
+											<a href="#" th:id="${'editVolunteerTimeBtn' + activityVolunteer.user?.id}" th:onclick="'javascript:editVolunteerTime(\'' + ${activityVolunteer.user?.id} + '\');'">편집</a>
+											<a href="#" th:id="${'cancelVolunteerTimeBtn' + activityVolunteer.user?.id}" th:onclick="'javascript:cancelVolunteerTime(\'' + ${activityVolunteer.user?.id} + '\');'" style="display: none;">취소</a>
+										</div>
 
 									</div>
 								</div>
 							</div>
 							<div id="editVolunteers" style="display: none;">
 								<div class="multiselect">
-    								<div class="selectBox" onclick="showVolunteerCheckboxes()">
-      								<select>
-        								<option>봉사자를 선택하세요</option>
-      								</select>
-      							<div class="overSelect"></div>
-    						</div>
-    						<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
-    						<ul id="volunteers" style="list-style-type: none;">
-      								
-    						</ul>
-  					</div>
-					<ul style="display:none;" id="clickedVolunteers" class="list-group mt-2">
-					</ul>
-				</div>
+									<div class="selectBox" onclick="showVolunteerCheckboxes()">
+										<select>
+											<option>봉사자를 선택하세요</option>
+										</select>
+										<div class="overSelect"></div>
+									</div>
+									<input id="searchVolunteers" type="text" placeholder="유저 이름으로 검색" style="height:99.5%; width: 99.5%; display: none">
+									<ul id="volunteers" style="list-style-type: none;">
+
+									</ul>
+								</div>
+								<ul style="display:none;" id="clickedVolunteers" class="list-group mt-2">
+								</ul>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -232,19 +231,19 @@
 			<hr class="line">
 
 			<div class="sub_contentbox">
-				<div class="sub_heading" style="margin-right: 0px">�솢�룞 �궡�슜
-					<button id="editActivityGroupBtn" class="edit">�렪吏�</button>
-					<button id="cancelActivityGroupBtn" class="edit" style="display: none;">痍⑥냼</button>
+				<div class="sub_heading" style="margin-right: 0px">활동 내용
+					<button id="editActivityGroupBtn" class="edit">편집</button>
+					<button id="cancelActivityGroupBtn" class="edit" style="display: none;">취소</button>
 				</div>
 
 				<div class="leftmenu">
 					<div class="inlinebox">
-						<div class="menu_name">�솢�룞 �떆媛�</div>
+						<div class="menu_name">활동 시간</div>
 					</div>
 					<div class="inlinebox">
-						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime==null}">�떆�옉 �떆媛� �뾾�쓬 ~ �걹 �떆媛� �뾾�쓬</p>
-						<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime==null}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ �걹 �떆媛� �뾾�쓬</p>
-						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime}">�떆�옉 �떆媛� �뾾�쓬 ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
+						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime==null}">시작 시간 없음 ~ 끝 시간 없음</p>
+						<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime==null}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ 끝 시간 없음</p>
+						<p id="volunteerTime" th:if="${activityDto.startTime==null} and ${activityDto.endTime}">시작 시간 없음 ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
 						<p id="volunteerTime" th:if="${activityDto.startTime} and ${activityDto.endTime}">[[${#temporals.format(activityDto.startTime, 'yyyy-MM-dd HH:mm')}]] ~ [[${#temporals.format(activityDto.endTime, 'yyyy-MM-dd HH:mm')}]]</p>
 
 						<div id="editVolunteerTime" style="display: none;">
@@ -257,10 +256,10 @@
 					</div>
 					<div class="explanationbox">
 						<div class="inlinebox">
-							<div class="menu_name explain">�긽�꽭�꽕紐�</div>
+							<div class="menu_name explain">상세설명</div>
 						</div>
 						<div class="inlinebox explain_textarea">
-							<p id="content" th:if="${activityDto.content.isEmpty()}">�꽭遺��궡�슜 �뾾�쓬</p>
+							<p id="content" th:if="${activityDto.content.isEmpty()}">세부내용 없음</p>
 							<p id="content" th:if="${activityDto.content != ''}" th:text="${activityDto.content}"></p>
 							<input type="textarea" id="explianation" name="explanation" th:value="${activityDto.content}" style="display: none;">
 						</div>
@@ -270,12 +269,12 @@
 				<div class="rightmenu" style="top: 0px">
 					<div class="search_box">
 						<div class="inlinebox">
-							<div class="menu_name">�옣�냼</div>
+							<div class="menu_name">장소</div>
 						</div>
 						<div class="inlinebox searchbox">
 							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
 							<div id="editPlace" name="place" style="display: none;">
-								<input type="text" id="address" placeholder="二쇱냼" th:value="${activityDto.place}" onclick="execPostcode()">
+								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" onclick="execPostcode()">
 								<input type="hidden" id="coordi_x">
 								<input type="hidden" id="coordi_y">
 							</div>
@@ -289,24 +288,24 @@
 			<hr class="line">
 
 			<div class="sub_contentbox deliveryGroup">
-				<div class="sub_heading">�굹�닎 �궡�슜</div>
+				<div class="sub_heading">나눔 내용</div>
 				<div class="leftmenu">
 					<div class="inlinebox">
-						<div class="menu_name">�쟾�떖 �뿬遺�</div>
+						<div class="menu_name">전달 여부</div>
 					</div>
 					<div class="inlinebox">
-						<span id="delivery" th:text="${activityDto.deliveryFlag == 0} ? '吏곸젒 �닔�졊' : '遊됱궗�옄 �넻�빐 �쟾�떖'" ></span>
+						<span id="delivery" th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" ></span>
 						<div id="editDelivery" style="display: none;">
 							<input type="radio" id="direct" name="delivery" value="0" th:checked="${activityDto.deliveryFlag} == 0">
-							<label for="direct">吏곸젒 �닔�졊</label>
+							<label for="direct">직접 수령</label>
 							<input type="radio" id="through" name="delivery" value="1" th:checked="${activityDto.deliveryFlag} == 1">
-							<label for="through">遊됱궗�궗 �넻�빐 �쟾�떖</label>
+							<label for="through">봉사사 통해 전달</label>
 						</div>
 					</div>
 				</div>
 				<div class="rightmenu thing">
 					<div class="inlinebox">
-						<div class="menu_name">臾쇨굔 �궗吏�</div>
+						<div class="menu_name">물건 사진</div>
 					</div>
 					<div id="images" th:if="${files.size()} > 0">
 						<img alt="image" th:each="file: ${files}" th:src="@{${'/images/' + file}}" width="250" height="250">
@@ -329,17 +328,17 @@
 
 		var origin_place = document.getElementById('original_place').value;
 
-		var mapContainer = document.getElementById('kakaomap'), // 吏��룄瑜� �몴�떆�븷 div
+		var mapContainer = document.getElementById('kakaomap'), // 지도를 표시할 div
 				mapOption = {
-					center: new daum.maps.LatLng(37.537187, 127.005476), // 吏��룄�쓽 以묒떖醫뚰몴
-					level: 5 // 吏��룄�쓽 �솗�� �젅踰�
+					center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+					level: 5 // 지도의 확대 레벨
 				};
 
-		//吏��룄瑜� 誘몃━ �깮�꽦
+		//지도를 미리 생성
 		var map = new daum.maps.Map(mapContainer, mapOption);
-		//二쇱냼-醫뚰몴 蹂��솚 媛앹껜瑜� �깮�꽦
+		//주소-좌표 변환 객체를 생성
 		var geocoder = new daum.maps.services.Geocoder();
-		//留덉빱瑜� 誘몃━ �깮�꽦
+		//마커를 미리 생성
 		var marker = new daum.maps.Marker({
 			position: new daum.maps.LatLng(37.537187, 127.005476),
 			map: map
@@ -348,14 +347,14 @@
 		findCoordi(origin_place);
 
 		function changeMap(y, x) {
-			// �빐�떦 二쇱냼�뿉 ���븳 醫뚰몴瑜� 諛쏆븘�꽌
+			// 해당 주소에 대한 좌표를 받아서
 			var coords = new daum.maps.LatLng(y, x);
-			// 吏��룄瑜� 蹂댁뿬以��떎.
+			// 지도를 보여준다.
 			mapContainer.style.display = "block";
 			map.relayout();
-			// 吏��룄 以묒떖�쓣 蹂�寃쏀븳�떎.
+			// 지도 중심을 변경한다.
 			map.setCenter(coords);
-			// 留덉빱瑜� 寃곌낵媛믪쑝濡� 諛쏆� �쐞移섎줈 �삷湲대떎.
+			// 마커를 결과값으로 받은 위치로 옮긴다.
 			marker.setPosition(coords)
 		}
 
@@ -363,21 +362,21 @@
 
 			console.log(addr);
 			geocoder.addressSearch(addr, function(results, status) {
-				// �젙�긽�쟻�쑝濡� 寃��깋�씠 �셿猷뚮릱�쑝硫�
+				// 정상적으로 검색이 완료됐으면
 				if (status === daum.maps.services.Status.OK) {
 
-					var result = results[0]; //泥ル쾲吏� 寃곌낵�쓽 媛믪쓣 �솢�슜
+					var result = results[0]; //첫번째 결과의 값을 활용
 					document.getElementById("coordi_x").value = result.x;
 					document.getElementById("coordi_y").value = result.y;
 
-					// // �빐�떦 二쇱냼�뿉 ���븳 醫뚰몴瑜� 諛쏆븘�꽌
+					// // 해당 주소에 대한 좌표를 받아서
 					var coords = new daum.maps.LatLng(result.y, result.x);
-					// 吏��룄瑜� 蹂댁뿬以��떎.
+					// 지도를 보여준다.
 					mapContainer.style.display = "block";
 					map.relayout();
-					// 吏��룄 以묒떖�쓣 蹂�寃쏀븳�떎.
+					// 지도 중심을 변경한다.
 					map.setCenter(coords);
-					// 留덉빱瑜� 寃곌낵媛믪쑝濡� 諛쏆� �쐞移섎줈 �삷湲대떎.
+					// 마커를 결과값으로 받은 위치로 옮긴다.
 					marker.setPosition(coords)
 				}
 			});
@@ -386,16 +385,16 @@
 		function execPostcode() {
 			new daum.Postcode({
 				oncomplete: function(data) {
-					var addr = data.address; // 理쒖쥌 二쇱냼 蹂��닔
+					var addr = data.address; // 최종 주소 변수
 
-					// 二쇱냼 �젙蹂대�� �빐�떦 �븘�뱶�뿉 �꽔�뒗�떎.
+					// 주소 정보를 해당 필드에 넣는다.
 					document.getElementById("address").value = addr;
-					// 二쇱냼濡� �긽�꽭 �젙蹂대�� 寃��깋
+					// 주소로 상세 정보를 검색
 					geocoder.addressSearch(addr, function(results, status) {
-						// �젙�긽�쟻�쑝濡� 寃��깋�씠 �셿猷뚮릱�쑝硫�
+						// 정상적으로 검색이 완료됐으면
 						if (status === daum.maps.services.Status.OK) {
 
-							var result = results[0]; //泥ル쾲吏� 寃곌낵�쓽 媛믪쓣 �솢�슜
+							var result = results[0]; //첫번째 결과의 값을 활용
 							document.getElementById("coordi_x").value = result.x;
 							document.getElementById("coordi_y").value = result.y;
 							changeMap(result.y, result.x);
@@ -413,97 +412,97 @@
 		function hideMessage() {
 			$('#message').hide();
 		}
-		
+
+
 		var expandedUsers = false;
 		var expandedVolunteers = false;
 
 		function showUserCheckboxes() {
-		  var checkboxes = document.getElementById("users");
-		  var searchboxes = document.getElementById("searchUsers");
-		  if (!expandedUsers) {
-		    checkboxes.style.display = "block";
-		    searchboxes.style.display = "block";
-		    expandedUsers = true;
-		  } else {
-		    checkboxes.style.display = "none";
-		    searchboxes.style.display = "none";
-		    expandedUsers = false;
-		  }
-		}
-		
-		function showVolunteerCheckboxes() {
-			  var checkboxes = document.getElementById("volunteers");
-			  var searchboxes = document.getElementById("searchVolunteers");
-			  if (!expandedVolunteers) {
-			    checkboxes.style.display = "block";
-			    searchboxes.style.display = "block";
-			    expandedVolunteers = true;
-			  } else {
-			    checkboxes.style.display = "none";
-			    searchboxes.style.display = "none";
-			    expandedVolunteers = false;
-			  }
+			var checkboxes = document.getElementById("users");
+			var searchboxes = document.getElementById("searchUsers");
+			if (!expandedUsers) {
+				checkboxes.style.display = "block";
+				searchboxes.style.display = "block";
+				expandedUsers = true;
+			} else {
+				checkboxes.style.display = "none";
+				searchboxes.style.display = "none";
+				expandedUsers = false;
 			}
-		
+		}
+
+		function showVolunteerCheckboxes() {
+			var checkboxes = document.getElementById("volunteers");
+			var searchboxes = document.getElementById("searchVolunteers");
+			if (!expandedVolunteers) {
+				checkboxes.style.display = "block";
+				searchboxes.style.display = "block";
+				expandedVolunteers = true;
+			} else {
+				checkboxes.style.display = "none";
+				searchboxes.style.display = "none";
+				expandedVolunteers = false;
+			}
+		}
+
 
 		var volunteerTime;
-		
+
 		function editVolunteerTime(volunteerId){
 			$('#volunteerTime' + volunteerId).toggle();
 			$('#editVolunteerTime' + volunteerId).toggle();
 			$('#cancelVolunteerTimeBtn' + volunteerId).toggle();
-			
+
 			volunteerTime = $('#editVolunteerTime' + volunteerId).val();
-			
+
 			if($('#editVolunteerTimeBtn' + volunteerId).html() == '편집'){
-    			$('#editVolunteerTimeBtn' + volunteerId).html('완료');
-    		}
-    		else{
+				$('#editVolunteerTimeBtn' + volunteerId).html('완료');
+			}
+			else{
 				if($('#editVolunteerTime' + volunteerId).val().length == 0){
-    				
+
 					$('#volunteerTime' + volunteerId).toggle();
 					$('#editVolunteerTime' + volunteerId).toggle();
 					$('#cancelVolunteerTimeBtn' + volunteerId).toggle();
-    				
-        			$('#message').removeClass("alert-info");
-        			$('#message').addClass("alert-danger");
-        			$('#mContent').html("봉사시간은 1글자 이상이어야 합니다");
-                    $('#message').show();
 
-                    setTimeout(function() {
-                        hideMessage();
-                    }, 2000);
-                 	
-        		}
+					$('#message').removeClass("alert-info");
+					$('#message').addClass("alert-danger");
+					$('#mContent').html("봉사시간은 1글자 이상이어야 합니다");
+					$('#message').show();
+
+					setTimeout(function() {
+						hideMessage();
+					}, 2000);
+
+				}
 				else{
 					$('#editVolunteerTimeBtn' + volunteerId).html('편집');
 					$.post("/activitydata/setVolunteerTime", {id: $('#activityId').val(), volunteerId: volunteerId, time: volunteerTime}, function(data) {
-        				
-						$('#volunteerTime' + volunteerId).html(data);
-						
-        				$('#message').removeClass("alert-danger");
-            			$('#message').addClass("alert-info");
-        				$('#mContent').html("봉사시간을 수정하였습니다.");
-                        $('#message').show();
 
-                        setTimeout(function() {
-                            hideMessage();
-                        }, 2000);
-                        
-                	});	
+						$('#volunteerTime' + volunteerId).html(data);
+
+						$('#message').removeClass("alert-danger");
+						$('#message').addClass("alert-info");
+						$('#mContent').html("봉사시간을 수정하였습니다.");
+						$('#message').show();
+
+						setTimeout(function() {
+							hideMessage();
+						}, 2000);
+
+					});
 				}
-    		}
+			}
 		}
-		
+
 		function cancelVolunteerTime(volunteerId){
 			$('#volunteerTime' + volunteerId).toggle();
 			$('#editVolunteerTime' + volunteerId).toggle();
 			$('#editVolunteerTime' + volunteerId).val(volunteerTime);
-			
+
 			$('#cancelVolunteerTimeBtn' + volunteerId).toggle();
-    		$('#editVolunteerTimeBtn' + volunteerId).html('편집');
+			$('#editVolunteerTimeBtn' + volunteerId).html('편집');
 		}
-    	
 
 		var statusValue;
 
@@ -521,8 +520,8 @@
 
 			$('#cancelTitleGroupBtn').toggle();
 
-			if ($('#editTitleGroupBtn').html() == '�렪吏�') {
-				$('#editTitleGroupBtn').html('�셿猷�');
+			if ($('#editTitleGroupBtn').html() == '편집') {
+				$('#editTitleGroupBtn').html('완료');
 			} else {
 				if ($('#editTitleField').val().length == 0) {
 
@@ -538,7 +537,7 @@
 
 					$('#message').removeClass("alert-info");
 					$('#message').addClass("alert-danger");
-					$('#mContent').html("�젣紐⑹� 1湲��옄 �씠�긽�씠�뼱�빞 �빀�땲�떎");
+					$('#mContent').html("제목은 1글자 이상이어야 합니다");
 					$('#message').show();
 
 					setTimeout(function () {
@@ -546,7 +545,7 @@
 					}, 2000);
 
 				} else {
-					$('#editTitleGroupBtn').html('�렪吏�');
+					$('#editTitleGroupBtn').html('편집');
 					$.post("/activitydata/setTitleAndStatus", {
 						id: $('#activityId').val(),
 						title: $('#editTitleField').val(),
@@ -598,7 +597,7 @@
 
 						$('#message').removeClass("alert-danger");
 						$('#message').addClass("alert-info");
-						$('#mContent').html("�젣紐⑷낵 �긽�깭瑜� �닔�젙�븯���뒿�땲�떎.");
+						$('#mContent').html("제목과 상태를 수정하였습니다.");
 						$('#message').show();
 
 						setTimeout(function () {
@@ -620,7 +619,7 @@
 			$('#status').toggle();
 
 			$('#cancelTitleGroupBtn').toggle();
-			$('#editTitleGroupBtn').html('�렪吏�');
+			$('#editTitleGroupBtn').html('편집');
 		})
 
 
@@ -645,8 +644,8 @@
 
 			$('#cancelCategoryGroupBtn').toggle();
 
-			if($('#editCategoryGroupBtn').html() == '�렪吏�'){
-				$('#editCategoryGroupBtn').html('�셿猷�');
+			if($('#editCategoryGroupBtn').html() == '편집'){
+				$('#editCategoryGroupBtn').html('완료');
 			}
 			else{
 
@@ -664,13 +663,13 @@
 					$('#message').removeClass("alert-info");
 					$('#message').addClass("alert-danger");
 					if(categoryValue == 0){
-						$('#mContent').html("吏��젙�븳 移댄뀒怨좊━�뒗 �뾾�뒗 移댄뀒怨좊━�엯�땲�떎");
+						$('#mContent').html("지정한 카테고리는 없는 카테고리입니다");
 					}
 					else if(deadlineDate == ""){
-						$('#mContent').html("留덇컧 �궇吏쒓� �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("마감 날짜가 입력되지 않았습니다");
 					}
 					else{
-						$('#mContent').html("留덇컧 �떆媛꾩씠 �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("마감 시간이 입력되지 않았습니다");
 					}
 					$('#message').show();
 
@@ -679,7 +678,7 @@
 					}, 2000);
 				}
 				else{
-					$('#editCategoryGroupBtn').html('�렪吏�');
+					$('#editCategoryGroupBtn').html('편집');
 					$.post("/activitydata/setCategoryAndDeadline",
 							{ id: $('#activityId').val(),
 								category: categoryValue,
@@ -689,11 +688,11 @@
 							function(data) {
 								var arr = data.split(".");
 								$('#category').val(arr[0]);
-								$('#deadline').text((arr[1] === "" || arr[2] === "")?"留덇컧�떆媛� �뾾�쓬":arr[1] + " " + arr[2]);
+								$('#deadline').text((arr[1] === "" || arr[2] === "")?"마감시간 없음":arr[1] + " " + arr[2]);
 
 								$('#message').removeClass("alert-danger");
 								$('#message').addClass("alert-info");
-								$('#mContent').html("移댄뀒怨좊━�� 留덇컧 湲고븳�쓣 �닔�젙�븯���뒿�땲�떎.");
+								$('#mContent').html("카테고리와 마감 기한을 수정하였습니다.");
 								$('#message').show();
 
 								setTimeout(function() {
@@ -715,7 +714,7 @@
 			$('#editDeadline').toggle();
 			var deadlineText = $('#deadline').text();
 
-			if(deadlineText.includes("留덇컧�떆媛� �뾾�쓬")){
+			if(deadlineText.includes("마감시간 없음")){
 				$('input[name="deadlineDate"]').val("");
 				$('input[name="deadlineTime"]').val("");
 			}
@@ -726,7 +725,7 @@
 			$('#deadline').toggle();
 
 			$('#cancelCategoryGroupBtn').toggle();
-			$('#editCategoryGroupBtn').html('�렪吏�');
+			$('#editCategoryGroupBtn').html('편집');
 		})
 
 
@@ -757,17 +756,17 @@
 				if(userStatusList.length > 0){
 					userStatusList.forEach(function(user){
 						if(clickedUsers.indexOf(user.id.toString()) > -1){
-							innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";	
+							innerHtml += " <li class='list-group-item list-group-item-success'>"+ user.name + "<br>" + user.phone +"</li>";
 						}
 					});
 				}
-				
+
 			}
 			finally{
 				$('#clickedUsers').html(innerHtml);
 			}
 		}
-		
+
 		function fancyClickVolunteers(){
 			try{
 				var innerHtml = (clickedVolunteers.length>0)?"봉사자:":"";
@@ -777,7 +776,7 @@
 					userStatusList.forEach(function(user){
 						if(clickedVolunteers.indexOf(user.id.toString()) > -1){
 							if(typeof $('#volunteer'+ user.id).val() === 'undefined'){
-								status = user.status;	
+								status = user.status;
 							}
 							else{
 								status = $('#volunteer'+ user.id).val();
@@ -791,116 +790,139 @@
 							else{
 								color = "danger";
 							}
-							innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";	
+							innerHtml += " <li class='list-group-item list-group-item-" + color + "'>"+ user.name + "<br>" + user.phone +"</li>";
 						}
 					});
 				}
-				
+
 			}
 			finally{
 				$('#clickedVolunteers').html(innerHtml);
 			}
 		}
-	
+
 		function addEventListenersToUsers(){
 			$('input[name="userId"]').each(function(){
-				
+
+				/*if($(this).prop('checked')){
+                    $('#editVolunteers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
 				if(clickedUsers.indexOf($(this).val()) > -1){
 					$(this).prop('checked', true);
-    			}
-				
+					//$('#user'+ $(this).val()).toggle();
+				}
+
 				$(this).click(function(){
 					$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
 					$('#user'+ $(this).val()).toggle();
-					
+
 					if($(this).prop('checked')){
-		    			if(clickedUsers.indexOf($(this).val()) == -1){
-		    				clickedUsers.push($(this).val());
-		    			}
+						if(clickedUsers.indexOf($(this).val()) == -1){
+							clickedUsers.push($(this).val());
+						}
 					}
 					else{
 						if(clickedUsers.indexOf($(this).val()) > -1){
-		    				clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
-		    			}
+							clickedUsers.splice(clickedUsers.indexOf($(this).val()), 1);
+						}
 					}
-					
+
 					fancyClickUsers();
-					
+
 				})
-				
+
 			})
 
+			/*$('input[name="userId"]+label+select').each(function(){
+                $(this).change(function(){
+
+                    for(var i = 0; i < users.length ; i++){
+                        if(users[i].id == $(this).attr('id').replace("user","")){
+                            users[i].status = $(this).val();
+                            break;
+                        }
+                    }
+
+                });
+            })*/;
 		}
-		
+
 		function addEventListenersToVolunteers(){
-			
+
 			$('input[name="volunteerId"]').each(function(){
-				
+
+				/*if($(this).prop('checked')){
+                    $('#editUsers li input[value="'+ $(this).val() +'"]').prop('disabled', true);
+                }*/
+
 				if(clickedVolunteers.indexOf($(this).val()) > -1){
 					$(this).prop('checked', true);
 					$('#volunteer'+ $(this).val()).toggle();
-    			}
-				
+				}
+
 				$(this).click(function(){
 					$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', function(i, v) { return !v; });
 					$('#volunteer'+ $(this).val()).toggle();
-					
+
 					if($(this).prop('checked')){
-		    			if(clickedVolunteers.indexOf($(this).val()) == -1){
-		    				clickedVolunteers.push($(this).val());
-		    			}
+						if(clickedVolunteers.indexOf($(this).val()) == -1){
+							clickedVolunteers.push($(this).val());
+						}
 					}
 					else{
 						if(clickedVolunteers.indexOf($(this).val()) > -1){
-		    				clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
-		    			}
+							clickedVolunteers.splice(clickedVolunteers.indexOf($(this).val()), 1);
+						}
 					}
-					
+
 					fancyClickVolunteers();
-					
+
 				})
-				
+
 			})
-			
+
 			$('input[name="volunteerId"]+label+select').each(function(){
 				$(this).change(function(){
-					
+
 					for(var i = 0; i < volunteers.length ; i++){
 						if(volunteers[i].id == $(this).attr('id').replace("volunteer","")){
 							volunteers[i].status = $(this).val();
 							break;
 						}
 					}
-					
+
 					fancyClickVolunteers();
 				});
 			});
-			
+
 		}
-		
+
+
 		function searchUsers(keyword){
 			var innerHtml = "";
 			var innerPage = "";
 			users = [];
 			searchUsersKeyword = keyword;
-			
+
 			try{
-				
+
 				userStatusList.forEach(function(user){
 					if(user.type == null || user.type == 0){
 						users.push(user);
 					}
 				});
-				
+
 				if(users.length > 0){
+					var count = 0;
 					users.forEach(function(item){
 						if(item.name.includes(keyword)){
-							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";									
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
 						}
 						else{
-							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";							
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='userId'";
 						}
-						
+
 						if(clickedVolunteers.indexOf(item.id.toString()) > -1){
 							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
@@ -908,54 +930,69 @@
 							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 
+
+						/*if(item.status==null || item.status == 0){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else if(item.status == 1){
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1' selected>승인</option><option value='2'>거절</option></select></li>";
+                        }
+                        else{
+                            innerHtml += "<select style='display: none;' id='user"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
+                        }*/
+
+
 					})
-					
+
+
 				}
 				else{
-					innerHtml = "그 이름의 이용자를 찾지 못했습니다";	
+					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
 				}
-				
+
 			}
 			finally{
-				
+
 				$('#users').html(innerHtml);
+
 				addEventListenersToUsers();
-				
-			}	
-		
+
+			}
+
 		}
-		
+
 		function searchVolunteers(keyword){
 			var innerHtml = "";
 			var innerPage = "";
 			volunteers = [];
 			searchVolunteersKeyword = keyword;
-			
+
 			try{
-				
+
 				userStatusList.forEach(function(user){
 					if((user.type == null || user.type == 1)){
 						volunteers.push(user);
 					}
 				});
-				
+
 				if(volunteers.length > 0){
-					
+
+					var count = 0;
 					volunteers.forEach(function(item){
 						if(item.name.includes(keyword)){
-							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";									
+							innerHtml += "<li><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
 						}
 						else{
-							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";							
+							innerHtml += "<li style='display: none;'><input type='checkbox' id='"+ item.id + "' value='"+ item.id +"' name='volunteerId'";
 						}
-						
+
 						if(clickedUsers.indexOf(item.id.toString()) > -1){
 							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 						else{
 							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
 						}
-						
+
 						if(item.status==null || item.status == 0){
 							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0' selected>대기</option><option value='1'>승인</option><option value='2'>거절</option></select></li>";
 						}
@@ -965,199 +1002,208 @@
 						else{
 							innerHtml += "<select style='display: none;' id='volunteer"+ item.id +"'><option value='0'>대기</option><option value='1'>승인</option><option value='2' selected>거절</option></select></li>";
 						}
-						
+
 					})
-					
+
 				}
 				else{
 					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
 				}
-				
+
 			}
 			finally{
-				
+
 				$('#volunteers').html(innerHtml);
+
 				addEventListenersToVolunteers();
-				
+
 			}
-			
+
 		}
-		
+
 		function getUsers(isSearch, category){
 			$.get("/activitydata/getUsers", {id: $('#activityId').val(), category: category}, function(data) {
-				
+
 				userStatusList = data;
-				
+
 				if(isSearch){
 					searchUsers("");
 					searchVolunteers("");
-					
+
 					fancyClickUsers();
 					fancyClickVolunteers();
-					
+
 					var userIdList = [];
-					
+
 					try{
-						
+
 						if(userStatusList!=null && userStatusList.length > 0){
 							userStatusList.forEach(function(user){
 								userIdList.push(user.id.toString());
 							});
 						}
-						
+
 					}
 					finally{
-						
+
 						for(var i = clickedUsers.length -1; i >= 0 ; i--){
-						    if(userIdList.indexOf(clickedUsers[i]) == -1){
-						        clickedUsers.splice(i, 1);
-						    }
+							if(userIdList.indexOf(clickedUsers[i]) == -1){
+								clickedUsers.splice(i, 1);
+							}
 						}
-						
+
 						for(var i = clickedVolunteers.length -1; i >= 0 ; i--){
-						    if(userIdList.indexOf(clickedVolunteers[i]) == -1){
-						        clickedVolunteers.splice(i, 1);
-						    }
-						}	
-						
+							if(userIdList.indexOf(clickedVolunteers[i]) == -1){
+								clickedVolunteers.splice(i, 1);
+							}
+						}
+
 					}
 				}
-				
+
 			});
 		}
-		
+
 		getUsers(false, $('#editCategory').val());
-		
+
 		$('#editCategory').on('change', function() {
-			
+
 			getUsers(true, $('#editCategory').val());
-			 
+
 		});
-		
+
 		if($('#editCategory option:selected').html().toString().includes("물건")){
 			$('.deliveryGroup').show();
 		}
 		else{
 			$('.deliveryGroup').hide();
 		}
-		
-		
+
+
 		$('input#searchUsers').on('input', function() {searchUsers($('#searchUsers').val())});
-		
+
 		$('input#searchVolunteers').on('input', function() {searchVolunteers($('#searchVolunteers').val())});
-    	
+
 		$('#editUserGroupBtn').click(function() {
-			
-    		var volunteerStatusList = [];
-			
+
+			//var userStatusList = [];
+			var volunteerStatusList = [];
+
+			/*if(clickedUsers!=null && clickedUsers.length > 0){
+                clickedUsers.forEach(function(userId){
+                    userStatusList.push($('#user' + userId).val());
+                });
+            }*/
+
 			if(clickedVolunteers!=null && clickedVolunteers.length > 0){
 				clickedVolunteers.forEach(function(volunteerId){
-    				volunteerStatusList.push($('#volunteer' + volunteerId).val());
-    			});
+					volunteerStatusList.push($('#volunteer' + volunteerId).val());
+				});
 			}
-			
-			$('#editUsers').toggle();
-    		
-    		$('#userList').toggle();
-    		
-    		$('#clickedUsers').toggle();
-    		
-    		searchUsers("");
-    		
-			$('#editVolunteers').toggle();
-    		
-    		$('#volunteerList').toggle();
-    		
-    		$('#clickedVolunteers').toggle();
-    		
-    		searchVolunteers("");
-    		
-    		fancyClickUsers();
-			fancyClickVolunteers();
-    		
-    		managerValue = $('#editManager').val();
-    		
-    		$('#editManager').toggle();
-    		
-    		$('#manager').toggle();
-    		
-    		$('#cancelUserGroupBtn').toggle();
-    		
-    		if($('#editUserGroupBtn').html() == '편집'){
-    			$('#editUserGroupBtn').html('완료');
-    		}
-    		else{
-    			
-    			$('#editUserGroupBtn').html('편집');
-    			$.post("/activitydata/setPeople", {id: $('#activityId').val(), users: clickedUsers, /*userStatusList: userStatusList,*/ volunteers: clickedVolunteers, volunteerStatusList: volunteerStatusList, manager: managerValue}, function(data) {
-    				var innerUsersHtml = "";
-    				var innerVolunteersHtml = "";
-    				try{
-    					if(data.users.length > 0){
-    						data.users.forEach(function(item){
-								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><span>"+ item.user.name +"</span><span>"+ item.user.phone +"</span></div>";
-        					})
-    					}
-    					else{
-    						innerUsersHtml = "이용자 없음";
-    					}
-    					
-    					if(data.volunteers.length > 0){
-    						data.volunteers.forEach(function(item){
-    							innerVolunteersHtml += "<div class='members worker'><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'/><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'><div><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='volunteerDetail" + item.user.id +"'><h2>봉사자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
-    							
-    							var phoneAgree = (item.phoneAgree==0)?"X":"O";
-    							var locationAgree = (item.locationAgree==0)?"X":"O";
-    							var status = "";
-    							var startImage = "시작 사진: <span>없음</span><br>";
-    							var endImage = "끝 사진: <span>없음</span><br>";
-    							var volunteerTime = "봉사시간: <span id='volunteerTime"+ item.user.id +"'>"+ item.volunteerTime +"</span>시간<input id='editVolunteerTime"+ item.user.id +"' type='text' style='display:none;' value='"+ item.volunteerTime +"'><a href='#' id='editVolunteerTimeBtn"+ item.user.id +"' onclick='editVolunteerTime("+ item.user.id +");'>편집</a><a href='#' id='cancelVolunteerTimeBtn"+ item.volunteerTime +"' onclick='cancelVolunteerTime("+ item.user.id +");' style='display: none;'>취소</a>";
-    							switch(item.status){
-    								case 0: status ="대기";
-    								break;
-    								case 1: status ="승인";
-    								break;
-    								case 2: status ="거절";
-    							}
-    							if(item.startImage != null){
-    								startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
-    							}
-    							if(item.endImage != null){
-    								endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
-    							}
-    							
-    							innerVolunteersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + volunteerTime + "</div></div></div>";
-								
-        					})
-    					}
-    					else{
-    						innerVolunteersHtml = "봉사자 없음";
-    					}
-    				}
-    				finally{
-    					$('#userList').html(innerUsersHtml);	
-    					userList = clickedUsers;
-    					$('#volunteerList').html(innerVolunteersHtml);
-    					volunteerList = clickedVolunteers;
-    					$('#manager').text(data.managerName);
-    					getUsers(false, $('#editCategory').val());
-    					
-    					$('#message').removeClass("alert-danger");
-            			$('#message').addClass("alert-info");
-    					$('#mContent').html("담당 인원을 수정하였습니다.");
-                        $('#message').show();
 
-                        setTimeout(function() {
-                            hideMessage();
-                        }, 2000);
-    				}
-            	});	
-    		}
-    	})
-    	
-    	$('#cancelUserGroupBtn').click(function(){
-    		
-    		$('#editUsers').toggle();
+			$('#editUsers').toggle();
+
+			$('#userList').toggle();
+
+			$('#clickedUsers').toggle();
+
+			searchUsers("");
+
+			$('#editVolunteers').toggle();
+
+			$('#volunteerList').toggle();
+
+			$('#clickedVolunteers').toggle();
+
+			searchVolunteers("");
+
+			fancyClickUsers();
+			fancyClickVolunteers();
+
+			managerValue = $('#editManager').val();
+
+			$('#editManager').toggle();
+
+			$('#manager').toggle();
+
+			$('#cancelUserGroupBtn').toggle();
+
+			if($('#editUserGroupBtn').html() == '편집'){
+				$('#editUserGroupBtn').html('완료');
+			}
+			else{
+
+				$('#editUserGroupBtn').html('편집');
+				$.post("/activitydata/setPeople", {id: $('#activityId').val(), users: clickedUsers, /*userStatusList: userStatusList,*/ volunteers: clickedVolunteers, volunteerStatusList: volunteerStatusList, manager: managerValue}, function(data) {
+					var innerUsersHtml = "";
+					var innerVolunteersHtml = "";
+					try{
+						if(data.users.length > 0){
+							data.users.forEach(function(item){
+								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><span>"+ item.user.name +"</span><span>"+ item.user.phone +"</span></div>";
+							})
+						}
+						else{
+							innerUsersHtml = "이용자 없음";
+						}
+
+						if(data.volunteers.length > 0){
+							data.volunteers.forEach(function(item){
+								innerVolunteersHtml += "<div class='members worker'><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'/><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'><div><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='volunteerDetail" + item.user.id +"'><h2>봉사자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
+
+								var phoneAgree = (item.phoneAgree==0)?"X":"O";
+								var locationAgree = (item.locationAgree==0)?"X":"O";
+								var status = "";
+								var startImage = "시작 사진: <span>없음</span><br>";
+								var endImage = "끝 사진: <span>없음</span><br>";
+								var volunteerTime = "봉사시간: <span id='volunteerTime"+ item.user.id +"'>"+ item.volunteerTime +"</span>시간<input id='editVolunteerTime"+ item.user.id +"' type='text' style='display:none;' value='"+ item.volunteerTime +"'><a href='#' id='editVolunteerTimeBtn"+ item.user.id +"' onclick='editVolunteerTime("+ item.user.id +");'>편집</a><a href='#' id='cancelVolunteerTimeBtn"+ item.volunteerTime +"' onclick='cancelVolunteerTime("+ item.user.id +");' style='display: none;'>취소</a>";
+								switch(item.status){
+									case 0: status ="대기";
+										break;
+									case 1: status ="승인";
+										break;
+									case 2: status ="거절";
+								}
+								if(item.startImage != null){
+									startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
+								}
+								if(item.endImage != null){
+									endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
+								}
+
+								innerVolunteersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + volunteerTime + "</div></div></div>";
+
+							})
+						}
+						else{
+							innerVolunteersHtml = "봉사자 없음";
+						}
+					}
+					finally{
+						$('#userList').html(innerUsersHtml);
+						userList = clickedUsers;
+						$('#volunteerList').html(innerVolunteersHtml);
+						volunteerList = clickedVolunteers;
+						$('#manager').text(data.managerName);
+						getUsers(false, $('#editCategory').val());
+
+						$('#message').removeClass("alert-danger");
+						$('#message').addClass("alert-info");
+						$('#mContent').html("담당 인원을 수정하였습니다.");
+						$('#message').show();
+
+						setTimeout(function() {
+							hideMessage();
+						}, 2000);
+					}
+				});
+			}
+		})
+
+		$('#cancelUserGroupBtn').click(function(){
+
+			$('#editUsers').toggle();
+
 			if(userList.length != 0){
 				userList.forEach(function(item){
 					$('#users li input[value="'+ item +'"]').prop('checked', true);
@@ -1166,20 +1212,20 @@
 			}
 			else{
 				$('#users li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
 						$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
+					}
+				})
 			}
-    		$('#userList').toggle();
-    		$('#clickedUsers').toggle();
-    		$('#users').html("");
-    		$('#searchUsers').val("");
-    		$('#pagingUsers').html("");
-    		clickedUsers = userList;
-    		
-    		$('#editVolunteers').toggle();
+			$('#userList').toggle();
+			$('#clickedUsers').toggle();
+			$('#users').html("");
+			$('#searchUsers').val("");
+			$('#pagingUsers').html("");
+			clickedUsers = userList;
+
+			$('#editVolunteers').toggle();
 			if(volunteerList.length != 0){
 				volunteerList.forEach(function(item){
 					$('#volunteers li input[value="'+ item +'"]').prop('checked', true);
@@ -1188,29 +1234,29 @@
 			}
 			else{
 				$('#volunteers li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
 						$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
+					}
+				})
 			}
 			$('#volunteerList').toggle();
 			$('#clickedVolunteers').toggle();
 			$('#volunteers').html("");
-    		$('#searchVolunteers').val("");
-    		$('#pagingVolunteers').html("");
-    		clickedVolunteers = volunteerList;
-    		
-    		$('#editManager').toggle();
+			$('#searchVolunteers').val("");
+			$('#pagingVolunteers').html("");
+			clickedVolunteers = volunteerList;
+
+			$('#editManager').toggle();
 			$('#editManager').val(managerValue);
-    		$('#manager').toggle();
-    		
-    		$('#cancelUserGroupBtn').toggle();
-    		$('#editUserGroupBtn').html('편집');
-    	})
-    	
-    	$('cancelSearchUsersBtn').click(function(){
-    		if(userList.length != 0){
+			$('#manager').toggle();
+
+			$('#cancelUserGroupBtn').toggle();
+			$('#editUserGroupBtn').html('편집');
+		})
+
+		$('cancelSearchUsersBtn').click(function(){
+			if(userList.length != 0){
 				userList.forEach(function(item){
 					$('#users li input[value="'+ item +'"]').prop('checked', true);
 					$('#volunteers li input[value="'+ item +'"]').prop('disabled', true);
@@ -1218,22 +1264,22 @@
 			}
 			else{
 				$('#users li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
 						$('#volunteers li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
+					}
+				})
 			}
-    		
-    		$('#users').html("");
-    		$('#searchUsers').val("");
-    		$('#pagingUsers').html("");
-    		clickedUsers = userList;
-    		fancyClickUsers();
-    	});
-    	
-    	$('#cancelSearchVolunteersBtn').click(function(){
-    		if(volunteerList.length != 0){
+
+			$('#users').html("");
+			$('#searchUsers').val("");
+			$('#pagingUsers').html("");
+			clickedUsers = userList;
+			fancyClickUsers();
+		});
+
+		$('#cancelSearchVolunteersBtn').click(function(){
+			if(volunteerList.length != 0){
 				volunteerList.forEach(function(item){
 					$('#volunteers li input[value="'+ item +'"]').prop('checked', true);
 					$('#users li input[value="'+ item +'"]').prop('disabled', true);
@@ -1241,19 +1287,19 @@
 			}
 			else{
 				$('#volunteers li input').each(function(){
-	    			if($(this).prop('checked')){
-	    				$(this).prop('checked', false);
+					if($(this).prop('checked')){
+						$(this).prop('checked', false);
 						$('#users li input[value="'+ $(this).val() +'"]').prop('disabled', false);
-	    			}
-	    		})
+					}
+				})
 			}
-    		
-    		$('#volunteers').html("");
-    		$('#searchVolunteers').val("");
-    		$('#pagingVolunteers').html("");
-    		clickedVolunteers = volunteerList;
-    		fancyClickVolunteers();
-    	});
+
+			$('#volunteers').html("");
+			$('#searchVolunteers').val("");
+			$('#pagingVolunteers').html("");
+			clickedVolunteers = volunteerList;
+			fancyClickVolunteers();
+		});
 
 
 		var startDate;
@@ -1282,8 +1328,8 @@
 
 			$('#cancelActivityGroupBtn').toggle();
 
-			if($('#editActivityGroupBtn').html() == '�렪吏�'){
-				$('#editActivityGroupBtn').html('�셿猷�');
+			if($('#editActivityGroupBtn').html() == '편집'){
+				$('#editActivityGroupBtn').html('완료');
 			}
 			else{
 				if(startDate == "" || startTime == "" || endDate == "" || endTime == "" || $('#address').val().length == 0){
@@ -1306,19 +1352,19 @@
 					$('#message').addClass("alert-danger");
 
 					if(startDate == ""){
-						$('#mContent').html("�떆�옉 �궇吏쒓� �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("시작 날짜가 입력되지 않았습니다");
 					}
 					else if(startTime == ""){
-						$('#mContent').html("�떆�옉 �떆媛꾩씠 �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("시작 시간이 입력되지 않았습니다");
 					}
 					else if(endDate == ""){
-						$('#mContent').html("�걹 �궇吏쒓� �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("끝 날짜가 입력되지 않았습니다");
 					}
 					else if(endTime == ""){
-						$('#mContent').html("�걹 �떆媛꾩씠 �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("끝 시간이 입력되지 않았습니다");
 					}
 					else{
-						$('#mContent').html("�옣�냼媛� �엯�젰�릺吏� �븡�븯�뒿�땲�떎");
+						$('#mContent').html("장소가 입력되지 않았습니다");
 					}
 					$('#message').show();
 
@@ -1327,7 +1373,7 @@
 					}, 2000);
 				}
 				else{
-					$('#editActivityGroupBtn').html('�렪吏�');
+					$('#editActivityGroupBtn').html('편집');
 					$.post("/activitydata/setVolunteerTimeAndPlaceAndContent",
 							{ id: $('#activityId').val(),
 								startDate: startDate,
@@ -1343,22 +1389,22 @@
 									$('#place').html(arr[0]);
 								}
 								else{
-									$('#place').text("�옣�냼 �뾾�쓬");
+									$('#place').text("장소 없음");
 								}
 								if(arr[1] !== ""){
 									$('#content').text(arr[1]);
 								}
 								else{
-									$('#content').text("�꽭遺��궡�슜 �뾾�쓬");
+									$('#content').text("세부내용 없음");
 								}
 
-								var start = (arr[2] === "" || arr[3] === "")?"�떆�옉 �떆媛� �뾾�쓬":arr[2] + " " + arr[3];
-								var end = (arr[4] === "" || arr[5] === "")?"�걹 �떆媛� �뾾�쓬":arr[4] + " " + arr[5];
+								var start = (arr[2] === "" || arr[3] === "")?"시작 시간 없음":arr[2] + " " + arr[3];
+								var end = (arr[4] === "" || arr[5] === "")?"끝 시간 없음":arr[4] + " " + arr[5];
 								$('#volunteerTime').text(start + " ~ " + end);
 
 								$('#message').removeClass("alert-danger");
 								$('#message').addClass("alert-info");
-								$('#mContent').html("�솢�룞 �궡�슜�쓣 �닔�젙�븯���뒿�땲�떎.");
+								$('#mContent').html("활동 내용을 수정하였습니다.");
 								$('#message').show();
 
 								setTimeout(function() {
@@ -1377,19 +1423,19 @@
 			$('#editVolunteerTime').toggle();
 			var volunteerTimeText = $('#volunteerTime').text();
 
-			if(volunteerTimeText.includes("�떆�옉 �떆媛� �뾾�쓬") && volunteerTimeText.includes("�걹 �떆媛� �뾾�쓬")){
+			if(volunteerTimeText.includes("시작 시간 없음") && volunteerTimeText.includes("끝 시간 없음")){
 				$('input[name="startDate"]').val("");
 				$('input[name="startTime"]').val("");
 				$('input[name="endDate"]').val("");
 				$('input[name="endTime"]').val("");
 			}
-			else if(volunteerTimeText.includes("�떆�옉 �떆媛� �뾾�쓬")){
+			else if(volunteerTimeText.includes("시작 시간 없음")){
 				$('input[name="startDate"]').val("");
 				$('input[name="startTime"]').val("");
 				$('input[name="endDate"]').val(endDate);
 				$('input[name="endTime"]').val(endTime);
 			}
-			else if(volunteerTimeText.includes("�걹 �떆媛� �뾾�쓬")){
+			else if(volunteerTimeText.includes("끝 시간 없음")){
 				$('input[name="startDate"]').val(startDate);
 				$('input[name="startTime"]').val(startTime);
 				$('input[name="endDate"]').val("");
@@ -1406,7 +1452,7 @@
 
 			$('#editPlace').toggle();
 			var placeText = $('#place').text();
-			if(placeText == "�옣�냼 �뾾�쓬"){
+			if(placeText == "장소 없음"){
 				$('#address').val("");
 			}
 			else{
@@ -1416,7 +1462,7 @@
 
 			$('#explianation').toggle();
 			var contentText = $('#content').text();
-			if(contentText == "�꽭遺��궡�슜 �뾾�쓬"){
+			if(contentText == "세부내용 없음"){
 				$('#explianation').val("");
 			}
 			else{
@@ -1427,7 +1473,7 @@
 			findCoordi(origin_place);
 
 			$('#cancelActivityGroupBtn').toggle();
-			$('#editActivityGroupBtn').html('�렪吏�');
+			$('#editActivityGroupBtn').html('편집');
 
 		})
 

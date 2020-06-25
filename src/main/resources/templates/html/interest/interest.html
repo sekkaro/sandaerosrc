@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" dir="ltr">
 <head>
+    <link rel="stylesheet" href="/css/listAct.css">
     <th:block th:replace="common/head.html"/>
+    <link rel="stylesheet" href="/css/interest.css">
 </head>
 <body>
     <header th:replace="common/menu :: header"></header>
@@ -9,40 +11,49 @@
     <div lang="en" th:replace="common/menu :: menu"></div>
 
     <div id="main">
-        <h4>관심사 목록</h4>
 
-        <div id="basicBody">
+        <div class="upper">
+            <h4 class="header">관심사 목록</h4>
+        </div>
 
-            <div>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">관심사</th>
-                        <th scope="col">사용자 수</th>
-                        <th scope="col">비활성화</th>
+        <div id="actList">
+
+            <div class="table-scroll">
+<!--            <div class="table-box-wrap">-->
+                <div class="table-box">
+                <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                    <thead id="interestth">
+                    <tr class="top">
+                        <th class="fixedHeader" style="border-radius: 15px 0 0 0;">No.</th>
+                        <th class="fixedHeader" >관심사</th>
+                        <th class="fixedHeader" >사용자 수</th>
+                        <th class="fixedHeader"  style="border-radius: 0 15px 0 0;">비활성화</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="interest : ${interestList}">
-                        <th scope="row">
+                        <th id="no">
                             <span th:text="${interestStat.index}+1"></span>
                         </th>
                         <td>
-                            <h5 th:id="InterestName+${interest.id}" th:text="${interest.name}" style="display: inline"></h5>
+                            <span class="interestname" th:id="InterestName+${interest.id}" th:text="${interest.name}"></span>
                             <input th:id="editName+${interest.id}" type="text" name="name" th:value="${interest.name}"
                                    style="display: none;" placeholder="관심사 이름을 입력하세요."
                                    aria-describedby="interestNameHelp" required minlength="2">
-                            <small th:id="interestNameHelp+${interest.id}" style="display: none;">
-                                2글자 이상 입력해주세요.
-                            </small>
+
+<!--                            <small th:id="interestNameHelp+${interest.id}" style="display: none;">-->
+<!--                                2글자 이상 입력해주세요.-->
+<!--                            </small>-->
 
                             <small th:id="error+${interest.id}" style="display: none;color: red">
                             </small>
                             <!--                        <small th:id="test+${interest.id}" class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
                             <!--                        <small th:if="${msg}">hello</small>-->
                             <!--                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
-                            <button th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">수정</button>
+                            <button class="edit" th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">
+                                <img src="/img/mod_interest.png" style="width: 56px">
+                            </button>
+                            <button th:id="completeBtn+${interest.id}" th:onclick="|javascript:complete('${interest.id}')|" style="display: none;">완료</button>
                             <button th:id="cancleBtn+${interest.id}" th:onclick="|javascript:cancle('${interest.id}')|" style="display: none;">취소</button>
 
                             <!--                        <form class="needs-validation col-sm-7" th:action="@{'/interest/edit/' + ${interest.id}}" th:object="${mod_interest}" th:method="post" novalidate>-->
@@ -73,28 +84,44 @@
                         <td>
                             <form id="delete-form" th:action="@{'/interest/' + ${interest.id}}" method="post">
                                 <input type="hidden" name="_method" value="put"/>
-                                <button th:if="${interest.on_off==0}">활성화</button>
-                                <button th:if="${interest.on_off==1}">비 활성화</button>
+                                <button class="active" name="button" th:if="${interest.on_off==0}">
+                                    <img class="condition" src="/img/activation.png">
+                                </button>
+                                <button class="active" name="button" th:if="${interest.on_off==1}">
+                                    <img class="condition" src="/img/deactivation.png">
+                                </button>
                             </form>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
+                </div>
             </div>
         </div>
 
-        <form class="needs-validation" action="/interest/add" th:object="${interestDto}" method="post" novalidate>
-            <label for="name">관심사 이름</label>
-            <input id="name" type="text" name="name" placeholder="관심사 이름을 입력하세요." aria-describedby="nameHelp" required minlength="2">
-            <small id="nameHelp">
-                2글자 이상 입력해주세요.
-            </small>
-            <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>
-            <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
-            <br>
-            <input type="submit" value="관심사 추가">
-        </form>
+        <div class="down">
+            <div class="addinterest">
+                <div id="addtext">관심사 추가</div>
+                <form action="/interest/add" th:object="${interestDto}" method="post" style="width: 500px" novalidate>
+                    <div class="interestadd">
+                        <input id="name" type="text" name="name" placeholder="관심사 이름을 2글자 이상 입력해주세요." aria-describedby="nameHelp" required minlength="2">
+                    </div>
+
+<!--                    <small id="nameHelp">-->
+<!--                        2글자 이상 입력해주세요.-->
+<!--                    </small>-->
+<!--                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
+<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
+<!--                    <br>-->
+                    <button id="register" type="submit" name="button">
+                        <img src="/img/add_interest.png">
+                    </button>
+<!--                    <input type="submit" value="관심사 추가">-->
+                </form>
+            </div>
+        </div>
+
+
     </div>
 
 
@@ -106,50 +133,87 @@
     <script type="text/javascript">
 
         function edit(id) {
-            const editName = '#editName' + id;
+            $('#editBtn'+id).hide();
+            $('#InterestName'+id).hide();
+            $('#editName' + id).show();
+            $('#cancleBtn'+id).show();
+            $('#completeBtn'+id).show();
+        }
 
-            $(editName).toggle();
+        function complete(id) {
+            $.post("/interestdata/edit", {
+                id: id,
+                name: $('#editName' + id).val()
+            }, function(data) {
+                if(data.message==null) { // 성공한 경우
+                    $('#InterestName'+id).html(data.name);
+                    $('#error'+id).hide();
+                    $('#interestNameHelp'+id).hide();
 
-            $('#InterestName'+id).toggle();
-
-            $('#cancleBtn'+id).toggle();
-
-            $('#interestNameHelp'+id).toggle();
-
-            if($('#editBtn'+id).html() == '수정'){
-                $('#editBtn'+id).html('완료');
-            } else{
-                $('#editBtn'+id).html('수정');
-                $.post("/interestdata/edit", {
-                    id: id,
-                    name: $(editName).val()
-                }, function(data) {
-                    console.log(data.message);
-                    if(data.message==null) {
-                        $('#InterestName'+id).html(data.name);
-                        $('#error'+id).hide();
-                        $('#interestNameHelp'+id).hide();
-                    } else {
-                        $(editName).show();
-                        $('#InterestName'+id).hide();
-                        $('#cancleBtn'+id).show();
-                        $('#editBtn'+id).html('완료');
-                        $('#error'+id).html(data.message);
-                        $('#error'+id).show();
-                        $('#interestNameHelp'+id).hide();
-                    }
-                });
-            }
+                    $('#editBtn'+id).show();
+                    $('#InterestName'+id).show();
+                    $('#editName' + id).hide();
+                    $('#cancleBtn'+id).hide();
+                    $('#completeBtn'+id).hide();
+                } else { // 실패한 경우(중복된 관심사 등)
+                    // $('#editName' + id).show();
+                    // $('#InterestName'+id).hide();
+                    // $('#cancleBtn'+id).show();
+                    // $('#editBtn'+id).html('완료');
+                    $('#error'+id).html(data.message);
+                    $('#error'+id).show();
+                    $('#interestNameHelp'+id).hide();
+                }
+            });
         }
 
         function cancle(id) {
-            $('#editName'+id).toggle();
-            $('#InterestName'+id).toggle();
-            $('#cancleBtn'+id).toggle();
-            $('#interestNameHelp'+id).hide();
-            $('#editBtn'+id).html('수정');
+            $('#editBtn'+id).show();
+            $('#InterestName'+id).show();
+            $('#editName' + id).hide();
+            $('#cancleBtn'+id).hide();
+            $('#completeBtn'+id).hide();
             $('#error'+id).hide();
+            $('#interestNameHelp'+id).hide();
         }
+
+        // function edit(id) {
+        //     const editName = '#editName' + id;
+        //
+        //     $(editName).toggle();
+        //
+        //     $('#InterestName'+id).toggle();
+        //
+        //     $('#cancleBtn'+id).toggle();
+        //
+        //     $('#interestNameHelp'+id).toggle();
+        //
+        //     if($('#editBtn'+id).html() == '수정'){
+        //         $('#editBtn'+id).html('완료');
+        //     } else{
+        //         $('#editBtn'+id).html('수정');
+        //         $.post("/interestdata/edit", {
+        //             id: id,
+        //             name: $(editName).val()
+        //         }, function(data) {
+        //             console.log(data.message);
+        //             if(data.message==null) {
+        //                 $('#InterestName'+id).html(data.name);
+        //                 $('#error'+id).hide();
+        //                 $('#interestNameHelp'+id).hide();
+        //             } else {
+        //                 $(editName).show();
+        //                 $('#InterestName'+id).hide();
+        //                 $('#cancleBtn'+id).show();
+        //                 $('#editBtn'+id).html('완료');
+        //                 $('#error'+id).html(data.message);
+        //                 $('#error'+id).show();
+        //                 $('#interestNameHelp'+id).hide();
+        //             }
+        //         });
+        //     }
+        // }
+
 
     </script>
 </body>
