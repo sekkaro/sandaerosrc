@@ -1,9 +1,14 @@
-html, body{height: 100%; width: 100%; margin:0;}
+html, body {
+  height: 100%;
+  width: 100%;
+  margin:0;
+  padding: 0;
+}
 #login_wrapper{
   width:auto;
   height: 100%;
   min-height: 500px;
-  background-image: url("img/background.png");
+  background-image: url("/img/background.png");
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;

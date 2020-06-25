@@ -131,16 +131,30 @@ tr:last-child > td{
   font-size: 15px;
 
 }
-#prev, #prevv #one, #two, #three, #next, #nextt{
+#prev, #prevv, #one, #two, #three, #next, #nextt {
   font-size: 10px;
   color: red;
 
 }
 
-#one{
+.plist {
+  font-size: 10px;
+  color: red;
+}
+
+#prev span button a span {
+  text-decoration: none;
+}
+
+.one{
   border: 1px solid #019783 !important;
   border-radius: 50%;
   color: #019783 !important;
+}
+
+a {
+  text-decoration: none;
+  color: #444444;
 }
 
 #list{
@@ -249,6 +263,10 @@ img{
     font-size: 10px;
     margin-right: 5px;
   }
+  .plist {
+    font-size: 10px;
+    margin-right: 5px;
+  }
   #submit {
     border: none;
     width: 130px;
@@ -273,6 +291,10 @@ img{
   }
 
   #prev, #prevv #one, #two, #three, #next, #nextt{
+    font-size: 10px;
+    margin-right: 5px;
+  }
+  .plist {
     font-size: 10px;
     margin-right: 5px;
   }

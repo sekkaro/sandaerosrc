@@ -1,0 +1,103 @@
+#interestth  {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    border-collapse: separate;
+    background-color: #bbedd5;
+}
+
+.edit {
+    border: none;
+    background: transparent;
+    width: 70px;
+    float: left;
+    margin-left: 20px;
+}
+
+.interestname{
+    float: left;
+    margin-left: 20px;
+}
+
+.active {
+    border: none;
+    background: transparent;
+    width: 100px;
+}
+
+.table-scroll {
+    clear: both;
+    height:530px;
+    /*overflow:scroll;*/
+    overflow: auto;
+    margin-top:20px;
+    border-radius: 20px;
+}
+
+.table-wrapper table {
+    width:100%;
+
+}
+
+#register {
+    border: none;
+    width: 100px;
+    background: transparent;
+    margin-top: -10px;
+}
+
+#addtext{
+    color: black;
+    font-size: 14px;
+    float: left;
+}
+
+#interestadd{
+    width: 400px;
+    font-size: 13px;
+}
+
+.addinterest{
+    width: 100%;
+    margin-top: 10px;
+}
+
+.interestadd input#name {
+    width: 270px;
+    height: 20px;
+    border: 1px solid #a5a5a5;
+    float: left;
+    /*color: #a5a5a5;*/
+    padding-left: 15px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 15px;
+    /*background-color: transparent;*/
+    float: left;
+    margin-left: 10px;
+}
+
+.fixedHeader {
+    position: sticky;
+    top: 0;
+    background-color: #bbedd5;
+}
+
+.down{
+    float: right;
+    width: 60%;
+}
+
+@media (max-width: 1185px){
+    .down {
+        float: right;
+        width: 70%;
+    }
+}
+
+@media (max-width: 1090px){
+    .down {
+        float: right;
+        width: 80%;
+    }
+}
