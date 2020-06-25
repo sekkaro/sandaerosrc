@@ -759,6 +759,18 @@ public class ActivityService {
 		return activityList;
 	}
     
+    public List<ActivityDto> getTop5ActivitylistForUser(UserDto user) {
+    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findTop5ByUserIdOrderByRegDateDesc(user.getId());
+    	List<ActivityDto> activityList = new ArrayList<>();
+    	for(UserEventMapper userEventMapper : userEventMapperList) {
+    		EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
+    		if(event!=null) {
+    			activityList.add(convertEventEntityToActivityDto(event));
+    		}
+    	}
+		return activityList;
+	}
+    
     public void setVolunteerTime(Long id, Long volunteerId, Integer time) {
 		UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserIdAndUserType(id, volunteerId, (byte) 1);
 		userEventMapper.setVolunteerTime(time);
