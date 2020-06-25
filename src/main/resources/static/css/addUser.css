@@ -1,0 +1,99 @@
+#actInfo {
+    background-color: white;
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-top: 11px;
+    padding-bottom: 50px;
+    height: auto;
+    text-align: left;
+}
+
+.title{
+    display: inline-block;
+    width: 130px;
+    font-size: 16px;
+    font-weight: 500;
+    vertical-align: middle;
+}
+.content {
+    display: inline-block;
+    width: 50%;
+}
+.infoContent{
+    margin-top: 15px;
+}
+.ctext{
+    width: 100%;
+    border: 1px solid #a5a5a5;
+    padding: 2px 10px;
+    border-radius: 15px;
+    color: #b3b3b3;
+    opacity: 0.7;
+}
+.button{
+    display: inline-block;
+    font-size: 12px;
+    width: 95px;
+    color: #b3b3b3;
+    border: 1px solid #b3b3b3;
+    border-radius: 14px;
+    padding: 0px 5px;
+    font-weight: 400;
+}
+.clickButton{
+    display: inline-block;
+    font-size: 12px;
+    width: 95px;
+    color: #019783;
+    border: 1px solid #019783;
+    border-radius: 14px;
+    padding: 0px 5px;
+    font-weight: 600;
+}
+.button:hover{
+    color: #019783;
+    border: 1px solid #019783;
+}
+.button img{
+    width: 14px;
+    float:right;
+    padding-top: 2px;
+}
+.content2{
+    display: inline-block;
+    width: 72%;
+}
+#buttonSet {
+    float: right;
+    position: relative;
+    right: -10px;
+    margin-top: 10px;
+}
+
+#reset {
+    border: none;
+    width: 130px;
+    background: transparent;
+}
+
+#reset img {
+    width: 100%;
+}
+
+#submit {
+    border: none;
+    width: 130px;
+    background: transparent;
+}
+
+#submit img {
+    width: 100%;
+}
+
+span {
+    margin-right: 10px;
+}
+
+small {
+    font-size: 10px;
+}

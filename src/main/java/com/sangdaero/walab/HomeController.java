@@ -10,11 +10,11 @@ public class HomeController {
 	public String homePage() {
 		return "redirect:/activity";
 	}
-	
+
 	@GetMapping("/login")
-    public String loginPage() {
-        return "html/login.html";
-    }
+	public String loginPage() {
+		return "html/login.html";
+	}
 
 //	@GetMapping("/test/map")
 //	public String naverMap() {

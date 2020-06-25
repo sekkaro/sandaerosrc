@@ -99,15 +99,21 @@ public class ActivityRestController {
 	public String setPhoneAgree(@RequestParam("id") Long id, @RequestParam(value="phoneAgree", required=false) String phoneAgree) {
 		mActivityService.setPhoneAgree(id, phoneAgree);
 		return phoneAgree;
-	}
-	
-	@PostMapping("/setVolunteerTime")
-	public String setVolunteerTime(@RequestParam("id") Long id, 
-			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
-			@RequestParam("endDate") String endDate, @RequestParam("endTime") String endTime) {
-		mActivityService.setVolunteerTime(id, startDate, startTime, endDate, endTime);
-		return startDate + "." + startTime + "." + endDate + "." + endTime;
 	}*/
+	
+//	@PostMapping("/setVolunteerTime")
+//	public String setVolunteerTime(@RequestParam("id") Long id,
+//			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
+//			@RequestParam("endDate") String endDate, @RequestParam("endTime") String endTime) {
+//		mActivityService.setVolunteerTime(id, startDate, startTime, endDate, endTime);
+//		return startDate + "." + startTime + "." + endDate + "." + endTime;
+//	}
+
+	@PostMapping("/setVolunteerTime")
+	public Integer setVolunteerTime(@RequestParam("id") Long id, @RequestParam("volunteerId") Long volunteerId, @RequestParam("time") Integer time) {
+		mActivityService.setVolunteerTime(id, volunteerId, time);
+		return time;
+	}
 	
 	@PostMapping("/setVolunteerTimeAndPlaceAndContent")
 	public String setVolunteerTimeAndPlaceAndContent(@RequestParam("id") Long id, 
@@ -154,28 +160,22 @@ public class ActivityRestController {
 		return deadlineDate + "." + deadlineTime;
 	}
 	
-	@PostMapping("/setVolunteerTime")
-	public Integer setVolunteerTime(@RequestParam("id") Long id, @RequestParam("volunteerId") Long volunteerId, @RequestParam("time") Integer time) {
-		mActivityService.setVolunteerTime(id, volunteerId, time);
-		return time;
-	}
-	
 	@GetMapping("/getActivities")
 	public List<ActivityDto> getActivities(@RequestParam("id") Long interestCategoryId){
 		return mActivityService.getActivitylist(interestCategoryId);
 	}
-	
+
 	@GetMapping("/getTop5Activities")
 	public List<ActivityDto> getTop5Activities(){
 		return mActivityService.getTop5Activitylist();
 	}
-	
+
 	@GetMapping("/getActivitiesForUser")
 	public List<ActivityDto> getActivitiesForUser(@RequestParam("name") String name, @RequestParam("email") String email){
 		UserDto userDto = mUserService.createUser(email, name);
 		return mActivityService.getActivitylistForUser(userDto);
 	}
-	
+
 	@GetMapping("/getTop5ActivitiesForUser")
 	public List<ActivityDto> getTop5ActivitiesForUser(@RequestParam("name") String name, @RequestParam("email") String email){
 		UserDto userDto = mUserService.createUser(email, name);

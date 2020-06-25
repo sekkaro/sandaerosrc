@@ -1,151 +1,187 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/css/manageAct.css">
     <th:block th:replace="common/head.html"/>
+    <style>
+        #time {
+            width: 50px;
+            margin-right: 0;
+            /*margin-left: 30px;*/
+        }
+        .edit {
+            border: none;
+            background: transparent;
+        }
+        .row1 {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            width: 98%;
+        }
+        .title {
+            /*background-color: #bbedd5;*/
+        }
+        .first_row {
+            padding-top: 20px;
+        }
+        .content {
+            color: black;
+        }
+        .tagify__dropdown__wrapper {
+            font-size: 16px;
+            color: black;
+        }
+        .volunteerBtn {
+            border: none;
+            background: transparent;
+        }
+        .volunteerBtn > img {
+            padding-top: 5px;
+        }
+    </style>
 </head>
 <body>
     <header th:replace="common/menu :: header"></header>
 
     <div lang="en" th:replace="common/menu :: menu"></div>
 
-    <div id="main" style="margin-left: 15%"></div>
-
-    <div class="container">
-        <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-        <div class="py-5 text-center">
-            <h2>유저 정보</h2>
+    <div id="main">
+        <div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+            <span id="mContent">메시지</span>
+            <button onclick="hideMessage()" type="button" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="justify-content-center" style="margin-left: 15%">
 
-            <div id="message" style="display: none" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                <span id="mContent">메시지</span>
-                <button onclick="hideMessage()" type="button" class="close" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+        <h4>유저 정보</h4>
+        <input type="hidden" name="id" id="uid" th:value="${userInfo.id}"/>
+
+        <div id="actManage">
+            <div class="row1 first_row">
+                <div class="title">이름</div>
+
+                <span class="content" id="name" th:text="${userInfo.name}" style="display: inline"></span>
+                <input id="editName" type="text" name="name" th:value="${userInfo.name}"
+                       style="display: none;" placeholder="한글로 입력해주세요."
+                       aria-describedby="nameHelp" required minlength="2">
+
+<!--                <small id="nameHelp" style="display: none;">-->
+<!--                    한글로 입력해주세요.-->
+<!--                </small>-->
+                <!--                    <small th:id="nameError" style="display: none;color: red">-->
+                <!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
+
+                <button class="edit" id="nameEditBtn" th:onclick="|javascript:editName()|">
+                    <img src="/img/mod_interest.png" style="width: 56px">
+                </button>
+                <button id="nameCompleteBtn" th:onclick="|javascript:completeName()|" style="display: none;">
+                    완료
+                </button>
+                <button id="nameCancleBtn" th:onclick="|javascript:cancleName()|" style="display: none;">
+                    취소
+                </button>
+
+            </div>
+            <hr class="line">
+            <div class="row1">
+                <div class="title">닉네임</div>
+
+                <span class="content" id="nickname" th:text="${userInfo.nickname}" style="display: inline"></span>
+                <input id="editNickname" type="text" name="nickname" th:value="${userInfo.nickname}"
+                       style="display: none;" placeholder="3글자 이상 10글자 미만으로 입력해주세요."
+                       aria-describedby="nicknameHelp" required minlength="2">
+
+                <!--                    <input id="nickname" type="text" name="nickname" th:value="${userInfo.nickname}" placeholder="닉네임을 입력하세요." aria-describedby="nicknameHelp" required minlength="2">-->
+
+                <!--                    <small th:id="nicknameError" style="display: none;color: red">-->
+                <!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
+                <!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>-->
+
+                <button class="edit" id="nicknameEditBtn" th:onclick="|javascript:editNickname()|">
+                    <img src="/img/mod_interest.png" style="width: 56px">
+                </button>
+                <button id="nicknameCompleteBtn" th:onclick="|javascript:completeNickname()|" style="display: none;">
+                    완료
+                </button>
+                <button id="nicknameCancleBtn" th:onclick="|javascript:cancleNickname()|" style="display: none;">
+                    취소
                 </button>
             </div>
-<!--            <form id="form" class="needs-validation col-sm-6" th:action="@{'/user/edit/' + ${userInfo.id}}" th:object="${userInfo}" method="post" novalidate>-->
-<!--                <input type="hidden" name="_method" value="put"/>-->
-                <input type="hidden" name="id" id="uid" th:value="${userInfo.id}"/>
+            <hr class="line">
+            <div class="row1">
+                <div class="title">이메일</div>
+                <span class="content"  id="socialId" th:text="${userInfo.socialId}" th:value="${userInfo.socialId}" style="display: inline"></span>
+                <input type="hidden" name="socialId" th:value="${userInfo.socialId}"/>
+            </div>
+            <hr class="line">
+            <div class="row1">
+                <div class="title">전화 번호</div>
 
-                <div class="form-group">
-                    <label for="name">이름</label>
+                <span class="content" id="phone" th:text="${userInfo.phone}" style="display: inline"></span>
+                <input id="editPhone" type="text" name="phone" th:value="${userInfo.phone}"
+                       style="display: none;" placeholder="010-xxxx-xxxx 형식으로 입력해주세요."
+                       aria-describedby="phoneHelp" required minlength="2">
 
-                    <h5 id="name" th:text="${userInfo.name}" style="display: inline"></h5>
-                    <input id="editName" type="text" name="name" th:value="${userInfo.name}"
-                           style="display: none;" placeholder="이름을 입력하세요."
-                           aria-describedby="nameHelp" required minlength="2">
-
-                    <small id="nameHelp" style="display: none;">
-                        한글로 입력해주세요.
-                    </small>
-<!--                    <small th:id="nameError" style="display: none;color: red">-->
-<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
-
-                    <button id="nameEditBtn" th:onclick="|javascript:editName()|">수정</button>
-                    <button id="nameCancleBtn" th:onclick="|javascript:cancleName()|" style="display: none;">취소</button>
-
-<!--                    <h4 id="name" th:text="${userInfo.name}" th:value="${userInfo.name}"></h4>-->
-<!--                    <input type="hidden" name="name" th:value="${userInfo.name}"/>-->
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="nickname">닉네임</label>
-
-                    <h5 id="nickname" th:text="${userInfo.nickname}" style="display: inline"></h5>
-                    <input id="editNickname" type="text" name="nickname" th:value="${userInfo.nickname}"
-                           style="display: none;" placeholder="닉네임을 입력하세요."
-                           aria-describedby="nicknameHelp" required minlength="2">
-
-<!--                    <input id="nickname" type="text" name="nickname" th:value="${userInfo.nickname}" placeholder="닉네임을 입력하세요." aria-describedby="nicknameHelp" required minlength="2">-->
-                    <small id="nicknameHelp" style="display: none;">
-                        3글자 이상 10글자 미만으로 입력해주세요.
-                    </small>
-<!--                    <small th:id="nicknameError" style="display: none;color: red">-->
-<!--                    <small class="invalid-feedback">2글자 이상을 입력해주세요</small>-->
-<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>-->
-
-                    <button id="nicknameEditBtn" th:onclick="|javascript:editNickname()|">수정</button>
-                    <button id="nicknameCancleBtn" th:onclick="|javascript:cancleNickname()|" style="display: none;">취소</button>
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="socialId">이메일</label>
-                    <h4 id="socialId" th:text="${userInfo.socialId}" th:value="${userInfo.socialId}"></h4>
-                    <input type="hidden" name="socialId" th:value="${userInfo.socialId}"/>
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="phone">전화 번호</label>
-
-                    <h5 id="phone" th:text="${userInfo.phone}" style="display: inline"></h5>
-                    <input id="editPhone" type="text" name="phone" th:value="${userInfo.phone}"
-                           style="display: none;" placeholder="전화번호를 입력하세요."
-                           aria-describedby="phoneHelp" required minlength="2">
-
-                    <small id="phoneHelp" style="display: none;">
-                        010-xxxx-xxxx 형식으로 입력해주세요.
-                    </small>
-<!--                    <small th:id="phoneError" style="display: none;color: red">-->
-<!--                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>-->
-
-                    <button id="phoneEditBtn" th:onclick="|javascript:editPhone()|">수정</button>
-                    <button id="phoneCancleBtn" th:onclick="|javascript:canclePhone()|" style="display: none;">취소</button>
-
-<!--                    <label for="phone">전화번호</label>-->
-<!--                    <input id="phone" type="text" name="phone" th:value="${userInfo.phone}" placeholder="전화번호를 입력하세요." aria-describedby="phoneHelp" required>-->
-<!--                    <small id="phoneHelp">-->
-<!--                        전화번호를 입력해주세요.-->
-<!--                    </small>-->
-<!--                    <small class="invalid-feedback">전화번호를 입력해주세요.</small>-->
-<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small>-->
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="userType">유저 타입</label>
-                    <select id="userType" name="userType">
-                        <option th:value="1" th:selected="${userInfo.userType==1}">관제사</option>
-                        <option th:value="0" th:selected="${userInfo.userType==0}">이용자</option>
-                    </select>
-                    <button id="userTypeEditBtn" th:onclick="|javascript:editUserType()|">수정</button>
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="volunteerTime">봉사 시간</label>
-                    <span id="volunteerTime" th:text="${userInfo.volunteerTime}+'시간'" th:value="${userInfo.volunteerTime}"></span>
-                    <input type="hidden" id="currentTime" name="volunteerTime" th:value="${userInfo.volunteerTime}"/>
-
-                    <input id="time" type="text" size="5px" placeholder="시간"/>
-                    <button type="button" name="action" value="plus" onclick="plus()">증가</button>
-                    <button type="button" name="action" value="minus" onclick="minus()">감소</button>
-
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label for="tags">관심사</label>
-                    <div id="whitelist" th:text="${whitelist}" hidden></div>
-                    <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(userInfo.interestName, ',')}"
-                           class="tagify-outside" aria-describedby="tagHelp"/>
-                </div>
-                <hr>
-                <div class="form-group">
-                    봉사 항목:
-                </div>
-                <hr>
-                <div class="form-group">
-                    커뮤니티:
-                </div>
-                <hr>
-                <button>
-                    <a href="javascript:history.back()">뒤로가기</a>
+                <button class="edit" id="phoneEditBtn" th:onclick="|javascript:editPhone()|">
+                    <img src="/img/mod_interest.png" style="width: 56px">
                 </button>
-<!--                <div class="form-group">-->
-<!--                    <input type="submit" value="수정">-->
-<!--                </div>-->
-<!--            </form>-->
+                <button id="phoneCompleteBtn" th:onclick="|javascript:completePhone()|" style="display: none;">
+                    완료
+                </button>
+                <button id="phoneCancleBtn" th:onclick="|javascript:canclePhone()|" style="display: none;">
+                    취소
+                </button>
+            </div>
+            <hr class="line">
+            <div class="row1">
+                <div class="title">유저 타입</div>
+                <select id="userType" name="userType">
+                    <option th:value="1" th:selected="${userInfo.userType==1}">관제사</option>
+                    <option th:value="0" th:selected="${userInfo.userType==0}">이용자</option>
+                </select>
+                <button class="edit" id="userTypeEditBtn" th:onclick="|javascript:editUserType()|">
+                    <img src="/img/mod_interest.png" style="width: 56px">
+                </button>
+            </div>
+            <hr class="line">
+            <div class="row1">
+                <div class="title">봉사 시간</div>
+                <span class="content" id="volunteerTime" th:text="${userInfo.volunteerTime}+'시간'" th:value="${userInfo.volunteerTime}"></span>
+                <input type="hidden" id="currentTime" name="volunteerTime" th:value="${userInfo.volunteerTime}"/>
+
+                <button class="volunteerBtn" type="button" name="action" value="minus" onclick="minus()">
+                    <img src="/img/user_minus.png">
+                </button>
+                <input id="time" type="text" size="5px" placeholder="시간"/>
+                <button class="volunteerBtn" type="button" name="action" value="plus" onclick="plus()">
+                    <img src="/img/user_plus.png">
+                </button>
+
+            </div>
+            <hr class="line">
+            <div class="row1" style="margin-bottom: 50px">
+                <div class="title">관심사</div>
+                <div id="whitelist" th:text="${whitelist}" hidden></div>
+                <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(userInfo.interestName, ',')}"
+                       class="tagify-outside" aria-describedby="tagHelp"/>
+            </div>
+
+        </div>
+        <div id="buttonSet">
+            <button id="submit" type="button" name="button" onclick="goList()">
+                <img src="/img/29.png">
+            </button>
         </div>
     </div>
+
+
+
     <script th:replace="common/fragments.html :: form-validation"></script>
     <script type="application/javascript">
+        function goList() {
+            window.history.back();
+        }
+
         $(function () {
             var id = document.getElementById('uid').value;
 
@@ -252,132 +288,135 @@
         }
 
         function editName() {
+            $('#name').hide();
+            $('#nameEditBtn').hide();
+            $('#editName').show();
+            $('#nameCompleteBtn').show();
+            $('#nameCancleBtn').show();
+        }
+
+        function completeName() {
             var id = document.getElementById('uid').value;
 
-            $('#editName').toggle();
+            $.post("/userdata/name", {
+                id: id,
+                name: $('#editName').val()
+            }, function(data) {
+                if(data.message==null) {
+                    $('#name').html(data.name);
+                    $('#mContent').html("이름을 수정하였습니다.");
+                    $('#message').show();
 
-            $('#name').toggle();
-
-            $('#nameCancleBtn').toggle();
-
-            $('#nameHelp').toggle();
-
-            if($('#nameEditBtn').html() == '수정'){
-                $('#nameEditBtn').html('완료');
-            } else{
-                $('#nameEditBtn').html('수정');
-                $.post("/userdata/name", {
-                    id: id,
-                    name: $('#editName').val()
-                }, function(data) {
-                    if(data.message==null) {
-                        $('#name').html(data.name);
-                        $('#mContent').html("이름을 수정하였습니다.");
-                        $('#message').show();
-                    }else {
-                        $('#mContent').html(data.message);
-                        // $('#message').css("background-color", "red");
-                        $('#message').show();
-                    }
-                    setTimeout(function() {
-                        hideMessage();
-                    }, 2000);
-                });
-            }
+                    $('#name').show();
+                    $('#nameEditBtn').show();
+                    $('#editName').hide();
+                    $('#nameCompleteBtn').hide();
+                    $('#nameCancleBtn').hide();
+                }else {
+                    $('#mContent').html(data.message);
+                    // $('#message').css("background-color", "red");
+                    $('#message').show();
+                }
+                setTimeout(function() {
+                    hideMessage();
+                }, 2000);
+            });
         }
 
         function cancleName() {
-            $('#editName').toggle();
-            $('#name').toggle();
-            $('#nameCancleBtn').toggle();
-            $('#nameHelp').toggle();
-            $('#nameEditBtn').html('수정');
+            $('#name').show();
+            $('#nameEditBtn').show();
+            $('#editName').hide();
+            $('#nameCompleteBtn').hide();
+            $('#nameCancleBtn').hide();
         }
 
         function editNickname() {
+            $('#nickname').hide();
+            $('#nicknameEditBtn').hide();
+            $('#editNickname').show();
+            $('#nicknameCompleteBtn').show();
+            $('#nicknameCancleBtn').show();
+        }
+
+        function completeNickname() {
             var id = document.getElementById('uid').value;
 
-            $('#editNickname').toggle();
+            $.post("/userdata/nickname", {
+                id: id,
+                nickname: $('#editNickname').val()
+            }, function(data) {
+                if(data.message==null) {
+                    $('#nickname').html(data.nickname);
+                    $('#mContent').html("닉네임을 수정하였습니다.");
+                    $('#message').show();
 
-            $('#nickname').toggle();
-
-            $('#nicknameCancleBtn').toggle();
-
-            $('#nicknameHelp').toggle();
-
-            if($('#nicknameEditBtn').html() == '수정'){
-                $('#nicknameEditBtn').html('완료');
-            } else{
-                $('#nicknameEditBtn').html('수정');
-                $.post("/userdata/nickname", {
-                    id: id,
-                    nickname: $('#editNickname').val()
-                }, function(data) {
-                    if(data.message==null) {
-                        $('#nickname').html(data.nickname);
-                        $('#mContent').html("닉네임을 수정하였습니다.");
-                        $('#message').show();
-                    }else {
-                        $('#mContent').html(data.message);
-                        // $('#message').css("background-color", "red");
-                        $('#message').show();
-                    }
-                    setTimeout(function() {
-                        hideMessage();
-                    }, 2000);
-                });
-            }
+                    $('#nickname').show();
+                    $('#nicknameEditBtn').show();
+                    $('#editNickname').hide();
+                    $('#nicknameCompleteBtn').hide();
+                    $('#nicknameCancleBtn').hide();
+                }else {
+                    $('#mContent').html(data.message);
+                    // $('#message').css("background-color", "red");
+                    $('#message').show();
+                }
+                setTimeout(function() {
+                    hideMessage();
+                }, 2000);
+            });
         }
 
         function cancleNickname() {
-            $('#editNickname').toggle();
-            $('#nickname').toggle();
-            $('#nicknameCancleBtn').toggle();
-            $('#nicknameHelp').toggle();
-            $('#nicknameEditBtn').html('수정');
+            $('#nickname').show();
+            $('#nicknameEditBtn').show();
+            $('#editNickname').hide();
+            $('#nicknameCompleteBtn').hide();
+            $('#nicknameCancleBtn').hide();
         }
 
         function editPhone() {
+            $('#phone').hide();
+            $('#phoneEditBtn').hide();
+            $('#editPhone').show();
+            $('#phoneCompleteBtn').show();
+            $('#phoneCancleBtn').show();
+        }
+
+        function completePhone() {
             var id = document.getElementById('uid').value;
 
-            $('#editPhone').toggle();
+            $.post("/userdata/phone", {
+                id: id,
+                phone: $('#editPhone').val()
+            }, function(data) {
+                if(data.message==null) {
+                    $('#phone').html(data.phone);
+                    $('#mContent').html("전화번호를 수정하였습니다.");
+                    $('#message').show();
 
-            $('#phone').toggle();
-
-            $('#phoneCancleBtn').toggle();
-
-            $('#phoneHelp').toggle();
-
-            if($('#phoneEditBtn').html() == '수정'){
-                $('#phoneEditBtn').html('완료');
-            } else{
-                $('#phoneEditBtn').html('수정');
-                $.post("/userdata/phone", {
-                    id: id,
-                    phone: $('#editPhone').val()
-                }, function(data) {
-                    if(data.message==null) {
-                        $('#phone').html(data.phone);
-                        $('#mContent').html("전화번호를 수정하였습니다.");
-                        $('#message').show();
-                    }else {
-                        $('#mContent').html(data.message);
-                        // $('#message').css("background-color", "red");
-                        $('#message').show();
-                    }
-                    setTimeout(function() {
-                        hideMessage();
-                    }, 2000);
-                });
-            }
+                    $('#phone').show();
+                    $('#phoneEditBtn').show();
+                    $('#editPhone').hide();
+                    $('#phoneCompleteBtn').hide();
+                    $('#phoneCancleBtn').hide();
+                }else {
+                    $('#mContent').html(data.message);
+                    // $('#message').css("background-color", "red");
+                    $('#message').show();
+                }
+                setTimeout(function() {
+                    hideMessage();
+                }, 2000);
+            });
         }
 
         function canclePhone() {
-            $('#editPhone').toggle();
-            $('#phone').toggle();
-            $('#phoneCancleBtn').toggle();
-            $('#phoneHelp').toggle();
-            $('#phoneEditBtn').html('수정');
+            $('#phone').show();
+            $('#phoneEditBtn').show();
+            $('#editPhone').hide();
+            $('#phoneCompleteBtn').hide();
+            $('#phoneCancleBtn').hide();
         }
 
         function editUserType() {

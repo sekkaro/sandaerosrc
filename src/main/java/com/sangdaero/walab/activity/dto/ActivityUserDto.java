@@ -27,7 +27,7 @@ public class ActivityUserDto {
 	private LocalDateTime modDate;
 	
 	public ActivityUserDto(User user, Byte status, Byte phoneAgree, Byte locationAgree, String startImage, String endImage,
-			Integer volunteerTime, LocalDateTime regDate, LocalDateTime modDate) {
+						   Integer volunteerTime, LocalDateTime regDate, LocalDateTime modDate) {
 		this.user = user;
 		this.status = status;
 		this.phoneAgree = phoneAgree;

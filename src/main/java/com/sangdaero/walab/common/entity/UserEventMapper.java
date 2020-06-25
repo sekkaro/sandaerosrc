@@ -55,7 +55,7 @@ public class UserEventMapper extends TimeEntity {
 	
 	@Column(name="end_image", nullable = true)
 	private String endImage;
-	
+
 	@Column(name="volunteer_time", nullable = false)
 	@ColumnDefault("0")
 	private Integer volunteerTime;

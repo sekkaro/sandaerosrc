@@ -1,7 +1,5 @@
 package com.sangdaero.walab;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,14 +29,14 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
         .authorizeRequests(a -> a
-        		.antMatchers("/error","/test/**", "/interestdata/**", "/requestdata/**", "/activitydata/**","/noticedata/**", "/notification/**", "/notificationdata/**", "/userdata/**", "/downloadFile/**").permitAll()
+				.antMatchers("/error","/test/**", "/interestdata/**", "/requestdata/**", "/activitydata/**","/noticedata/**", "/notification/**", "/notificationdata/**", "/userdata/**", "/downloadFile/**").permitAll()
         		.anyRequest().authenticated()
         )
         .logout(l -> l
-        		.logoutSuccessUrl("/login").permitAll()
+				.logoutSuccessUrl("/login").permitAll()
         )
         .csrf().disable()
-        .oauth2Login().loginPage("/login")
+		.oauth2Login().loginPage("/login")
         .userInfoEndpoint()
         .oidcUserService(mUserService);
 		
@@ -48,6 +46,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
 				.mvcMatchers("/node_modules/**")
+				.mvcMatchers("/img/**")
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations());
 	}
 	

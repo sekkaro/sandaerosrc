@@ -29,8 +29,8 @@ body {
 
 hr {
     position: static;
-    width:90%;
-    border: 0.5px solid #e6e6e6;
+    width:97%;
+    border: 0.4px solid #e6e6e6;
 }
 
 h4{
@@ -58,7 +58,7 @@ h4{
         height: 630px;
     }
     hr{
-        width: 90%;
+        width: 97%;
     }
 }
 

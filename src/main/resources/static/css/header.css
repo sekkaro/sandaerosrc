@@ -1,6 +1,6 @@
 /*header*/
 header {
-    height: 50px;
+    height: 60px;
     padding: 10px 15px 0 15px;
     background: url("/img/bar.png") no-repeat;
     position: fixed;
@@ -12,8 +12,9 @@ header {
 
 #logo {
     float: left;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
     color: white;
+
 }
 
 #button {
