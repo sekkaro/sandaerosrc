@@ -4,6 +4,39 @@
     <link rel="stylesheet" href="/css/listAct.css">
     <th:block th:replace="common/head.html"/>
     <link rel="stylesheet" href="/css/interest.css">
+    <style>
+        input[type=text]{
+            border: 1px solid;
+            border-radius: 20px;
+            border-color: #a5a5a5;
+            padding: 5px 16px;
+            width: 150px;
+            color: #000000;
+            /*margin-right: 50px;*/
+            margin-bottom: 10px;
+            text-align: center;
+            margin-left: 15px;
+            float: left;
+        }
+        .down {
+            float: right;
+            width: auto;
+        }
+        .interestname, .numberofpeople{
+            font-size: 16px;
+        }
+        .cancleBtn {
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+        .cancleBtn, .completeBtn {
+            border: none;
+            background: transparent;
+            width: 50px;
+            float: left;
+            padding: 0px;
+        }
+    </style>
 </head>
 <body>
     <header th:replace="common/menu :: header"></header>
@@ -14,6 +47,28 @@
 
         <div class="upper">
             <h4 class="header">관심사 목록</h4>
+        </div>
+
+        <div class="down">
+            <div class="addinterest">
+                <div id="addtext">관심사 추가</div>
+                <form action="/interest/add" th:object="${interestDto}" method="post" style="width: 500px" novalidate>
+                    <div class="interestadd">
+                        <input id="name" type="text" name="name" placeholder="관심사 이름을 2글자 이상 입력해주세요." aria-describedby="nameHelp" required minlength="2">
+                    </div>
+
+                    <!--                    <small id="nameHelp">-->
+                    <!--                        2글자 이상 입력해주세요.-->
+                    <!--                    </small>-->
+                    <!--                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
+                    <!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
+                    <!--                    <br>-->
+                    <button id="register" type="submit" name="button">
+                        <img src="/img/add_interest.png">
+                    </button>
+                    <!--                    <input type="submit" value="관심사 추가">-->
+                </form>
+            </div>
         </div>
 
         <div id="actList">
@@ -53,8 +108,13 @@
                             <button class="edit" th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">
                                 <img src="/img/mod_interest.png" style="width: 56px">
                             </button>
-                            <button th:id="completeBtn+${interest.id}" th:onclick="|javascript:complete('${interest.id}')|" style="display: none;">완료</button>
-                            <button th:id="cancleBtn+${interest.id}" th:onclick="|javascript:cancle('${interest.id}')|" style="display: none;">취소</button>
+                            <button class="cancleBtn" th:id="cancleBtn+${interest.id}" th:onclick="|javascript:cancle('${interest.id}')|" style="display: none;">
+                                <img src="/img/interest_cancle.png">
+                            </button>
+                            <button class="completeBtn" th:id="completeBtn+${interest.id}" th:onclick="|javascript:complete('${interest.id}')|" style="display: none;">
+                                <img src="/img/interest_complete.png">
+                            </button>
+
 
                             <!--                        <form class="needs-validation col-sm-7" th:action="@{'/interest/edit/' + ${interest.id}}" th:object="${mod_interest}" th:method="post" novalidate>-->
                             <!--                            <input type="hidden" name="_method" value="put"/>-->
@@ -78,7 +138,7 @@
                         </td>
                         <td>
                             <div>
-                                <span>현재 <span style="font-weight: bold" th:text="${interest.count}"></span>명이 관심있어 합니다.</span>
+                                <span class="numberofpeople">현재 <span style="font-weight: bold" th:text="${interest.count}"></span>명이 관심있어 합니다.</span>
                             </div>
                         </td>
                         <td>
@@ -99,27 +159,6 @@
             </div>
         </div>
 
-        <div class="down">
-            <div class="addinterest">
-                <div id="addtext">관심사 추가</div>
-                <form action="/interest/add" th:object="${interestDto}" method="post" style="width: 500px" novalidate>
-                    <div class="interestadd">
-                        <input id="name" type="text" name="name" placeholder="관심사 이름을 2글자 이상 입력해주세요." aria-describedby="nameHelp" required minlength="2">
-                    </div>
-
-<!--                    <small id="nameHelp">-->
-<!--                        2글자 이상 입력해주세요.-->
-<!--                    </small>-->
-<!--                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-<!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
-<!--                    <br>-->
-                    <button id="register" type="submit" name="button">
-                        <img src="/img/add_interest.png">
-                    </button>
-<!--                    <input type="submit" value="관심사 추가">-->
-                </form>
-            </div>
-        </div>
 
 
     </div>

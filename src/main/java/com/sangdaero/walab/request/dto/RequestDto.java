@@ -38,7 +38,7 @@ public class RequestDto {
 	
 	@Builder
 	public RequestDto(Long id, String title, InterestCategory interestCategory, User client, Byte status, Byte userType,
-					  EventEntity event, String productImage, LocalDateTime startTime, LocalDateTime endTime, String content, 
+					  EventEntity event, String productImage, LocalDateTime startTime, LocalDateTime endTime, String content,
 					  LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.title = title;

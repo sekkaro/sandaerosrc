@@ -74,8 +74,8 @@ public interface NoticeRepository extends JpaRepository<Board, Long> {
 	@Modifying
 	@Query(value="UPDATE board SET status=:status WHERE id=:id", nativeQuery = true)
 	void updateCommunityCategoryId(@Param("status") Byte status, @Param("id") Long id);
-	
+
 	List<Board> findAllByTopCategoryOrderByRegDateDesc(byte topCategory);
-	
+
 	List<Board> findTop5ByTopCategoryOrderByRegDateDesc(byte topCategory);
 }

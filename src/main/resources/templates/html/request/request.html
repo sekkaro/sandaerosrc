@@ -10,6 +10,20 @@
 		.menus {
 			width: 470px;
 		}
+		.activeBtn {
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+		.activeBtn > a > img {
+			margin-left: 20px;
+			margin-right: -10px;
+		}
+		.rejectBtn {
+			margin-right: 30px;
+		}
+		.registeredBtn > a > img {
+			width: 90px;
+		}
 	</style>
 </head>
 <body>
@@ -92,17 +106,28 @@
 									<img alt="image" th:src="@{${'/images/' + request.productImage}}" width="250" height="250">
 								</div>
 							</td>
-							<td th:if="${request.status == 0} and ${request.event == null}"><a th:href="@{'/request/register/' + ${request.id}}"><img src="/img/add_act.png"></a></td>
-							<td th:if="${request.status == 0} and ${request.event}"><a th:href="@{'/request/permit/' + ${request.id}}">승인</a></td>
-							<td th:if="${request.status == 0}">
+							<td class="activeBtn" th:if="${request.status == 0} and ${request.event == null}">
+								<a th:href="@{'/request/register/' + ${request.id}}">
+									<img src="/img/app_register.png">
+								</a>
+							</td>
+							<td class="activeBtn" th:if="${request.status == 0} and ${request.event}">
+								<a th:href="@{'/request/permit/' + ${request.id}}">
+									<img src="/img/app_approve.png">
+								</a>
+							</td>
+							<td class="rejectBtn" th:if="${request.status == 0}">
 <!--								<button type="button" th:data-requestId="${request.id}" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">-->
-								<img th:data-requestId="${request.id}" src="/img/reject_act.png" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">
+								<img th:data-requestId="${request.id}" src="/img/app_reject.png" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">
 <!--								</button>-->
 							</td>
-							<td th:if="${request.status == 1}"><a th:href="@{'/activity/' + ${request.event?.id}}">등록된 활동 보기</a></td>
-							<td th:if="${request.status == 1}"></td>
-							<td th:if="${request.status == 2}"></td>
-							<td th:if="${request.status == 2}"></td>
+							<td class="registeredBtn" th:if="${request.status == 1}" colspan="2">
+								<a th:href="@{'/activity/' + ${request.event?.id}}">
+									<img src="/img/app_registered.png">
+								</a>
+							</td>
+							<td class="activeBtn" th:if="${request.status == 2}"></td>
+							<td class="activeBtn" th:if="${request.status == 2}"></td>
 						</tr>
 						</tbody>
 					</table>

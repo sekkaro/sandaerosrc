@@ -59,7 +59,7 @@ public class UserService extends OidcUserService {
         User user = mUserRepository.findBySocialId(userDto.getSocialId());
         if(user == null) {
         	userDto.setNickname("닉네임");
-        	userDto.setPhone("010-9291-2788");
+            userDto.setPhone("010-9291-2788");
             userDto.setUserType((byte) 1); // TODO 나중에 0(이용자)로 바꿔야 함
             userDto.setStatus((byte) 1);
             user = userDto.toEntity(); 

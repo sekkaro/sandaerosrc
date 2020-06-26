@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" dir="ltr">
 <head>
-	<th:block th:replace="common/head.html"/>
 	<link rel="stylesheet" href="/css/insertAct.css">
+	<th:block th:replace="common/head.html"/>
+
 	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<style th:inline="text">
 		.multiselect {
@@ -39,6 +40,36 @@
 			max-height:100px;/* you can change as you need it */
 			overflow:auto;/* to get scroll */
 		}
+		#clickedUsers > li {
+			margin-top: 5px;
+			background: #EDFAF3;
+			border-radius: 10px;
+			width: 200px;
+		}
+		#clickedVolunteers > li {
+			margin-top: 5px;
+			border-radius: 10px;
+			width: 200px;
+		}
+		#clickedVolunteers > .list-group-item-warning {
+			background: #F4FAE5
+		}
+		#clickedVolunteers > .list-group-item-success {
+			background: #EDFAF3;
+		}
+		#clickedVolunteers > .list-group-item-danger {
+			background: #FAEDE6
+		}
+		#volunteers > li > select {
+			width: 65px;
+			margin-left: 10px;
+		}
+		/*.volunteerBox, #volunteer {*/
+		/*	margin-left: 15px;*/
+		/*}*/
+		#volunteer {
+			width: 200px;
+		}
 
 	</style>
 </head>
@@ -66,28 +97,25 @@
 								</select>
 							</div>
 						</div>
-						<div class="subcontent">마감 기한
-							<div class="subsub">
-								<input id="date" type="date" name="deadlineDate"> <input id="time" type="time" name="deadlineTime">
+						<div class="subcontent" style="width: 400px">
+							<div style="float: left;">
+								마감 기한
+							</div>
+							<div class="subsub" style="float: left;margin-left: 60px">
+								<input id="date" type="date" name="deadlineDate" style="width: 120px">
+								<input id="time" type="time" name="deadlineTime">
 							</div>
 						</div>
 					</div>
 					<div class="sectionRight">
-						<div class="subcontent">제목
-							<div class="subsub2">
+						<div class="subcontent">
+							<div style="float: left;">
+								제목
+							</div>
+							<div class="subsub2" style="float: left;margin-left: 93px;width:290px">
 								<input id="titletext" type="text" name="title" th:value="${requestDto?.title}" placeholder="제목을 입력하세요.">
 							</div>
 						</div>
-<!--						<div class="subcontent">상태-->
-<!--							<div class="subsub2">-->
-<!--								<select id="state" name="state">-->
-<!--									<option value="whole">전체</option>-->
-<!--									<option value="what">무엇을</option>-->
-<!--									<option value="choose">고를까요?</option>-->
-<!--									<option value="haha">ㅎㅎ</option>-->
-<!--								</select>-->
-<!--							</div>-->
-<!--						</div>-->
 					</div>
 				</div>
 
@@ -121,20 +149,17 @@
 									<option th:each="manager : ${managers}" th:value="${manager.id}"
 											th:text="${manager.name}"></option>
 								</select>
-<!--								<div class="row">-->
-<!--									<ul id="clickedUsers" class="list-group mt-2 col-md-6">-->
-<!--									</ul>-->
-<!--									<ul id="clickedVolunteers" class="list-group mt-2 col-md-6">-->
-<!--									</ul>-->
-<!--								</div>-->
 							</div>
 						</div>
 					</div>
 					<div class="sectionRight">
-						<div class="subcontent">봉사자
-							<div class="subsub2">
+						<div class="subcontent">
+							<div style="float:left;">
+								봉사자
+							</div>
+							<div class="subsub2" style="float: left;margin-left: 80px">
 								<div class="multiselect">
-									<div class="selectBox" onclick="showVolunteerCheckboxes()">
+									<div class="selectBox volunteerBox" onclick="showVolunteerCheckboxes()">
 										<select id="volunteer">
 											<option>봉사자를 선택하세요</option>
 										</select>
@@ -156,17 +181,23 @@
 
 				<div class="infoContent2">
 					<div class="subtitle">활동 내용</div>
-					<div class="sectionLeft2">
-						<div class="subcontent">활동 시간
-							<div class="subsub2 sub1">
+					<div class="sectionLeft2" style="float:left;">
+						<div class="subcontent" style="width: 630px">
+							<div style="float: left">
+								활동 시간
+							</div>
+							<div class="subsub2 sub1" style="float: left; margin-left: 53px">
 								<input id="start_date" type="date" name="startDate" th:value="${requestDto?.startTime?.toLocalDate()}"><input id="start_time" type="time" name="startTime" th:value="${requestDto?.startTime?.toLocalTime()}"><span id="and"> ~ </span>
 								<input id="end_date" type="date" name="endDate" th:value="${requestDto?.endTime?.toLocalDate()}"><input id="end_time" type="time" name="endTime" th:value="${requestDto?.endTime?.toLocalTime()}">
 							</div>
 						</div>
 					</div>
-					<div class="sectionRight2">
-						<div class="subcontent">장소
-							<div class="subsub2 sub">
+					<div class="sectionRight2" style="float: left;width: 700px">
+						<div class="subcontent">
+							<div style="float: left;">
+								장소
+							</div>
+							<div class="subsub2 sub" style="float: left;margin-left: 85px">
 								<input type="text" id="place" name="place" placeholder="주소를 입력하세요." onclick="execPostcode()">
 							</div>
 						</div>
@@ -176,22 +207,24 @@
 				<hr class="divgap2">
 
 				<div class="infoContent2">
-					상세 설명
-					<div id="description">
+					<div style="float: left">
+						상세 설명
+					</div>
+					<div id="description" style="float: left;margin-left:60px">
 <!--						<div id="fileName">파일 첨부-->
 <!--							<input type="file" name="file" id="file" style="display:none"/>-->
 <!--							<div class="button" id = "img" onclick="onclick=document.all.file.click()"><i class="far fa-image"></i>사진</div>-->
 <!--							<div class="button" id="video" onclick="onclick=document.all.file.click()"><i class="far fa-play-circle"></i> 동영상</div>-->
 <!--						</div>-->
 <!--						<div>-->
-							<textarea name="content">[[${requestDto?.content}]]</textarea>
+						<textarea name="content">[[${requestDto?.content}]]</textarea>
 <!--						</div>-->
 					</div>
 				</div>
 
 				<hr class="divgap">
 
-				<div class="infoContent deliveryGroup" style="display: none;">
+				<div class="infoContent deliveryGroup" style="display: none;height: 200px">
 					<div class="subtitle">나눔 내용</div>
 					<div class="sectionLeft">
 						<div class="subcontent">수령 방법</div>
@@ -213,23 +246,6 @@
 				<button id="reset" type="button" name="button" onclick="goBack()"><img src="/img/cancel.png"/></button>
 				<button id="submit" type="submit" name="button"><img src="/img/register.png"/></button>
 			</div>
-
-<!--			<div class="row deliveryGroup" style="display: none;">-->
-<!--				<h4>나눔 내용</h4>-->
-<!--			</div>-->
-<!--			<div class="row deliveryGroup" style="display: none;">-->
-<!--				<div class="col-md-6">-->
-<!--					<input type="radio" id="direct" name="delivery" value="0" checked>-->
-<!--					<label for="direct">직접 수령</label>-->
-<!--					<input type="radio" id="through" name="delivery" value="1">-->
-<!--					<label for="through">봉사사 통해 전달</label>-->
-<!--				</div>-->
-<!--				<div class="col-md-6">-->
-<!--					<input th:if="${productImage == null}" type="file" name="files" multiple>-->
-<!--					<img th:if="${productImage}" alt="image" th:src="@{${'/images/' + productImage}}" width="250" height="250">-->
-<!--					<input th:if="${productImage}" type="text" style="display:none;" name="file" th:value="${productImage}" >-->
-<!--				</div>-->
-<!--			</div>-->
 
 		</form>
 	</div>
@@ -608,8 +624,7 @@
 									break;
 								}
 							}
-						}
-						else{
+						} else {
 							clickedUsers.push(permittedUser.id.toString());
 							for(var i = 0; i < userStatusList.length ; i++){
 								if(userStatusList[i].id == permittedUser.id){
@@ -618,7 +633,6 @@
 								}
 							}
 						}
-						
 					}
 				}
 
