@@ -42,7 +42,7 @@ public class RequestController {
 		
 		List<RequestDto> requestDtoList = mRequestService.getRequestlist(pageNum, keyword, interestType, sortType);
         Integer[] pageList = mRequestService.getPageList(pageNum, keyword, interestType, sortType);
-        List<InterestDto> interestList = mInterestService.getInterestList();
+        List<InterestDto> interestList = mInterestService.getInterestList(2);
 
 		Long totalNum = mRequestService.getAllRequestNum();
         model.addAttribute("requestList", requestDtoList);
@@ -61,7 +61,7 @@ public class RequestController {
 	@GetMapping("/register/{no}")
 	public String registerRequest(@PathVariable("no") Long id, Model model) {
 		RequestDto requestDto = mRequestService.getPost(id);
-		List<InterestDto> interestList = mInterestService.getInterestList();
+		List<InterestDto> interestList = mInterestService.getInterestList(2);
 		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
 

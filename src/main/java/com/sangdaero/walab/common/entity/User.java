@@ -64,13 +64,15 @@ public class User extends TimeEntity {
     private LocalDateTime lastLogin;
 
     private Byte isDelete;
+
+    private Byte isDummy;
 	
     @Builder
     public User(Long id, String name, String nickname, String profile, String socialId,
                 String phone, Byte userType, Byte status, Integer volunteerTime,
 //                Set<InterestCategory> interests,
                 String service, String memo, Byte locationAgree, Byte phoneAgree, String community,
-                LocalDateTime lastLogin, Byte isDelete) {
+                LocalDateTime lastLogin, Byte isDelete, Byte isDummy) {
 
         this.id=id;
         this.name=name;
@@ -89,6 +91,7 @@ public class User extends TimeEntity {
         this.community=community;
         this.lastLogin=lastLogin;
         this.isDelete=0;
+        this.isDummy=isDummy;
     }
 	
 	

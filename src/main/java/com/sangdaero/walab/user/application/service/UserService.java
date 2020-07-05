@@ -174,6 +174,7 @@ public class UserService extends OidcUserService {
                 .userType(user.getUserType())
                 .volunteerTime(user.getVolunteerTime())
                 .interestName(interestName)
+                .isDummy(user.getIsDummy())
                 .build();
 
         return userDetailDTO;
@@ -297,6 +298,11 @@ public class UserService extends OidcUserService {
         byId.ifPresent(a->a.setName(name));
     }
 
+    public void changeEmail(Long id, String socialId) {
+        Optional<User> byId = mUserRepository.findById(id);
+        byId.ifPresent(a->a.setSocialId(socialId));
+    }
+
     public void changePhone(Long id, String phone) {
         Optional<User> byId = mUserRepository.findById(id);
         byId.ifPresent(a->a.setPhone(phone));
@@ -376,4 +382,6 @@ public class UserService extends OidcUserService {
         UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
         list.setEndImage(fileDownloadUri);
     }
+
+
 }

@@ -163,10 +163,16 @@ public class RequestService {
 		userEventMapper.setVolunteerTime(0);
     	
     	mUserEventMapperRepository.save(userEventMapper);
-    	
+
+		Notification notification = new Notification();
+
     	request.setStatus((byte) 1);
+
+		notification.setUser(request.getClient());
+		notification.setMessage(request.getTitle() + " 요청이 승인되었습니다");
     	
     	mRequestRepository.save(request);
+		mNotificationRepository.save(notification);
     	
 		return request.getEvent().getId();
 	}

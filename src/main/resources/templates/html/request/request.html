@@ -24,6 +24,12 @@
 		.registeredBtn > a > img {
 			width: 90px;
 		}
+		.fancybox-content {
+			width: 350px;
+		}
+		.fancybox-content > img {
+			width: 100%;
+		}
 	</style>
 </head>
 <body>
@@ -108,7 +114,8 @@
 							</td>
 							<td class="activeBtn" th:if="${request.status == 0} and ${request.event == null}">
 								<a th:href="@{'/request/register/' + ${request.id}}">
-									<img src="/img/app_register.png">
+<!--									<img src="/img/app_register.png">-->
+									<img src="/img/app_confirm.png">
 								</a>
 							</td>
 							<td class="activeBtn" th:if="${request.status == 0} and ${request.event}">
@@ -150,7 +157,7 @@
 				function rejectRequest(id, event){
 					$.post("/requestdata/setStatus", {id: id, status: 2}, function(data) {
 						if(data == 2){
-							$(event).parent().prev().prev().text("거절");
+							$(event).parent().prev().prev().prev().text("거절");
 							$(event).toggle();
 							$(event).parent().prev().toggle();
 						}

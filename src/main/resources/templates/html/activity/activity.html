@@ -5,7 +5,14 @@
 	<th:block th:replace="common/head.html"/>
 
 <!--	<link rel="stylesheet" href="/css/test2.css">-->
-
+	<style>
+		.fancybox-content {
+			width: 400px;
+		}
+		.fancybox-content > img {
+			width: 300px;
+		}
+	</style>
 </head>
 <body>
 	<header th:replace="common/menu :: header"></header>
@@ -113,5 +120,6 @@
 		</form>
 	</div>
 	<div lang="en" th:replace="common/footer :: footer"></div>
+	<div th:replace="common/fragments :: change-onoff"></div>
 </body>
 </html>

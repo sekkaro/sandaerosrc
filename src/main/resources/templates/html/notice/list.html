@@ -4,6 +4,32 @@
 <head>
 	<link rel="stylesheet" href="/css/listAct.css">
 	<th:block th:replace="common/head.html"/>
+	<link rel="stylesheet" href="/css/addUser.css">
+	<style>
+		.up {
+			width: auto;
+			background-color: white;
+			margin-bottom: 15px;
+			border-radius: 10px;
+			padding-left: 30px;
+			padding-top: 11px;
+			min-height: 150px;
+			text-align: left;
+		}
+		.title {
+			float: left;
+			margin-top: 5px;
+		}
+		.content > form {
+			float: left;
+		}
+		.content {
+			width: 80%;
+			float: left;
+			margin-bottom: 20px;
+		}
+
+	</style>
 </head>
 <body>
 <header th:replace="common/menu :: header"></header>
@@ -13,67 +39,59 @@
 	<div id="main">
 		<h4>공지 사항</h4>
 
-
-	<div id="basicBody">
-
-		<div>
-			<a th:href="@{/notice/category?topCategory=1}">카테고리 관리</a>
+		<div class="up">
+			<a th:href="@{/notice/category?topCategory=1}">하위 카테고리 목록</a>
+			<div class="infoContent">
+				<div class="title">하위 카테고리</div>
+				<div class="content" style="float:left;width:80%">
+					<form action="/notice" method="GET" style="float:left">
+						<select name="category">
+							<option value="0" th:selected="0 == ${category}">전체</option>
+							<option th:each="categoryOption : ${categoryList}"
+							th:text="${categoryOption.memo}"
+							th:value="${categoryOption.id}"
+							th:selected="${categoryOption.id} == ${category}"/>
+							<option value="-1" th:selected="-1 == ${category}">삭제된 글</option>
+						</select>
+						<button>확인</button>
+					</form>
+				</div>
+			</div>
+			<div class="infoContent">
+				<div class="title">검색</div>
+				<div class="content">
+					<form action="/notice" method="GET">
+						<div style="float:left">
+							<select name="type" style="width:80%">
+								<option value="1">제목</option>
+								<option value="2">내용</option>
+								<option value="3">작성자</option>
+							</select>
+						</div>
+						<div class="search" style="float:left">
+							<input class="ctext" name="keyword" type="text" placeholder="검색어를 입력해주세요" style="width: 500px;margin-right: 36px">
+						</div>
+						<div style="float:left">
+							<button>검색하기</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 
-		<!-- Select Category -->
-		<div>
-			<h4>카테고리 선택</h4>
-			<form action="/notice" method="GET">
-				<select name="category">
-					<option value="0" th:selected="0 == ${category}">전체</option>
-					<option th:each="categoryOption : ${categoryList}"
-					th:text="${categoryOption.memo}"
-					th:value="${categoryOption.id}"
-					th:selected="${categoryOption.id} == ${category}"/>
-					<option value="-1" th:selected="-1 == ${category}">삭제된 글</option>
-				</select>
-				<button>확인</button>
-			</form>
-		</div><br>
-
-
-
-		<!-- Search -->
-		<div>
-			<form action="/notice" method="GET">
-				<div class="search" style="float:left">
-					<input name="keyword" type="text" placeholder="검색어를 입력해주세요">
-				</div>
-				<div style="float:left">
-					<select name="type">
-						<option value="1">제목</option>
-						<option value="2">내용</option>
-						<option value="3">작성자</option>
-					</select>
-				</div>
-				<div style="float:left">
-					<button>검색하기</button>
-				</div>
-			</form>
-		</div><br><br>
-
-		<!-- List -->
-		<div>
-			<div>
-				<table style="border:1px solid;">
-					<thead>
-					<tr>
-						<th class="one wide">번호</th>
-						<th class="ten wide">글제목</th>
-						<th class="two wide">작성자</th>
-						<th class="three wide">조회수</th>
+		<div id="actList">
+			<table style="width: 100%;" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr class="top">
+						<th id="leftth" style="border-radius: 15px 0 0 0;">No.</th>
+						<th>글제목</th>
+						<th>작성자</th>
+						<th id="rigthth" style="border-radius: 0 15px 0 0;">조회수</th>
 					</tr>
-					</thead>
-
-					<tbody>
-					<!-- CONTENTS !-->
+				</thead>
+				<tbody>
 					<tr th:each="notice : ${noticeList}">
-						<td>
+						<td id="no">
 							<span th:text="${notice.id}"></span>
 						</td>
 						<td>
@@ -88,23 +106,20 @@
 							<span th:text="${notice.view}"></span>
 						</td>
 					</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<div>
+				</tbody>
+			</table>
+		</div>
+		<div class="down">
+			<button id="list" type="button" name="button">
+				<a th:href="@{/notice/post}"><img id="addBtn" src="/img/18.png"></a>
+			</button>
+			<div id="Paging">
 				<span th:each="pageNum : ${pageList}" th:inline="text">
 					<a th:href="@{'/notice/?category=' + ${category} + '&page=' + ${pageNum} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${pageNum}]]</a>
 				</span>
 			</div>
 		</div>
-
-		<a th:href="@{/notice/post}">글쓰기</a>
-
 	</div>
-
 	<div lang="en" th:replace="common/footer :: footer"></div>
-
-</div>
 </body>
 </html>

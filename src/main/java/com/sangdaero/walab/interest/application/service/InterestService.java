@@ -37,9 +37,16 @@ public class InterestService {
         return mInterestRepository.save(interestDto.toEntity()).getId();
     }
 
-    public List<InterestDto> getInterestList() {
+    public List<InterestDto> getInterestList(int type) {
 //        List<InterestName> interestNames = mInterestRepository.findAllByOrderByName();
-        List<InterestCategory> interestCategories = mInterestRepository.findAll();
+        List<InterestCategory> interestCategories = new ArrayList<>();;
+
+        if(type==1) {
+            interestCategories = mInterestRepository.findAll();
+        } else if(type==2) {
+            interestCategories = mInterestRepository.findAllByOn_offEquals((byte)1);
+        }
+
 //        List<InterestCategory> interestCategories = mInterestRepository.findByTypeEquals(type);
         List<InterestDto> interestDTOList = new ArrayList<>();
 

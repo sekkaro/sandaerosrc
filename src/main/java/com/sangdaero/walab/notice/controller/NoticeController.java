@@ -42,12 +42,17 @@ public class NoticeController extends CategoryController {
         
         List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1, "", 0);
 
+//        Long totalNum = mNoticeService.getAllNoticeNum(category);
+
         model.addAttribute("categoryList", categoryDtoList);
         model.addAttribute("noticeList", noticeDtoList);
         model.addAttribute("pageList", pageList);
         model.addAttribute("category", category);
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", searchType);
+
+//        model.addAttribute("currentPage", pageNum);
+//        model.addAttribute("totalNum", totalNum);
 
         return "html/notice/list.html";
     }

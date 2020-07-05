@@ -57,7 +57,7 @@ public class ActivityController {
 		
 		List<ActivityDto> activityDtoList = mActivityService.getActivitylist(pageNum, keyword, interestType, status, sortType);
         Integer[] pageList = mActivityService.getPageList(pageNum, keyword, interestType, sortType, status);
-        List<InterestDto> interestList = mInterestService.getInterestList();
+        List<InterestDto> interestList = mInterestService.getInterestList(2);
 
 		Long totalNum = mActivityService.getAllActivityNum();
         model.addAttribute("activityList", activityDtoList);
@@ -77,7 +77,7 @@ public class ActivityController {
 	@GetMapping("/{no}")
     public String detail(@PathVariable("no") Long id, Model model) {
         ActivityDto activityDto = mActivityService.getPost(id);
-        List<InterestDto> interestList = mInterestService.getInterestList();
+        List<InterestDto> interestList = mInterestService.getInterestList(2);
         List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
 		List<String> fileNameList = mFileService.getFiles(id);
@@ -93,7 +93,7 @@ public class ActivityController {
 	
 	@GetMapping("/activityForm")
     public String getActivityForm(Model model) {
-		List<InterestDto> interestList = mInterestService.getInterestList();
+		List<InterestDto> interestList = mInterestService.getInterestList(2);
 		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
 		
@@ -107,7 +107,7 @@ public class ActivityController {
 	@GetMapping("/activityForm/edit/{no}")
 	public String editActivity(@PathVariable("no") Long id, Model model) {
 		ActivityDto activityDto = mActivityService.getPost(id);
-		List<InterestDto> interestList = mInterestService.getInterestList();
+		List<InterestDto> interestList = mInterestService.getInterestList(2);
 		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
 		

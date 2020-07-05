@@ -1,50 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/css/insertAct.css">
     <th:block th:replace="common/head.html"/>
+    <style>
+        #buttonSet {
+            float: right;
+            position: relative;
+            right: -10px;
+            margin-top: 10px;
+        }
+        #reset, #submit {
+            border: none;
+            width: 130px;
+            background: transparent;
+        }
+        .key, .content {
+            float: left;
+        }
+        .key {
+            width: 150px;
+            text-align: left;
+            color: #515151;
+        }
+        .section1 {
+            margin-bottom: 30px;
+        }
+        textarea {
+            width: 80%;
+            height: 300px;
+        }
+        input {
+            width: 400px;
+            border-radius: 30px;
+            border: 1px solid #a5a5a5;
+            color: #b3b3b3;
+            padding: 0 0 0 10px;
+            height: 25px;
+            margin-right: 36px;
+        }
+        span {
+            color: #515151;
+        }
+    </style>
 </head>
 <body>
-<header th:replace="common/menu :: header"></header>
+    <header th:replace="common/menu :: header"></header>
 
-<div lang="en" th:replace="common/menu :: menu"></div>
+    <div lang="en" th:replace="common/menu :: menu"></div>
 
-<div id="main" style="margin-left: 15%">
+    <div id="main">
+        <h4>서브 카테고리 추가</h4>
 
-<div class="w3-teal">
-  <button id="openNav" style="display: none" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
-  <div class="w3-container">
-    <h1>카테고리 추가</h1>
-  </div>
-</div>
-    <div>
-    
-    <form action="/notice/category/add" method="post">
-    	<div>
-    		항목 : <input type="text" name="memo" maxlength="10">
-    	</div> <br>
-    	<div>
-        <input type="hidden" name="topCategory" th:value="${category}"/>
-        </div> <br>
-        <div>
-        	Manager : <input type="text" name="communityManager">
-        </div> <br>
-    	<div>
-	    	<div style="float:left">
-	    		<input type="submit" value="등록">
-	    	</div>
-	    	<div style="float:left">
-	    	<button th:href="@{'/'+${path}+'/category?topCategory='+${category}}">목록</button>
-	    	</div>
-    	</div>
-        
-        
-    </form>
+        <form action="/notice/category/add" method="post" style="width: 100%">
+            <div id="actInfo" style="height: 250px">
+                <br>
+                <div class="section1">
+                    <div class="key">
+                        이름
+                    </div>
+                    <div class="content">
+                        <input type="text" name="memo" maxlength="10">
+                    </div>
+                </div>
+                <br>
+                <div class="section1">
+                    <div class="key">
+                        게시판
+                    </div>
+                    <div class="content">
+                        <span th:if="${category==1}" th:text="공지사항"></span>
+                        <input type="hidden" name="topCategory" th:value="${category}"/>
+                    </div>
+                </div>
+                <br>
+                <div class="section1">
+                    <div class="key">
+                        관제사
+                    </div>
+                    <div class="content">
+                        <input type="text" name="communityManager">
+                    </div>
+                </div>
+            </div>
+            <div id="buttonSet">
+                <button id="reset" type="button" name="button" onclick="goBack()"><img src="/img/cancel.png"/></button>
+                <button id="submit" type="submit" name="button"><img src="/img/register.png"/></button>
+            </div>
+
+        </form>
     </div>
-    
+
     <div lang="en" th:replace="common/footer :: footer"></div>
 
-</div>
-
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 <script src="${pageContext.request.contextPath}/resources/static/js/ckeditor.js"></script>
 

@@ -110,8 +110,20 @@
             <hr class="line">
             <div class="row1">
                 <div class="title">이메일</div>
-                <span class="content"  id="socialId" th:text="${userInfo.socialId}" th:value="${userInfo.socialId}" style="display: inline"></span>
-                <input type="hidden" name="socialId" th:value="${userInfo.socialId}"/>
+                <span class="content" id="email" th:text="${userInfo.socialId}" th:value="${userInfo.socialId}" style="display: inline"></span>
+                <input id="editEmail" type="text" name="email" th:value="${userInfo.socialId}"
+                       style="display: none;" placeholder="이메일을 입력해주세요."
+                       aria-describedby="emailHelp">
+<!--                <input type="hidden" name="socialId" th:value="${userInfo.socialId}"/>-->
+                <button th:if="${userInfo.isDummy==1}" class="edit" id="emailEditBtn" th:onclick="|javascript:editEmail()|">
+                    <img src="/img/mod_interest.png" style="width: 56px">
+                </button>
+                <button th:if="${userInfo.isDummy==1}" id="emailCompleteBtn" th:onclick="|javascript:completeEmail()|" style="display: none;">
+                    완료
+                </button>
+                <button th:if="${userInfo.isDummy==1}" id="emailCancleBtn" th:onclick="|javascript:cancleEmail()|" style="display: none;">
+                    취소
+                </button>
             </div>
             <hr class="line">
             <div class="row1">
@@ -202,6 +214,7 @@
             }
 
             function onAdd(e) {
+                console.log(e.detail.data)
                 tagRequest("/add", e.detail.data.value);
             }
 
@@ -373,6 +386,50 @@
             $('#editNickname').hide();
             $('#nicknameCompleteBtn').hide();
             $('#nicknameCancleBtn').hide();
+        }
+
+        function editEmail() {
+            $('#email').hide();
+            $('#emailEditBtn').hide();
+            $('#editEmail').show();
+            $('#emailCompleteBtn').show();
+            $('#emailCancleBtn').show();
+        }
+
+        function completeEmail() {
+            var id = document.getElementById('uid').value;
+
+            $.post("/userdata/email", {
+                id: id,
+                socialId: $('#editEmail').val()
+            }, function(data) {
+                if(data.message==null) {
+                    $('#email').html(data.socialId);
+                    $('#mContent').html("이메일을 수정하였습니다.");
+                    $('#message').show();
+
+                    $('#email').show();
+                    $('#emailEditBtn').show();
+                    $('#editEmail').hide();
+                    $('#emailCompleteBtn').hide();
+                    $('#emailCancleBtn').hide();
+                }else {
+                    $('#mContent').html(data.message);
+                    // $('#message').css("background-color", "red");
+                    $('#message').show();
+                }
+                setTimeout(function() {
+                    hideMessage();
+                }, 2000);
+            });
+        }
+
+        function cancleEmail() {
+            $('#email').show();
+            $('#emailEditBtn').show();
+            $('#editEmail').hide();
+            $('#emailCompleteBtn').hide();
+            $('#emailCancleBtn').hide();
         }
 
         function editPhone() {

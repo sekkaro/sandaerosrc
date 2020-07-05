@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="common/head.html"/>
+    <style>
+        #center {
+            text-align: center;
+            width: 75%;
+            height: 100%;
+            position: static;
+            float: right;
+            margin-top: 10%;
+            font-size: 20px;
+            color: #019783;
+            padding-right: 4%;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="common/menu :: header"></header>
+
+    <div lang="en" th:replace="common/menu :: menu"></div>
+
+    <div id="center">
+        <img src="/img/developing.png">
+        <div>
+            <h3>개발 중입니다.</h3>
+            <p>불편을 드려 죄송합니다.</p>
+        </div>
+    </div>
+
+</body>
+</html>

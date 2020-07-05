@@ -33,7 +33,7 @@ public class InterestController {
 	@GetMapping("")
 	public String interestPage(Model model) {
 //		List<InterestDTO> interestDTOList = mInterestService.getInterestList(type);
-		List<InterestDto> interestDTOList = mInterestService.getInterestList();
+		List<InterestDto> interestDTOList = mInterestService.getInterestList(1);
 		model.addAttribute("interestList", interestDTOList);
 		model.addAttribute(new InterestDto());
 //		model.addAttribute("mod_interest", new InterestDto());
@@ -49,7 +49,7 @@ public class InterestController {
 	public String addInterest(@Valid InterestDto interestDto, Errors errors, Model model) {
 
 		if(errors.hasErrors()) {
-			List<InterestDto> interestDTOList = mInterestService.getInterestList();
+			List<InterestDto> interestDTOList = mInterestService.getInterestList(1);
 			model.addAttribute("interestList", interestDTOList);
 			return "html/interest/interest";
 		}

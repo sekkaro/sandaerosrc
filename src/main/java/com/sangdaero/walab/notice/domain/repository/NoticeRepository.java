@@ -78,4 +78,6 @@ public interface NoticeRepository extends JpaRepository<Board, Long> {
 	List<Board> findAllByTopCategoryOrderByRegDateDesc(byte topCategory);
 
 	List<Board> findTop5ByTopCategoryOrderByRegDateDesc(byte topCategory);
+
+//	Long countByTopCategory(Long category);
 }
