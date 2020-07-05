@@ -451,7 +451,7 @@
 				</div>
 			</div>
 
-			<hr class="line">
+			<hr id="lasthr" class="line">
 
 			<div class="sub_contentbox deliveryGroup" style="margin-bottom:100px">
 				<div class="sub_heading">나눔 내용</div>
@@ -1248,9 +1248,11 @@
 
 		if($('#editCategory option:selected').html().toString().includes("물건")){
 			$('.deliveryGroup').show();
+			$('#lasthr').show();
 		}
 		else{
 			$('.deliveryGroup').hide();
+			$('#lasthr').hide();
 		}
 
 

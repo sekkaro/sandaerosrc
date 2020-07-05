@@ -385,5 +385,40 @@ public class UserService extends OidcUserService {
         list.setEndImage(fileDownloadUri);
     }
 
+	public Boolean checkNewUser(String email, String name) {
+		
+		User user = mUserRepository.findBySocialId(email);
+		
+		if(user != null) {
+			user.setName(name);
+			mUserRepository.save(user);
+			return false;
+		}
+		
+		return true;
+		
+	}
+
+	public void setPhoneAgree(Long id, Boolean phoneAgree) {
+		User user = mUserRepository.findById(id).orElse(null);
+		
+		if(user!=null) {
+			user.setPhoneAgree((byte) ((phoneAgree)?1:0));
+			mUserRepository.save(user);
+		}
+		
+	}
+
+	public void setBasicInfo(Long id, String phone, String nickname, Boolean phoneAgree) {
+		User user = mUserRepository.findById(id).orElse(null);
+		
+		if(user!=null) {
+			user.setPhone(phone);
+			user.setNickname(nickname);
+			user.setPhoneAgree((byte) ((phoneAgree)?1:0));
+			mUserRepository.save(user);
+		}
+	}
+
 
 }

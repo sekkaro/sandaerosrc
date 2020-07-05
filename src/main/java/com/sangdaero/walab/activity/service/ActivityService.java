@@ -227,6 +227,7 @@ public class ActivityService {
     	activityDto.setPlace(place);
     	activityDto.setDeadline((deadlineDate.isEmpty()||deadlineTime.isEmpty())?null:LocalDateTime.parse(deadlineDate + deadlineTime, formatter));
     	activityDto.setContent(content);
+    	activityDto.setType((requestId!=null)?0:1);
     	
     	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
     	User manager = mUserRepository.findById(managerId).orElse(null);
@@ -235,6 +236,7 @@ public class ActivityService {
     	
     	event.setInterestCategory(interestCategory);
     	event.setManager(manager);
+    	
     	
     	Long id = mActivityRepository.save(event).getId();
     	
@@ -845,6 +847,7 @@ public class ActivityService {
 					.deliveryFlag(eventEntity.getDeliveryFlag())
 					.evaluate(eventEntity.getEvaluate())
 					.deadline(eventEntity.getDeadline())
+					.type(eventEntity.getType())
 					.regDate(eventEntity.getRegDate())
 					.modDate(eventEntity.getModDate())
 					.build();

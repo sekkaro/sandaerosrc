@@ -143,7 +143,26 @@ public class UserRestController {
 	public void modifyNickName(@RequestBody AppRequest userForm) {
 		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
 		
-		mUserService.changeNickname(userDto.getId(), userForm.getNickName());
+		mUserService.changeNickname(userDto.getId(), userForm.getNickname());
+	}
+	
+	@GetMapping("/checkNewUser")
+	public Boolean checkNewUser(@RequestParam("name") String name, @RequestParam("email") String email) {
+		return mUserService.checkNewUser(email, name);
+	}
+	
+	@PostMapping("/setPhoneAgree")
+	public void setPhoneAgree(@RequestBody AppRequest userForm) {
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+		
+		mUserService.setPhoneAgree(userDto.getId(), userForm.getPhoneAgree());
+	}
+	
+	@PostMapping("/setBasicInfo")
+	public void setBasicInfo(@RequestBody AppRequest userForm) {
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+		
+		mUserService.setBasicInfo(userDto.getId(), userForm.getPhone(), userForm.getNickname(), userForm.getPhoneAgree());
 	}
 
 }

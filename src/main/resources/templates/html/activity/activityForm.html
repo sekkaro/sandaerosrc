@@ -226,7 +226,7 @@
 					</div>
 				</div>
 
-				<hr class="divgap">
+				<hr id="lasthr" class="divgap">
 
 				<div class="infoContent deliveryGroup" style="display: none;height: 200px">
 					<div class="subtitle">나눔 내용</div>
@@ -676,9 +676,11 @@
 
 			if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 				$('.deliveryGroup').show();
+				$('#lasthr').show();
 			}
 			else{
 				$('.deliveryGroup').hide();
+				$('#lasthr').hide();
 			}
 
 		});

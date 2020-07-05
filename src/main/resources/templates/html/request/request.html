@@ -92,7 +92,12 @@
 								<span th:text="${totalNum}-8*(${currentPage}-1)-${requestStat.count}+1"></span>
 							</th>
 							<!--							<td><span th:text="${request.id}"></span></td>-->
-							<td><span th:text="${request.title}"></span></td>
+							<td>
+								<a th:if="${request.event != null and request.status == 0}" class="detail-link" th:href="@{'/activity/' + ${request.event.id}}">
+									<span th:text="${request.title}"></span>
+								</a>
+								<span th:if="${request.event == null or request.status != 0}" th:text="${request.title}"></span>
+							</td>
 							<td><span th:if="${request.interestCategory}"
 									  th:text="${request.interestCategory.name}"></span> <span
 									th:if="${request.interestCategory==null}">——</span></td>
