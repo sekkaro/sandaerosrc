@@ -90,27 +90,31 @@ public class PaymentController {
 	}
 	
 	
-	// - - - - - - - - - - - - Payment Part - - - - - - - - - - - - 
-	@GetMapping("/payment") // list
-	public String paymentList(@RequestParam(value="pageNum", defaultValue="1") Integer pageNum,
-			@RequestParam(value="keyword", defaultValue="") String keyword,
-			@RequestParam(value="sortBy", defaultValue="2") Byte sortBy, 
-			Model model) { // transfer data to View with Model		
-				
-		List<PaymentDto> paymentList = mPaymentService.getSearchPaymentList(pageNum, keyword, sortBy); // read all payment records from database (service)
-		model.addAttribute("paymentList", paymentList); // actual data transfer, with specific name
-
-		// page numbers
-		Integer[] pageList =  mPaymentService.getPageList(pageNum, keyword, sortBy);		
-		model.addAttribute("pageList", pageList);
-		
-		// pass get parameters
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("sortBy", sortBy);
-		model.addAttribute("pageNum", pageNum);
-
-		return "html/payment/payment.html";
+	// - - - - - - - - - - - - Payment Part - - - - - - - - - - - -
+	@GetMapping("/payment")
+	public String developingPage() {
+		return "html/developing";
 	}
+//	@GetMapping("/payment") // list
+//	public String paymentList(@RequestParam(value="pageNum", defaultValue="1") Integer pageNum,
+//			@RequestParam(value="keyword", defaultValue="") String keyword,
+//			@RequestParam(value="sortBy", defaultValue="2") Byte sortBy,
+//			Model model) { // transfer data to View with Model
+//
+//		List<PaymentDto> paymentList = mPaymentService.getSearchPaymentList(pageNum, keyword, sortBy); // read all payment records from database (service)
+//		model.addAttribute("paymentList", paymentList); // actual data transfer, with specific name
+//
+//		// page numbers
+//		Integer[] pageList =  mPaymentService.getPageList(pageNum, keyword, sortBy);
+//		model.addAttribute("pageList", pageList);
+//
+//		// pass get parameters
+//		model.addAttribute("keyword", keyword);
+//		model.addAttribute("sortBy", sortBy);
+//		model.addAttribute("pageNum", pageNum);
+//
+//		return "html/payment/payment.html";
+//	}
 	
 	
 	// Search, sort by

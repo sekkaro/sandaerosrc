@@ -24,7 +24,7 @@ public class NoticeService extends CategoryService {
 
     private NoticeRepository mNoticeRepository;
     private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
-    private static final int PAGE_POSTCOUNT = 3;  // 한 페이지에 존재하는 게시글 수
+    private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
     private static final Byte topCategory = 1;
 
     public NoticeService(NoticeRepository noticeRepository, CategoryRepository categoryRepository) {
@@ -267,4 +267,8 @@ public class NoticeService extends CategoryService {
 				.memo(category.getMemo())
 				.build();
 	}
+
+//    public Long getAllNoticeNum(Long category) {
+//    	return mNoticeRepository.countByTopCategory(category);
+//    }
 }

@@ -32,6 +32,7 @@ public class UserDto {
     private Integer volunteerTime;
     private String[] userInterestList;
     private Set<InterestCategory> interests = new HashSet<>();
+    private Byte isDummy;
 
     public User toEntity() {
         User user = User.builder()
@@ -43,12 +44,13 @@ public class UserDto {
                 .userType(userType)
                 .status(status)
                 .volunteerTime(volunteerTime)
+                .isDummy(isDummy)
                 .build();
         return user;
     }
 
     @Builder
-    public UserDto(Long id, String name, String nickname, String phone, String socialId, Byte userType, Byte status, Integer volunteerTime) {
+    public UserDto(Long id, String name, String nickname, String phone, String socialId, Byte userType, Byte status, Integer volunteerTime, Byte isDummy) {
         this.id=id;
         this.name=name;
         this.nickname=nickname;
@@ -57,6 +59,7 @@ public class UserDto {
         this.userType = userType;
         this.status = status;
         this.volunteerTime = volunteerTime;
+        this.isDummy = isDummy;
     }
 
 }

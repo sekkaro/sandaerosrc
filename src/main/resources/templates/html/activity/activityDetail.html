@@ -351,7 +351,7 @@
 															시작 사진
 														</div>
 														<div>
-															<img style="display:block;" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="300px" height="250px">
+															<img style="display:block;width: 300px" th:if="${activityVolunteer.startImage}" alt="image" th:src="@{${activityVolunteer.startImage}}" width="300px" height="250px">
 															<span th:if="${activityVolunteer.startImage == null}">없음</span>
 														</div>
 													</div>
@@ -360,7 +360,7 @@
 															끝 사진
 														</div>
 														<div>
-															<img style="display:block;" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="300px" height="250px">
+															<img style="display:block;width: 300px" th:if="${activityVolunteer.endImage}" alt="image" th:src="@{${activityVolunteer.endImage}}" width="300px" height="250px">
 															<span th:if="${activityVolunteer.endImage == null }">없음</span>
 														</div>
 													</div>

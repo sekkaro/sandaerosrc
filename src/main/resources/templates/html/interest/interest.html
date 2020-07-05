@@ -142,14 +142,14 @@
                             </div>
                         </td>
                         <td>
-                            <form id="delete-form" th:action="@{'/interest/' + ${interest.id}}" method="post">
+                            <form th:id="'active-form'+${interest.id}" name="deactive" th:action="@{'/interest/' + ${interest.id}}" method="post">
                                 <input type="hidden" name="_method" value="put"/>
                                 <button class="active" name="button" th:if="${interest.on_off==0}">
                                     <img class="condition" src="/img/activation.png">
                                 </button>
-                                <button class="active" name="button" th:if="${interest.on_off==1}">
+                                <a class="active" name="button" th:if="${interest.on_off==1}" th:onclick="'changeStatus(' + ${interest.id} + ')'">
                                     <img class="condition" src="/img/deactivation.png">
-                                </button>
+                                </a>
                             </form>
                         </td>
                     </tr>
@@ -171,6 +171,14 @@
 
     <script type="text/javascript">
 
+        function changeStatus(id) {
+            if(confirm("관심있는 유저가 있습니다. 정말 비활성화 하시겠습니까?")==true) {
+                document.getElementById('active-form' + id).submit();
+            } else {
+                return false;
+            }
+        }
+        
         function edit(id) {
             $('#editBtn'+id).hide();
             $('#InterestName'+id).hide();

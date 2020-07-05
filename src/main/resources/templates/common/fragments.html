@@ -24,4 +24,21 @@
     }())
 </script>
 
+<script th:fragment="change-onoff">
+    var img = document.getElementById("onoff");
+
+    img.addEventListener('click', function () {
+        changeStatus();
+    });
+
+    function changeStatus() {
+
+        // if() {
+        //     img.src="/img/off.png";
+        // } else {
+        //     img.src="/img/on.png";
+        // }
+    }
+</script>
+
 </html>

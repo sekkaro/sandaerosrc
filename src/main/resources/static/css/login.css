@@ -15,6 +15,7 @@ html, body {
   display:flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 #login{
@@ -25,4 +26,8 @@ html, body {
 .button {
   margin: 60px 0;
   width:80%;
+}
+
+#logo {
+  margin-bottom: 50px;
 }

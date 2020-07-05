@@ -91,6 +91,21 @@ public class UserRestController {
 		return map;
 	}
 
+	@PostMapping("/email")
+	public Map<String, Object> changeEmail(@Valid UserEmail userEmail, Errors errors) {
+		Map<String, Object> map = new HashMap<>();
+
+		if(errors.hasErrors()) {
+			map.put("message", "올바르지 않은 형식입니다.");
+			return map;
+		}
+
+		mUserService.changeEmail(userEmail.getId(), userEmail.getSocialId());
+		map.put("socialId", userEmail.getSocialId());
+
+		return map;
+	}
+
 	@PostMapping("/phone")
 	public Map<String, Object> changePhone(@Valid UserPhone userPhone, Errors errors) {
 		Map<String, Object> map = new HashMap<String, Object>();

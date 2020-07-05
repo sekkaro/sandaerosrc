@@ -33,29 +33,34 @@ public class CommunityController extends CategoryController {
 		this.mCommentService = commentService;
 	}
 	// Community list page
-	
-	@GetMapping("")
-	public String list(
-			Model model,
-			@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
-			@RequestParam(value = "category", defaultValue = "0") Long category,
-			@RequestParam(value = "keyword", defaultValue = "") String keyword,
-			@RequestParam(value = "type", defaultValue = "0") Integer searchType) {
-		
-        List<CommunityDto> communityDtoList = mCommunityService.getCommunitylist(pageNum, category, keyword, searchType);
-        Integer[] pageList = mCommunityService.getPageList(pageNum, category, keyword, searchType);
-        
-        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2, "", 0);
 
-        model.addAttribute("categoryList", categoryDtoList);
-        model.addAttribute("communityList", communityDtoList);
-        model.addAttribute("pageList", pageList);
-        model.addAttribute("category", category);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("type", searchType);
-
-        return "html/community/list.html";
+    @GetMapping("")
+    public String developingPage() {
+        return "html/developing";
     }
+	
+//	@GetMapping("")
+//	public String list(
+//			Model model,
+//			@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
+//			@RequestParam(value = "category", defaultValue = "0") Long category,
+//			@RequestParam(value = "keyword", defaultValue = "") String keyword,
+//			@RequestParam(value = "type", defaultValue = "0") Integer searchType) {
+//
+//        List<CommunityDto> communityDtoList = mCommunityService.getCommunitylist(pageNum, category, keyword, searchType);
+//        Integer[] pageList = mCommunityService.getPageList(pageNum, category, keyword, searchType);
+//
+//        List<CategoryDto> categoryDtoList = mCommunityService.getCategory((byte)2, "", 0);
+//
+//        model.addAttribute("categoryList", categoryDtoList);
+//        model.addAttribute("communityList", communityDtoList);
+//        model.addAttribute("pageList", pageList);
+//        model.addAttribute("category", category);
+//        model.addAttribute("keyword", keyword);
+//        model.addAttribute("type", searchType);
+//
+//        return "html/community/list.html";
+//    }
 
 	// Writing community page
 	@GetMapping("/post")

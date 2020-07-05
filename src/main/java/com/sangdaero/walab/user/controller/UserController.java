@@ -61,7 +61,7 @@ public class UserController {
 
 	@GetMapping("/add")
 	public String add(Model model) {
-		List<InterestDto> interestDTOList = mInterestService.getInterestList();
+		List<InterestDto> interestDTOList = mInterestService.getInterestList(2);
 		model.addAttribute(new UserDto());
 		model.addAttribute("interestList", interestDTOList);
 		return "html/user/add";
@@ -76,6 +76,7 @@ public class UserController {
 
 		userDTO.setVolunteerTime(0);
 		userDTO.setUserType((byte)0);
+		userDTO.setIsDummy((byte)1);
 		mUserService.addUser(userDTO);
 		return "redirect:/user";
 	}
@@ -94,7 +95,7 @@ public class UserController {
 		UserDetailDto userDetailDTO = mUserService.getUser(id);
 		model.addAttribute("userInfo", userDetailDTO);
 
-		List<String> all = mInterestRepository.findAll()
+		List<String> all = mInterestRepository.findAllByOn_offEquals((byte)1)
 				.stream().map(InterestCategory::getName).collect(Collectors.toList());
 
 		model.addAttribute("whitelist", objectMapper.writeValueAsString(all));
