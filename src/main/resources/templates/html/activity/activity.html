@@ -102,16 +102,23 @@
 			</div>
 			<div class="down">
 				<div id="Paging">
-					<button id="prevv" type="submit" name="button"><<</button>
-					<button id="prev" type="submit" name="button"><</button>
-					<button id="one" type="submit" name="button">1</button>
-					<button id="two" type="submit" name="button">2</img></button>
-					<button id="three" type="submit" name="button">3</img></button>
-					<button id="next" type="submit" name="button">></button>
-					<button id="nextt" type="submit" name="button">>></button>
-<!--					<button th:each="pageNum : ${pageList}" th:inline="text"> <a-->
-<!--							th:href="@{'/activity?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${pageNum}]]</a>-->
-<!--					</button>-->
+					<!--  <button id="prevv" type="submit" name="button"><<</button> -->
+					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/activity?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}"><</a>
+					</button>
+					<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/activity?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage}]]</a>
+					</button>
+					<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/activity?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+1}]]</a>
+					</button>
+					<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/activity?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+2}]]</a>
+					</button>
+					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/activity?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">></a>
+					</button>
+					<!--  <button id="nextt" type="submit" name="button">>></button> --> 
 				</div>
 				<button id="list" type="button" name="button">
 					<a th:href="@{/activity/activityForm}"><img id="addBtn" src="/img/18.png"></a>
@@ -120,6 +127,5 @@
 		</form>
 	</div>
 	<div lang="en" th:replace="common/footer :: footer"></div>
-	<div th:replace="common/fragments :: change-onoff"></div>
 </body>
 </html>

@@ -62,6 +62,7 @@ public class UserService extends OidcUserService {
             userDto.setPhone("010-9291-2788");
             userDto.setUserType((byte) 1); // TODO 나중에 0(이용자)로 바꿔야 함
             userDto.setStatus((byte) 1);
+            userDto.setIsDummy((byte) 0);
             user = userDto.toEntity(); 
             user.setLocationAgree((byte) 0);
             user.setPhoneAgree((byte) 0);
@@ -189,6 +190,7 @@ public class UserService extends OidcUserService {
                 .phone(user.getPhone())
                 .userType(user.getUserType())
                 .status(user.getStatus())
+                .isDummy(user.getIsDummy())
                 .build();
     }
 

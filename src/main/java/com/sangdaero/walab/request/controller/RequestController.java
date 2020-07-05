@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sangdaero.walab.activity.dto.ActivityDto;
+import com.sangdaero.walab.activity.dto.ActivityForm;
 import com.sangdaero.walab.interest.application.dto.InterestDto;
 import com.sangdaero.walab.interest.application.service.InterestService;
 import com.sangdaero.walab.request.dto.RequestDto;
@@ -41,18 +42,19 @@ public class RequestController {
 			@RequestParam(value = "sort", defaultValue = "1") Integer sortType) {
 		
 		List<RequestDto> requestDtoList = mRequestService.getRequestlist(pageNum, keyword, interestType, sortType);
-        Integer[] pageList = mRequestService.getPageList(pageNum, keyword, interestType, sortType);
         List<InterestDto> interestList = mInterestService.getInterestList(2);
+        Integer firstPage = mRequestService.getFirstPage(pageNum, keyword, interestType);
 
-		Long totalNum = mRequestService.getAllRequestNum();
+        Long totalNum = mRequestService.getRequestCount(keyword, interestType);
+        
         model.addAttribute("requestList", requestDtoList);
-        model.addAttribute("pageList", pageList);
         model.addAttribute("keyword", keyword);
         model.addAttribute("interestType", interestType);
         model.addAttribute("sort", sortType);
         model.addAttribute("interests", interestList);
 
 		model.addAttribute("currentPage", pageNum);
+		model.addAttribute("firstPage", firstPage);
 		model.addAttribute("totalNum", totalNum);
 
         return "html/request/request.html";
@@ -64,14 +66,12 @@ public class RequestController {
 		List<InterestDto> interestList = mInterestService.getInterestList(2);
 		List<SimpleUser> managerList = mUserService.getSimpleUserList("manager");
 		List<SimpleUser> userList = mUserService.getSimpleUserList();
-
-		model.addAttribute("requestDto", requestDto);
+		ActivityForm activityForm = mRequestService.getActivityForm(requestDto);
+		
 		model.addAttribute("interests", interestList);
 		model.addAttribute("managers", managerList);
 		model.addAttribute("users", userList);
-		model.addAttribute("permittedUser", requestDto.getClient());
-		model.addAttribute("userType", requestDto.getUserType());
-		model.addAttribute("productImage", requestDto.getProductImage());
+		model.addAttribute("activityForm", activityForm);
 		
 		return "html/activity/activityForm.html";
 	}

@@ -45,6 +45,8 @@ public class UserDto {
                 .status(status)
                 .volunteerTime(volunteerTime)
                 .isDummy(isDummy)
+                .locationAgree((byte) 0)
+                .phoneAgree((byte) 0)
                 .build();
         return user;
     }

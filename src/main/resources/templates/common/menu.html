@@ -42,9 +42,9 @@
         </a>
     </div>
     <div id="button">
-        <a class="authenticated"><img id="onoff" src="/img/on.png" alt="on"></a>
+        <a id="userStatus"></a>
 <!--        <a class="unauthenticated" th:href="@{/login}"><img id="loginout" src="/img/login.png" alt="on"></a>-->
-        <a class="authenticated" th:href="@{/logout}"><img id="loginout" src="/img/logout.png" alt="on"></a>
+        <a th:href="@{/logout}"><img id="loginout" src="/img/logout.png" alt="on"></a>
     </div>
 </header>
 
@@ -64,6 +64,36 @@
         <li class="firstMenu"><a th:href="@{/ask}">문의</a> <img src = "/img/arrow.png"></li>
         </li>
     </ul>
-    <script>showSubMenu();</script>
+    <script>
+    	showSubMenu();
+    	
+    	function getStatus(){
+    		$.get("/userdata/getBasicInfo", function(data){
+        		var innerHtml = ""; 
+        		if(data.status == 1){
+        			innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/on.png' alt='on'>"; 
+        		}
+        		else{
+        			innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/off.png' alt='off'>";
+        		}
+        		$('#userStatus').html(innerHtml);
+        		addClickListener();
+        	});
+    	}
+    	
+    	getStatus();
+    	
+    	
+    	function addClickListener(){
+    		$('#onoff').click(function(){
+    			var isOn = !($('#onoff').attr('alt') == 'on');
+    			$.post("/userdata/setStatus", {isOn: isOn }, function(data){
+    				var innerHtml = "";
+    				getStatus();
+    			});
+    		});
+    	}
+    	
+    </script>
 </div>
 </html>

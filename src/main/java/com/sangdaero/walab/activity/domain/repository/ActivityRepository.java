@@ -15,18 +15,18 @@ import com.sangdaero.walab.common.entity.InterestCategory;
 public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingOrderByStatusAsc(int eventCategory, String keyword, Pageable page);
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingOrderByStatusAscStartTimeAsc(int eventCategory, String keyword, Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(int eventCategory, String keyword, InterestCategory interestCategory,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscStartTimeAsc(int eventCategory, String keyword, InterestCategory interestCategory,
 			Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndStatus(int eventCategory, String keyword, Byte status,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndStatusOrderByStartTimeAsc(int eventCategory, String keyword, Byte status,
 			Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatus(int eventCategory, String keyword,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByStartTimeAsc(int eventCategory, String keyword,
 			InterestCategory interestCategory, Byte status, Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
@@ -46,11 +46,17 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 			LocalDateTime currentDate, LocalDateTime endDate);
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	List<EventEntity> findTop5ByEventCategoryOrderByStatusAscRegDateDesc(int eventCategory);
+	List<EventEntity> findTop5ByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte status);
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	List<EventEntity> findAllByEventCategoryAndInterestCategoryOrderByStatusAscRegDateDesc(int eventCategory, InterestCategory interestCategory);
-
+	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory,
+			InterestCategory interestCategory, Byte status);
+	
+	@EntityGraph(attributePaths = { "interestCategory", "manager" })
+	List<EventEntity> findAllByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte status);
+	
 	Long countByEventCategory(int eventCategory);
+
+	
 
 }

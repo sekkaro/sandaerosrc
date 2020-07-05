@@ -615,21 +615,18 @@
 		var volunteerTime;
 
 		function editVolunteerTime(volunteerId){
-			$('#volunteerTime' + volunteerId).toggle();
-			$('#editVolunteerTime' + volunteerId).toggle();
-			$('#cancelVolunteerTimeBtn' + volunteerId).toggle();
 
 			volunteerTime = $('#editVolunteerTime' + volunteerId).val();
-
-			if($('#editVolunteerTimeBtn' + volunteerId).html() == '편집'){
+			
+			if($('#editVolunteerTimeBtn' + volunteerId).html().toString().includes('편집')){
+				$('#volunteerTime' + volunteerId).hide();
+				$('#editVolunteerTime' + volunteerId).show();
+				$('#cancelVolunteerTimeBtn' + volunteerId).show();
+				
 				$('#editVolunteerTimeBtn' + volunteerId).html('완료');
 			}
 			else{
 				if($('#editVolunteerTime' + volunteerId).val().length == 0){
-
-					$('#volunteerTime' + volunteerId).toggle();
-					$('#editVolunteerTime' + volunteerId).toggle();
-					$('#cancelVolunteerTimeBtn' + volunteerId).toggle();
 
 					$('#message').removeClass("alert-info");
 					$('#message').addClass("alert-danger");
@@ -642,10 +639,14 @@
 
 				}
 				else{
-					$('#editVolunteerTimeBtn' + volunteerId).html('편집');
 					$.post("/activitydata/setVolunteerTime", {id: $('#activityId').val(), volunteerId: volunteerId, time: volunteerTime}, function(data) {
 
 						$('#volunteerTime' + volunteerId).html(data);
+						
+						$('#editVolunteerTimeBtn' + volunteerId).html('편집');
+						$('#volunteerTime' + volunteerId).show();
+						$('#editVolunteerTime' + volunteerId).hide();
+						$('#cancelVolunteerTimeBtn' + volunteerId).hide();
 
 						$('#message').removeClass("alert-danger");
 						$('#message').addClass("alert-info");
@@ -1096,10 +1097,10 @@
 						}
 
 						if(clickedVolunteers.indexOf(item.id.toString()) > -1){
-							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+							innerHtml += " disabled> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 						else{
-							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+							innerHtml += "> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 
 
@@ -1159,10 +1160,10 @@
 						}
 
 						if(clickedUsers.indexOf(item.id.toString()) > -1){
-							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							innerHtml += " disabled> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 						else{
-							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							innerHtml += "> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 
 						if(item.status==null || item.status == 0){
@@ -1318,43 +1319,76 @@
 					var innerVolunteersHtml = "";
 					try{
 						if(data.users.length > 0){
+							$('#userList').removeClass("members user");
 							data.users.forEach(function(item){
 								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><span>"+ item.user.name +"</span><span>"+ item.user.phone +"</span></div>";
 							})
 						}
 						else{
+							$('#userList').addClass("members user");
 							innerUsersHtml = "이용자 없음";
 						}
 
 						if(data.volunteers.length > 0){
+							$('#volunteerList').removeClass("members worker");
 							data.volunteers.forEach(function(item){
-								innerVolunteersHtml += "<div class='members worker'><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'/><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'><div><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='volunteerDetail" + item.user.id +"'><h2>봉사자 디테일</h2>이름: <span>"+ item.user.name +"</span><br>전화번호: <span>"+ item.user.phone +"</span><br>";
-
-								var phoneAgree = (item.phoneAgree==0)?"X":"O";
-								var locationAgree = (item.locationAgree==0)?"X":"O";
-								var status = "";
-								var startImage = "시작 사진: <span>없음</span><br>";
-								var endImage = "끝 사진: <span>없음</span><br>";
-								var volunteerTime = "봉사시간: <span id='volunteerTime"+ item.user.id +"'>"+ item.volunteerTime +"</span>시간<input id='editVolunteerTime"+ item.user.id +"' type='text' style='display:none;' value='"+ item.volunteerTime +"'><a href='#' id='editVolunteerTimeBtn"+ item.user.id +"' onclick='editVolunteerTime("+ item.user.id +");'>편집</a><a href='#' id='cancelVolunteerTimeBtn"+ item.volunteerTime +"' onclick='cancelVolunteerTime("+ item.user.id +");' style='display: none;'>취소</a>";
+									
+								innerVolunteersHtml += "<div class='members worker'><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'/><div><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='volunteerDetail" + item.user.id +"'><img src='/img/v_bar.png'><h3 style='padding-left: 20px'>봉사자 정보</h3><div style='padding-left: 20px'><div class='sub_heading'>기본 정보</div><div><div class='user_left'><div class='inlinebox'><div class='v_menuname' style='float: left;'>이름</div><input type='text' class='v_menuval' id='v_name' name='v_name' value='"+ item.user.name +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호</div><input type='text' class='v_menuval' id='v_phone' name='v_phone' value='"+ item.user.phone +"' disabled></div><br>";
+																
+								var status = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>상태</div>";
 								switch(item.status){
-									case 0: status ="대기";
-										break;
-									case 1: status ="승인";
-										break;
-									case 2: status ="거절";
+								case 0: status +="<input type='text' class='v_menuval' id='v_status0' name='v_status' value='대기' disabled>";
+									break;
+								case 1: status +="<input type='text' class='v_menuval' id='v_status1' name='v_status' value='승인' disabled>";
+									break;
+								case 2: status +="<input type='text' class='v_menuval' id='v_status2' name='v_status' value='거절' disabled>";
 								}
+								
+								status += "</div></div>";
+							
+								var phoneAgree = "<div class='user_right'><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호 공유 동의</div><div style='float:left;margin-top: 10px'>"
+									
+								phoneAgree += (item.phoneAgree==1)?"<img style='width: 15px' src='/img/v_ok.png'/>":"<img style='width: 15px' src='/img/v_nok.png'/>";
+								phoneAgree += "</div></div><br>";
+
+								var locationAgree = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>위치 공유 동의</div><div style='float:left;margin-top: 10px'>";
+										
+								locationAgree += (item.locationAgree==1)?"<img style='width: 15px' src='/img/v_ok.png'/>":"<img style='width: 15px' src='/img/v_nok.png'/>";
+								locationAgree += "</div></div><br>";
+								
+								var volunteerTime = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>봉사 시간</div><div style='float: left;margin-top: 10px'><span id='volunteerTime"+ item.user.id +"'>"+ item.volunteerTime +"</span>시간<input id='editVolunteerTime"+ item.user.id +"' type='text' style='display:none;width: 75px' value='"+ item.volunteerTime +"'><button id='editVolunteerTimeBtn"+ item.user.id +"' onclick='editVolunteerTime("+ item.user.id +");'>편집</button><button id='cancelVolunteerTimeBtn"+ item.volunteerTime +"' onclick='cancelVolunteerTime("+ item.user.id +");' style='display: none;'>취소</button></div></div></div></div></div>";
+								
+								
+								var startImage = "<hr class='line'><div style='padding-left: 20px'><div class='sub_heading'>활동 사진</div><div><div class='user_left'><div class='v_menuname'>시작 사진</div><div>";
+								
 								if(item.startImage != null){
-									startImage = "시작 사진: <img style='display:block;' alt='image' src='/images/"+ item.startImage +"' width='250' height='300'>";
+									startImage += "<img style='display:block; width: 300px' alt='image' src='"+ item.startImage +"' width='300px' height='250px'>";
 								}
+								else{
+									startImage += "<span>없음</span>"
+								}
+								
+								startImage += "</div></div>";
+								
+								
+						
+								var endImage = "<div class='user_right'><div class='v_menuname'>끝 사진</div><div>";
+		
 								if(item.endImage != null){
-									endImage = "끝 사진: <img style='display:block;' alt='image' src='/images/"+ item.endImage +"' width='250' height='300'>";
+									endImage += "<img style='display:block; width: 300px' alt='image' src='"+ item.endImage +"' width='300px' height='250px'>";
 								}
+								else{
+									endImage += "<span>없음</span>"
+								}
+		
+								endImage += "</div></div></div></div></div></div></div>";
+								
 
-								innerVolunteersHtml += "전화번호 공유 동의: <span>"+ phoneAgree +"</span><br>위치 공유 동의: <span>"+ locationAgree +"</span><br>상태: <span>"+ status +"</span><br>" + startImage + endImage + volunteerTime + "</div></div></div>";
-
+								innerVolunteersHtml += status + phoneAgree + locationAgree + volunteerTime + startImage + endImage;
 							})
 						}
 						else{
+							$('#volunteerList').addClass("members worker");
 							innerVolunteersHtml = "봉사자 없음";
 						}
 					}

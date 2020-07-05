@@ -133,8 +133,10 @@
 									<img src="/img/app_registered.png">
 								</a>
 							</td>
-							<td class="activeBtn" th:if="${request.status == 2}"></td>
-							<td class="activeBtn" th:if="${request.status == 2}"></td>
+							<td class="activeBtn" th:if="${request.status == 2}"><button type="button" th:data-requestId="${request.id}" onClick="cancelRejectRequest(this.getAttribute('data-requestId'), this)">거절 취소</button></td>
+							<td class="activeBtn" th:if="${request.status == 2}" style="display: none;">
+								<img th:data-requestId="${request.id}" src="/img/reject_act.png" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">
+							</td>
 						</tr>
 						</tbody>
 					</table>
@@ -142,12 +144,25 @@
 
 			</form>
 
-			<!--  paging -->
 			<div class="down">
 				<div id="Paging">
-					<span th:each="pageNum : ${pageList}" th:inline="text">
-						<a th:href="@{'/request?page=' + ${pageNum} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${pageNum}]]</a>
-					</span>
+					<!--  <button id="prevv" type="submit" name="button"><<</button> -->
+					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}"><</a>
+					</button>
+					<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage}]]</a>
+					</button>
+					<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage+1}]]</a>
+					</button>
+					<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage+2}]]</a>
+					</button>
+					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">></a>
+					</button>
+					<!--  <button id="nextt" type="submit" name="button">>></button> --> 
 				</div>
 			</div>
 			<!-- paging end -->
@@ -156,12 +171,33 @@
 			
 				function rejectRequest(id, event){
 					$.post("/requestdata/setStatus", {id: id, status: 2}, function(data) {
-						if(data == 2){
+						if(data.status == 2){
 							$(event).parent().prev().prev().prev().text("거절");
-							$(event).toggle();
-							$(event).parent().prev().toggle();
+							$(event).parent().prev().html("<button type='button' onClick='cancelRejectRequest("+ id +", this)'>거절 취소</button>");
+							$(event).parent().hide();
 						}
 						
+	            	});
+				}
+				
+				function cancelRejectRequest(id, event){
+					$.post("/requestdata/setStatus", {id: id, status: 0}, function(data) {
+						if(data.status == 0){
+							var innerHtml = "";
+							if(data.event==null){
+								innerHtml = "<a href='/request/register/"+ id +"'><img src='/img/app_confirm.png'></a>";
+							}
+							else{
+								innerHtml = "<a href='/request/permit/"+ id +"'><img src='/img/app_approve.png'></a>";
+							}
+							
+							$(event).parent().prev().prev().text("대기");
+							
+							$(event).parent().next().children().first().html("<img src='/img/reject_act.png' onClick='rejectRequest("+ id +", this)'>");
+							$(event).parent().next().show();
+							$(event).parent().html(innerHtml);
+							
+						}
 	            	});
 				}
 			

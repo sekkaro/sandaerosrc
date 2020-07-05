@@ -81,8 +81,8 @@
 	<div id="main">
 		<h4>활동 등록</h4>
 
-		<form id="infoForm" name="activity" action="/activity/activityForm" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="requestId" th:value="${requestDto?.id}"/>
+		<form id="infoForm" name="activity" action="/activity/activityForm" method="post" enctype="multipart/form-data" th:object="${activityForm}">
+			<input type="hidden" th:field="*{requestId}" />
 
 			<div id="actInfo">
 				<div class="infoContent">
@@ -90,11 +90,12 @@
 					<div class="sectionLeft">
 						<div class="subcontent">카테고리
 							<div class="subsub">
-								<select id="category" name="interestCategoryId">
+								<select id="category" th:field="*{interestCategoryId}">
 									<option value="0">관심사를 선택하세요</option>
 									<option th:each="interest : ${interests}" th:value="${interest.id}"
-											th:text="${interest.name}" th:selected="${interest.id} == ${requestDto?.interestCategory?.id}"></option>
+											th:text="${interest.name}"></option>
 								</select>
+								<span th:if="${#fields.hasErrors('interestCategoryId')}">카테고리를 선택해주세요</span>
 							</div>
 						</div>
 						<div class="subcontent" style="width: 400px">
@@ -102,8 +103,9 @@
 								마감 기한
 							</div>
 							<div class="subsub" style="float: left;margin-left: 60px">
-								<input id="date" type="date" name="deadlineDate" style="width: 120px">
-								<input id="time" type="time" name="deadlineTime">
+								<input id="date" type="date" th:field="*{deadlineDate}" style="width: 120px">
+								<input id="time" type="time" th:field="*{deadlineTime}">
+								<span th:if="${#fields.hasErrors('deadlineDate') or #fields.hasErrors('deadlineTime')}">마감 기한을 입력해주세요</span>
 							</div>
 						</div>
 					</div>
@@ -113,7 +115,8 @@
 								제목
 							</div>
 							<div class="subsub2" style="float: left;margin-left: 93px;width:290px">
-								<input id="titletext" type="text" name="title" th:value="${requestDto?.title}" placeholder="제목을 입력하세요.">
+								<input id="titletext" type="text" th:field="*{title}" placeholder="제목을 입력하세요.">
+								<span th:if="${#fields.hasErrors('title')}">2자 이상 입력해주세요</span>
 							</div>
 						</div>
 					</div>
@@ -144,7 +147,7 @@
 						</div>
 						<div class="subcontent">담당 관제사
 							<div class="subsub">
-								<select name="managerId">
+								<select th:field="*{managerId}">
 									<option value="0">관리자를 선택하세요</option>
 									<option th:each="manager : ${managers}" th:value="${manager.id}"
 											th:text="${manager.name}"></option>
@@ -187,8 +190,9 @@
 								활동 시간
 							</div>
 							<div class="subsub2 sub1" style="float: left; margin-left: 53px">
-								<input id="start_date" type="date" name="startDate" th:value="${requestDto?.startTime?.toLocalDate()}"><input id="start_time" type="time" name="startTime" th:value="${requestDto?.startTime?.toLocalTime()}"><span id="and"> ~ </span>
-								<input id="end_date" type="date" name="endDate" th:value="${requestDto?.endTime?.toLocalDate()}"><input id="end_time" type="time" name="endTime" th:value="${requestDto?.endTime?.toLocalTime()}">
+								<input id="start_date" type="date" th:field="*{startDate}"><input id="start_time" type="time" th:field="*{startTime}"><span id="and"> ~ </span>
+								<input id="end_date" type="date" th:field="*{endDate}"><input id="end_time" type="time" th:field="*{endTime}">
+								<span th:if="${#fields.hasErrors('startDate') or #fields.hasErrors('startTime') or #fields.hasErrors('endDate') or #fields.hasErrors('endTime') }">활동시간을 입력해주세요</span>
 							</div>
 						</div>
 					</div>
@@ -198,7 +202,7 @@
 								장소
 							</div>
 							<div class="subsub2 sub" style="float: left;margin-left: 85px">
-								<input type="text" id="place" name="place" placeholder="주소를 입력하세요." onclick="execPostcode()">
+								<input type="text" id="place" th:field="*{place}" placeholder="주소를 입력하세요." onclick="execPostcode()">
 							</div>
 						</div>
 					</div>
@@ -217,7 +221,7 @@
 <!--							<div class="button" id="video" onclick="onclick=document.all.file.click()"><i class="far fa-play-circle"></i> 동영상</div>-->
 <!--						</div>-->
 <!--						<div>-->
-						<textarea name="content">[[${requestDto?.content}]]</textarea>
+						<textarea th:field="*{content}"></textarea>
 <!--						</div>-->
 					</div>
 				</div>
@@ -228,16 +232,16 @@
 					<div class="subtitle">나눔 내용</div>
 					<div class="sectionLeft">
 						<div class="subcontent">수령 방법</div>
-							<input type="radio" id="direct" name="delivery" value="0" checked>
+							<input type="radio" id="direct" th:field="*{delivery}" value="0" checked>
 							<label for="direct">직접 수령</label>
-							<input type="radio" id="through" name="delivery" value="1">
+							<input type="radio" id="through" th:field="*{delivery}" value="1">
 							<label for="through">봉사사 통해 전달</label>
 					</div>
 					<div class="sectionRight">
 						<div class="subcontent">물건 사진</div>
-							<input th:if="${productImage == null}" type="file" name="files" multiple>
-							<img th:if="${productImage}" alt="image" th:src="@{${'/images/' + productImage}}" width="250" height="250">
-							<input th:if="${productImage}" type="text" style="display:none;" name="file" th:value="${productImage}" >
+							<input th:if="*{file == null}" type="file" th:field="*{files}">
+							<img th:if="*{file}" alt="image" th:src="@{*{'/images/' + file}}" width="250" height="250">
+							<input th:if="*{file}" type="text" style="display:none;" th:field="*{file}">
 					</div>
 				</div>
 
@@ -260,9 +264,7 @@
 		var clickedUsers = [];
 		var clickedVolunteers = [];
 		var userStatusList = [];
-		var permittedUser =/*[[${permittedUser}]]*/'none';
-		var userType =/*[[${userType}]]*/'none';
-		var productImage =/*[[${productImage}]]*/'none';
+		var activityForm =/*[[${activityForm}]]*/'none';
 
 		function goBack() {
 			window.history.back();
@@ -483,10 +485,10 @@
 						}
 
 						if(clickedVolunteers.indexOf(item.id.toString()) > -1){
-							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+							innerHtml += " disabled> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 						else{
-							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label></li>";
+							innerHtml += "> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label></li>";
 						}
 
 
@@ -545,10 +547,10 @@
 						}
 
 						if(clickedUsers.indexOf(item.id.toString()) > -1){
-							innerHtml += " disabled> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							innerHtml += " disabled> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 						else{
-							innerHtml += "> <label for='"+ item.id +"'>"+ item.name +"</label>";
+							innerHtml += "> <label style='pointer-events: none' for='"+ item.id +"'>"+ item.name +"</label>";
 						}
 
 						if(item.status==null || item.status == 0){
@@ -615,7 +617,28 @@
 					}
 				}
 				else{
-					if(permittedUser != null){
+					
+					if(activityForm.userId != null){
+						activityForm.userId.forEach(function(id){
+							clickedUsers.push(id.toString());
+						})
+					}
+					
+					if(activityForm.volunteerId != null){
+						var idx = 0;
+						activityForm.volunteerId.forEach(function(id){
+							clickedVolunteers.push(id.toString());
+							for(var i = 0 ; i < userStatusList.length ; i++){
+								if(userStatusList[i].id == id){
+									userStatusList[i].status = activityForm.volunteerStatus[idx];
+									break;
+								}
+							}
+							idx++;
+						})
+						
+					}
+					/*if(permittedUser != null){
 						if(userType == 1){
 							clickedVolunteers.push(permittedUser.id.toString());
 							for(var i = 0; i < userStatusList.length ; i++){
@@ -633,7 +656,7 @@
 								}
 							}
 						}
-					}
+					}*/
 				}
 
 				searchUsers("");

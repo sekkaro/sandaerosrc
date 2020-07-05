@@ -27,41 +27,7 @@
 
 	<script th:inline="javascript">
 
-        // var logout = function() {
-        //     $.post("/logout", function() {
-        //         //$("#user").html('');
-        //         $(".unauthenticated").show();
-        //         $(".authenticated").hide();
-        //     })
-        //     return true;
-        // }
-
-        $.get("/userdata/getBasicInfo", function(data) {
-            if(typeof data.name != "undefined"){
-                //$("#user").html(data.name);
-                $(".unauthenticated").hide();
-                $(".authenticated").show();
-
-                if(data.userType != 1){
-                    $('a.menu').hide();
-
-                    if(window.location.pathname != "/"){
-                        window.location.replace("/");
-                    }
-
-                }
-
-                if(data.status == 0){
-                    $('#toggle-event').bootstrapToggle('off');
-                }
-
-
-            }
-            // else{
-            //     logout();
-            // }
-        });
-
+        
         $( document ).ready(function() {
             $.ajaxSetup({
                   beforeSend : function(xhr, settings) {
@@ -76,11 +42,5 @@
                     }
                   }
                 });
-
-                $('#toggle-event').change(function() {
-                    $.post("/userdata/setStatus", {isOn: $(this).prop('checked')}, function(data) {
-                        console.log(data);
-                    });
-                })
         });
 	</script>

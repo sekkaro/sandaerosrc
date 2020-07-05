@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
+import com.sangdaero.walab.activity.dto.ActivityForm;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.user.application.dto.UserDto;
@@ -39,7 +40,8 @@ public class RequestService {
 	private UserEventMapperRepository mUserEventMapperRepository;
 	private FileRepository mFileRepository;
 	private NotificationRepository mNotificationRepository;
-	private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
+	
+	//private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
     private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
@@ -80,33 +82,7 @@ public class RequestService {
         return requestDtoList;
     }
     
- // getPageList -> getrequestCount
-    public Integer[] getPageList(Integer curPageNum, String keyword, Integer interestType, Integer sortType) {
-        Integer[] pageList = new Integer[BLOCK_PAGE_NUMCOUNT];
-
-        // 총 게시글 수
-        Double postsTotalCount = Double.valueOf(this.getrequestCount(keyword, interestType));
-
-        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
-        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
-
-        // 현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-        Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUMCOUNT)
-                ? curPageNum + BLOCK_PAGE_NUMCOUNT
-                : totalLastPageNum;
-
-        // 페이지 시작 번호 조정
-        curPageNum = (curPageNum<=3) ? 1 : curPageNum-2;
-
-        // 페이지 번호 할당
-        for(int val=curPageNum, i=0;val<=blockLastPageNum;val++, i++) {
-            pageList[i] = val;
-        }
-
-        return pageList;
-    }
-    
-    public Long getrequestCount(String keyword, Integer interestType) {
+    public Long getRequestCount(String keyword, Integer interestType) {
     	if(interestType == 0) {
     		return mRequestRepository.countByTitleContaining(keyword);
     	}
@@ -118,6 +94,25 @@ public class RequestService {
     	
     }
     
+    public int getFirstPage(Integer curPageNum, String keyword, Integer interestType) {
+		// 총 게시글 수
+        Double postsTotalCount = Double.valueOf(this.getRequestCount(keyword, interestType));
+
+        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
+        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
+        
+        if(curPageNum < 3) {
+        	return 1;
+        }
+        else if(curPageNum + 1 > totalLastPageNum) {
+        	return curPageNum-2;
+        }
+        else {
+        	return curPageNum-1;
+        }
+        
+	}
+    
     public RequestDto getPost(Long id) {
     	Optional<Request> RequestWrapper = mRequestRepository.getById(id);
         Request request = RequestWrapper.get();
@@ -127,25 +122,26 @@ public class RequestService {
     	return requestDto;
 	}
     
-    public void setStatus(Long id, Byte status) {
+    public RequestDto setStatus(Long id, Byte status) {
 		
     	Request request = mRequestRepository.findById(id).orElse(null);
-		Notification notification = new Notification();
+    	Notification notification = new Notification();
     	
     	request.setStatus(status);
-
-		notification.setUser(request.getClient());
-
-		if(status == 1) {
-			notification.setMessage(request.getTitle() + " 요청이 승인되었습니다");
-		}
-		else if(status == 2) {
-			notification.setMessage(request.getTitle() + " 요청이 거절되었습니다");
-		}
-
-
-		mRequestRepository.save(request);
-		mNotificationRepository.save(notification);
+    	
+    	notification.setUser(request.getClient());
+    	
+    	if(status == 0) {
+    		notification.setMessage(request.getTitle() + "이 거절 취소되었습니다");
+    	}
+    	else if(status == 2) {
+    		notification.setMessage(request.getTitle() + "이 거절되었습니다");
+    	}
+    	
+    	mRequestRepository.save(request);
+    	mNotificationRepository.save(notification);
+    	
+    	return convertRequestToDto(request);
     	
 	}
     
@@ -169,7 +165,7 @@ public class RequestService {
     	request.setStatus((byte) 1);
 
 		notification.setUser(request.getClient());
-		notification.setMessage(request.getTitle() + " 요청이 승인되었습니다");
+		notification.setMessage(request.getTitle() + "이 승인되었습니다");
     	
     	mRequestRepository.save(request);
 		mNotificationRepository.save(notification);
@@ -191,12 +187,17 @@ public class RequestService {
 		request.setStatus((byte)0);
 		if(title==null) {
 			if(eventId==null) {
-				request.setTitle(userDto.getName() + "님이 새로운 나눔을 하기 원하십니다");
+				request.setTitle(userDto.getName() + "님의 나눔 신청");
 			}
 			else {
-				request.setTitle(userDto.getName() + "님이 " + event.getTitle() + "을/를 참여하기 원하십니다");
+				if(userType==1) {
+					request.setTitle(userDto.getName() + "님의 " + event.getTitle() + " 봉사자 참여 신청");
+				}
+				else if(userType==0) {
+					request.setTitle(userDto.getName() + "님의 " + event.getTitle() + " 이용자 참여 신청");
+				}	
 			}
-
+			
 		}
 		else {
 			request.setTitle(title);
@@ -263,5 +264,35 @@ public class RequestService {
 
 	public Long getAllRequestNum() {
 		return mRequestRepository.count();
+	}
+	
+	public ActivityForm getActivityForm(RequestDto requestDto) {
+		
+		ActivityForm activityForm = new ActivityForm();
+		List<Long> userId = new ArrayList<>();
+		List<Byte> userStatus = new ArrayList<>();
+		
+		activityForm.setTitle(requestDto.getTitle());
+		activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
+		activityForm.setContent(requestDto.getContent());
+		activityForm.setStartDate(requestDto.getStartTime().toLocalDate().toString());
+		activityForm.setStartTime(requestDto.getStartTime().toLocalTime().toString());
+		activityForm.setEndDate(requestDto.getEndTime().toLocalDate().toString());
+		activityForm.setEndTime(requestDto.getEndTime().toLocalTime().toString());
+		activityForm.setRequestId(requestDto.getId());
+		activityForm.setFile(requestDto.getProductImage());
+		
+		userId.add(requestDto.getClient().getId());
+		userStatus.add((byte) 1);
+		
+		if(requestDto.getUserType() == 1) {
+			activityForm.setVolunteerId(userId);
+			activityForm.setVolunteerStatus(userStatus);
+		}
+		else {
+			activityForm.setUserId(userId);
+		}
+		
+		return activityForm;
 	}
 }

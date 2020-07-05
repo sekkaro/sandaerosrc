@@ -22,5 +22,7 @@ public class AppRequest {
     private String endTime;
 
     private String memo;
+    
+    private String nickName;
 
 }

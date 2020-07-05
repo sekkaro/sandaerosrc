@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sangdaero.walab.activity.dto.AppRequest;
 import com.sangdaero.walab.user.application.dto.*;
 import com.sangdaero.walab.user.application.validator.NicknameValidator;
 import com.sangdaero.walab.user.application.validator.PhoneValidator;
@@ -136,6 +137,13 @@ public class UserRestController {
 		UserDto userDto = mUserService.createUser(email, name);
 
 		return mUserService.getUser(userDto.getId());
+	}
+	
+	@PostMapping("/modifyNickName")
+	public void modifyNickName(@RequestBody AppRequest userForm) {
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+		
+		mUserService.changeNickname(userDto.getId(), userForm.getNickName());
 	}
 
 }

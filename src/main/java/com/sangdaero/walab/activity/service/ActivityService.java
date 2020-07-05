@@ -32,10 +32,12 @@ import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.common.entity.EventEntity;
 import com.sangdaero.walab.common.entity.FileEntity;
 import com.sangdaero.walab.common.entity.InterestCategory;
+import com.sangdaero.walab.common.entity.Notification;
 import com.sangdaero.walab.common.entity.Request;
 import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.common.entity.UserEventMapper;
 import com.sangdaero.walab.common.file.repository.FileRepository;
+import com.sangdaero.walab.common.notification.repository.NotificationRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.request.repository.RequestRepository;
@@ -53,20 +55,22 @@ public class ActivityService {
 	private UserEventMapperRepository mUserEventMapperRepository;
 	private FileRepository mFileRepository;
 	private RequestRepository mRequestRepository;
+	private NotificationRepository mNotificationRepository;
 	
-	private static final int BLOCK_PAGE_NUMCOUNT = 12; // 블럭에 존재하는 페이지 수
+	//private static final int BLOCK_PAGE_NUMCOUNT = 12; // 블럭에 존재하는 페이지 수
     private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public ActivityService(ActivityRepository activityRepository, InterestRepository interestRepository, 
 			UserRepository userRepository, UserEventMapperRepository userEventMapperRepository,
-			FileRepository fileRepository, RequestRepository requestRepository) {
+			FileRepository fileRepository, RequestRepository requestRepository, NotificationRepository notificationRepository) {
 		mActivityRepository = activityRepository;
 		mInterestRepository = interestRepository;
 		mUserRepository = userRepository;
 		mUserEventMapperRepository = userEventMapperRepository;
 		mFileRepository = fileRepository;
 		mRequestRepository = requestRepository;
+		mNotificationRepository = notificationRepository;
 	}
 	
 	
@@ -76,22 +80,22 @@ public class ActivityService {
     	
     	if(status == 0) {
     		if(interestType == 0) {
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAsc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAscStartTimeAsc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscStartTimeAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     	}
     	else {
     		if(interestType == 0) {
-    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatus(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatusOrderByStartTimeAsc(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
     			
-    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatus(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    			page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByStartTimeAsc(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     	}
     	
@@ -103,32 +107,6 @@ public class ActivityService {
         }
         
         return activityDtoList;
-    }
-    
- // getPageList -> getActivityCount
-    public Integer[] getPageList(Integer curPageNum, String keyword, Integer interestType, Integer sortType, Integer status) {
-        Integer[] pageList = new Integer[BLOCK_PAGE_NUMCOUNT];
-
-        // 총 게시글 수
-        Double postsTotalCount = Double.valueOf(this.getActivityCount(keyword, interestType, status));
-
-        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
-        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
-
-        // 현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-        Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUMCOUNT)
-                ? curPageNum + BLOCK_PAGE_NUMCOUNT
-                : totalLastPageNum;
-
-        // 페이지 시작 번호 조정
-        curPageNum = (curPageNum<=3) ? 1 : curPageNum-2;
-
-        // 페이지 번호 할당
-        for(int val=curPageNum, i=0;val<=blockLastPageNum;val++, i++) {
-            pageList[i] = val;
-        }
-
-        return pageList;
     }
     
     public Long getActivityCount(String keyword, Integer interestType, Integer status) {
@@ -153,6 +131,25 @@ public class ActivityService {
     		}
     	}
     }
+    
+    public int getFirstPage(Integer curPageNum, String keyword, Integer interestType, Integer status) {
+		// 총 게시글 수
+        Double postsTotalCount = Double.valueOf(this.getActivityCount(keyword, interestType, status));
+
+        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
+        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
+        
+        if(curPageNum < 3) {
+        	return 1;
+        }
+        else if(curPageNum + 1 > totalLastPageNum) {
+        	return curPageNum-2;
+        }
+        else {
+        	return curPageNum-1;
+        }
+        
+	}
     
  // Detail of id's notice
     public ActivityDto getPost(Long id) {
@@ -215,7 +212,7 @@ public class ActivityService {
     @Transactional
     public Long saveActivity(String title, Long interestCategoryId, List<Long> userIdList, /*List<Byte> userStatusList,*/ Byte delivery, 
     		Long managerId, String startDate, String startTime, String endDate, String endTime, String place,
-		    String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile[] files, Long requestId, String requestFileName) {
+		    String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile file, Long requestId, String requestFileName) {
 		
     	ActivityDto activityDto = new ActivityDto();
     	
@@ -297,36 +294,23 @@ public class ActivityService {
 
 //    	String url = "/src/main/resources/static/images/";
     		
-        for(MultipartFile file: files) {
-        	if(file!=null && !file.isEmpty()) {
-        		String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename();
-             	Path fileNameAndPath = Paths.get(absolutePath + url, fileName);
-             	try {
-         			Files.write(fileNameAndPath, file.getBytes());
-         				
-         			FileEntity fileEntity = new FileEntity();
-         			fileEntity.setEvent(event);
-         			fileEntity.setTitle(fileName);
-         			fileEntity.setUrl(fileNameAndPath.toString());
-         				
-         			mFileRepository.save(fileEntity);
-         				
-         		} catch (IOException e) {
-         			e.printStackTrace();
-         		}
-        	}	
-        }
-
-		if(requestFileName != null) {
-			Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
-
-			FileEntity fileEntity = new FileEntity();
-			fileEntity.setEvent(event);
-			fileEntity.setTitle(requestFileName);
-			fileEntity.setUrl(fileNameAndPath.toString());
-
-			mFileRepository.save(fileEntity);
-		}
+		 if(file!=null && !file.isEmpty()) {
+	        	String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename();
+	             Path fileNameAndPath = Paths.get(absolutePath + url, fileName);
+	             try {
+	         		Files.write(fileNameAndPath, file.getBytes());
+	         				
+	         		FileEntity fileEntity = new FileEntity();
+	         		fileEntity.setEvent(event);
+	         		fileEntity.setTitle(fileName);
+	         		fileEntity.setUrl(fileNameAndPath.toString());
+	         				
+	         		mFileRepository.save(fileEntity);
+	         				
+	         	} catch (IOException e) {
+	         		e.printStackTrace();
+	         	}
+	        }
 
 		if(requestFileName != null) {
 			Path fileNameAndPath = Paths.get(absolutePath + url, requestFileName);
@@ -342,11 +326,16 @@ public class ActivityService {
         if(requestId!=null) {
         	
         	Request request = mRequestRepository.findById(requestId).orElse(null);
+        	Notification notification = new Notification();
         	
         	request.setEvent(event);
         	request.setStatus((byte) 1);
         	
+        	notification.setUser(request.getClient());
+        	notification.setMessage(request.getTitle() + "이 등록되었습니다");
+        	
         	mRequestRepository.save(request);
+        	mNotificationRepository.save(notification);
         	
         }
     	
@@ -693,54 +682,53 @@ public class ActivityService {
 	}
 
 	public List<ActivityDto> getActivitylist(Long interestCategoryId) {
-		InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
-		List<EventEntity> eventList = mActivityRepository.findAllByEventCategoryAndInterestCategoryOrderByStatusAscRegDateDesc(0, interestCategory);
+		List<EventEntity> eventList = new ArrayList<>();
+    	if(interestCategoryId!=0) {
+    		InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
+    		eventList = mActivityRepository.findAllByEventCategoryAndInterestCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, interestCategory, (byte) 0);
+    	}
+    	else {
+    		eventList = mActivityRepository.findAllByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, (byte) 0);
+    	}
+    	
 		List<ActivityDto> activityList = new ArrayList<>();
 		Set<ActivityUserDto> activityUsers;
 		Set<ActivityUserDto> activityVolunteers;
 		ActivityUserDto activityUser;
-		//Set<Long> userIds;
-		//Set<Long> volunteerIds;
 		ActivityDto activity;
 		List<UserEventMapper> userEventList;
-
+		
 		for(EventEntity event: eventList) {
 			activity = convertEventEntityToActivityDto(event);
 			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
 			activityUsers = new HashSet<>();
 			activityVolunteers = new HashSet<>();
-			//userIds = new HashSet<>();
-			//volunteerIds = new HashSet<>();
 			for(UserEventMapper userEvent : userEventList) {
 				activityUser = new ActivityUserDto();
 				activityUser.setUser(userEvent.getUser());
 				activityUser.setLocationAgree(userEvent.getLocationAgree());
 				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
 				activityUser.setStatus(userEvent.getStatus());
-
+				
 				if(userEvent.getUserType() == 1) {
 					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
 					activityVolunteers.add(activityUser);
-					//volunteerIds.add(userEvent.getUser().getId());
 				}
 				else {
 					activityUsers.add(activityUser);
-					//userIds.add(userEvent.getUser().getId());
 				}
 			}
 			activity.setActivityUsers(activityUsers);
 			activity.setActivityVolunteers(activityVolunteers);
-			//activity.setUserIds(userIds);
-			//activity.setVolunteerIds(volunteerIds);
 			activityList.add(activity);
 		}
-
-
-		return activityList;
+		
+		
+    	return activityList;
 	}
 
 	public List<ActivityDto> getTop5Activitylist() {
-		List<EventEntity> eventList = mActivityRepository.findTop5ByEventCategoryOrderByStatusAscRegDateDesc(0);
+		List<EventEntity> eventList = mActivityRepository.findTop5ByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, (byte) 0);
 		List<ActivityDto> activityList = new ArrayList<>();
 		for(EventEntity event: eventList) {
 			activityList.add(convertEventEntityToActivityDto(event));
@@ -749,33 +737,96 @@ public class ActivityService {
 	}
 
 	public List<ActivityDto> getActivitylistForUser(UserDto user) {
-		List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByUserIdOrderByRegDateDesc(user.getId());
-		List<ActivityDto> activityList = new ArrayList<>();
-		for(UserEventMapper userEventMapper : userEventMapperList) {
-			EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
-			if(event!=null) {
-				activityList.add(convertEventEntityToActivityDto(event));
-			}
-		}
+    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findAllByUserIdOrderByRegDateDesc(user.getId());
+    	List<ActivityDto> activityList = new ArrayList<>();
+    	Set<ActivityUserDto> activityUsers;
+		Set<ActivityUserDto> activityVolunteers;
+		ActivityUserDto activityUser;
+		ActivityDto activity;
+		List<UserEventMapper> userEventList;
+		
+    	for(UserEventMapper userEventMapper : userEventMapperList) {
+    		EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
+    		if(event!=null) {
+    			activity = convertEventEntityToActivityDto(event);
+    			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
+    			activityUsers = new HashSet<>();
+    			activityVolunteers = new HashSet<>();
+    			for(UserEventMapper userEvent : userEventList) {
+    				activityUser = new ActivityUserDto();
+    				activityUser.setUser(userEvent.getUser());
+    				activityUser.setLocationAgree(userEvent.getLocationAgree());
+    				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
+    				activityUser.setStatus(userEvent.getStatus());
+    				
+    				if(userEvent.getUserType() == 1) {
+    					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
+    					activityVolunteers.add(activityUser);
+    				}
+    				else {
+    					activityUsers.add(activityUser);
+    				}
+    			}
+    			activity.setActivityUsers(activityUsers);
+    			activity.setActivityVolunteers(activityVolunteers);
+    			activityList.add(activity);
+    		}
+    	}
+    	
 		return activityList;
 	}
-
-	public List<ActivityDto> getTop5ActivitylistForUser(UserDto user) {
-		List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findTop5ByUserIdOrderByRegDateDesc(user.getId());
-		List<ActivityDto> activityList = new ArrayList<>();
-		for(UserEventMapper userEventMapper : userEventMapperList) {
-			EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
-			if(event!=null) {
-				activityList.add(convertEventEntityToActivityDto(event));
-			}
-		}
+    
+    public List<ActivityDto> getTop5ActivitylistForUser(UserDto user) {
+    	List<UserEventMapper> userEventMapperList = mUserEventMapperRepository.findTop5ByUserIdOrderByRegDateDesc(user.getId());
+    	List<ActivityDto> activityList = new ArrayList<>();
+    	Set<ActivityUserDto> activityUsers;
+		Set<ActivityUserDto> activityVolunteers;
+		ActivityUserDto activityUser;
+		ActivityDto activity;
+		List<UserEventMapper> userEventList;
+    	
+    	for(UserEventMapper userEventMapper : userEventMapperList) {
+    		EventEntity event = mActivityRepository.findById(userEventMapper.getEvent().getId()).orElse(null);
+    		if(event!=null) {
+    			activity = convertEventEntityToActivityDto(event);
+    			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
+    			activityUsers = new HashSet<>();
+    			activityVolunteers = new HashSet<>();
+    			for(UserEventMapper userEvent : userEventList) {
+    				activityUser = new ActivityUserDto();
+    				activityUser.setUser(userEvent.getUser());
+    				activityUser.setLocationAgree(userEvent.getLocationAgree());
+    				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
+    				activityUser.setStatus(userEvent.getStatus());
+    				
+    				if(userEvent.getUserType() == 1) {
+    					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
+    					activityVolunteers.add(activityUser);
+    				}
+    				else {
+    					activityUsers.add(activityUser);
+    				}
+    			}
+    			activity.setActivityUsers(activityUsers);
+    			activity.setActivityVolunteers(activityVolunteers);
+    			activityList.add(activity);
+    		}
+    	}
 		return activityList;
 	}
 
 	public void setVolunteerTime(Long id, Long volunteerId, Integer time) {
 		UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserIdAndUserType(id, volunteerId, (byte) 1);
+		
+		User user = userEventMapper.getUser();
+		Integer prevTolTime = user.getVolunteerTime() - userEventMapper.getVolunteerTime();
+		
 		userEventMapper.setVolunteerTime(time);
+		user.setVolunteerTime(prevTolTime + time);
+		userEventMapper.setUser(user);
+		
 		mUserEventMapperRepository.save(userEventMapper);
+		mUserRepository.save(user);
 	}
     
 	// EventEntity -> ActivityDto conversion
@@ -801,8 +852,4 @@ public class ActivityService {
 			return activityDto;
 			
 		}
-
-	public Long getAllActivityNum() {
-		return mActivityRepository.countByEventCategory(0);
-	}
 }
