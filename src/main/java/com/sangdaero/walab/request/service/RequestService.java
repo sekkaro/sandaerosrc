@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.sangdaero.walab.activity.dto.ActivityForm;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.common.notification.repository.NotificationRepository;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
-import com.sangdaero.walab.activity.dto.ActivityForm;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
 import com.sangdaero.walab.user.application.dto.UserDto;
@@ -40,8 +40,7 @@ public class RequestService {
 	private UserEventMapperRepository mUserEventMapperRepository;
 	private FileRepository mFileRepository;
 	private NotificationRepository mNotificationRepository;
-	
-	//private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
+
     private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
@@ -81,8 +80,8 @@ public class RequestService {
         
         return requestDtoList;
     }
-    
-    public Long getRequestCount(String keyword, Integer interestType) {
+
+	public Long getRequestCount(String keyword, Integer interestType) {
     	if(interestType == 0) {
     		return mRequestRepository.countByTitleContaining(keyword);
     	}
@@ -93,24 +92,24 @@ public class RequestService {
     	}
     	
     }
-    
-    public int getFirstPage(Integer curPageNum, String keyword, Integer interestType) {
-		// 총 게시글 수
-        Double postsTotalCount = Double.valueOf(this.getRequestCount(keyword, interestType));
 
-        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
-        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
-        
-        if(curPageNum < 3) {
-        	return 1;
-        }
-        else if(curPageNum + 1 > totalLastPageNum) {
-        	return curPageNum-2;
-        }
-        else {
-        	return curPageNum-1;
-        }
-        
+	public int getFirstPage(Integer curPageNum, String keyword, Integer interestType) {
+		// 총 게시글 수
+		Double postsTotalCount = Double.valueOf(this.getRequestCount(keyword, interestType));
+
+		// 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
+		Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
+
+		if(curPageNum < 3) {
+			return 1;
+		}
+		else if(curPageNum + 1 > totalLastPageNum) {
+			return curPageNum-2;
+		}
+		else {
+			return curPageNum-1;
+		}
+
 	}
     
     public RequestDto getPost(Long id) {
@@ -121,28 +120,27 @@ public class RequestService {
     	
     	return requestDto;
 	}
-    
-    public RequestDto setStatus(Long id, Byte status) {
+
+	public RequestDto setStatus(Long id, Byte status) {
 		
     	Request request = mRequestRepository.findById(id).orElse(null);
-    	Notification notification = new Notification();
+		Notification notification = new Notification();
     	
     	request.setStatus(status);
-    	
-    	notification.setUser(request.getClient());
-    	
-    	if(status == 0) {
-    		notification.setMessage(request.getTitle() + "이 거절 취소되었습니다");
-    	}
-    	else if(status == 2) {
-    		notification.setMessage(request.getTitle() + "이 거절되었습니다");
-    	}
-    	
-    	mRequestRepository.save(request);
-    	mNotificationRepository.save(notification);
-    	
-    	return convertRequestToDto(request);
-    	
+
+		notification.setUser(request.getClient());
+
+		if(status == 0) {
+			notification.setMessage(request.getTitle() + "이 거절 취소되었습니다");
+		}
+		else if(status == 2) {
+			notification.setMessage(request.getTitle() + "이 거절되었습니다");
+		}
+
+		mRequestRepository.save(request);
+		mNotificationRepository.save(notification);
+
+		return convertRequestToDto(request);
 	}
     
     public Long registerRequestToEvent(Long id) {
@@ -195,9 +193,9 @@ public class RequestService {
 				}
 				else if(userType==0) {
 					request.setTitle(userDto.getName() + "님의 " + event.getTitle() + " 이용자 참여 신청");
-				}	
+				}
 			}
-			
+
 		}
 		else {
 			request.setTitle(title);
@@ -265,26 +263,26 @@ public class RequestService {
 	public Long getAllRequestNum() {
 		return mRequestRepository.count();
 	}
-	
+
 	public ActivityForm getActivityForm(RequestDto requestDto) {
-		
+
 		ActivityForm activityForm = new ActivityForm();
 		List<Long> userId = new ArrayList<>();
 		List<Byte> userStatus = new ArrayList<>();
-		
+
 		activityForm.setTitle(requestDto.getTitle());
 		activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
 		activityForm.setContent(requestDto.getContent());
-		activityForm.setStartDate(requestDto.getStartTime().toLocalDate().toString());
-		activityForm.setStartTime(requestDto.getStartTime().toLocalTime().toString());
-		activityForm.setEndDate(requestDto.getEndTime().toLocalDate().toString());
-		activityForm.setEndTime(requestDto.getEndTime().toLocalTime().toString());
+		activityForm.setStartDate((requestDto.getStartTime()!=null)?requestDto.getStartTime().toLocalDate().toString():null);
+		activityForm.setStartTime((requestDto.getStartTime()!=null)?requestDto.getStartTime().toLocalTime().toString():null);
+		activityForm.setEndDate((requestDto.getEndTime()!=null)?requestDto.getEndTime().toLocalDate().toString():null);
+		activityForm.setEndTime((requestDto.getEndTime()!=null)?requestDto.getEndTime().toLocalTime().toString():null);
 		activityForm.setRequestId(requestDto.getId());
 		activityForm.setFile(requestDto.getProductImage());
-		
+
 		userId.add(requestDto.getClient().getId());
 		userStatus.add((byte) 1);
-		
+
 		if(requestDto.getUserType() == 1) {
 			activityForm.setVolunteerId(userId);
 			activityForm.setVolunteerStatus(userStatus);
@@ -292,7 +290,7 @@ public class RequestService {
 		else {
 			activityForm.setUserId(userId);
 		}
-		
+
 		return activityForm;
 	}
 }

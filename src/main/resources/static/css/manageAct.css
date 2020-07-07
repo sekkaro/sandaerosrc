@@ -45,7 +45,7 @@ input[type=date] {
   border-radius: 20px;
   border-color: #a5a5a5;
   padding: 3px 16px;
-  color:  #a5a5a5;
+  color:  #494949;
   width: 60px;
   background: none;
 }
@@ -55,7 +55,7 @@ input[type=time] {
   border-radius: 20px;
   border-color: #a5a5a5;
   padding: 3px 16px;
-  color:  #a5a5a5;
+  color:  #494949;
   background: none;
   width: 60px;
 }
@@ -66,7 +66,7 @@ input[type=number] {
   border-color: #a5a5a5;
   padding: 5px 16px;
   width: 150px;
-  color:  #a5a5a5;
+  color:  #494949;
   text-align: center;
 }
 
@@ -76,7 +76,7 @@ input[type=textarea] {
   padding: 5px 16px;
   width: 400px;
   height: 200px;
-  color:  #a5a5a5;
+  color:  #494949;
   margin: 20px 20px 0 0;
 }
 
@@ -176,7 +176,8 @@ img {
   float: right;
   position: relative;
   right: -10px;
-  margin-top: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 #submit {
@@ -216,7 +217,7 @@ img {
   height: 28px;
   border: 1px solid #a5a5a5;
   float: left;
-  color: #a5a5a5;
+  color: #494949;
   padding: 0px;
   padding-left: 15px;
   -webkit-border-radius: 5px;
@@ -230,7 +231,7 @@ img {
   margin-left: -30px;
   margin-top: 5px;
   z-index: 1;
-  color: #a5a5a5;
+  color: #494949;
 }
 .map{
   width: 300px;

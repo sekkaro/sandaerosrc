@@ -34,42 +34,42 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/activitydata")
 @RequiredArgsConstructor
 public class ActivityRestController {
-	
+
 	private final ActivityService mActivityService;
 	private final UserService mUserService;
 	private final FileUploadDownloadService fileUploadDownloadService;
-	
+
 	@PostMapping("/setTitle")
 	public String setTitle(@RequestParam("id") Long id, @RequestParam("title") String title) {
 		mActivityService.setTitle(id, title);
 		return title;
 	}
-	
+
 	@PostMapping("/setCategory")
 	public String setCategory(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId) {
 		String interestCategoryName = mActivityService.setInterestCategory(id, interestCategoryId);
 		return interestCategoryName;
 	}
-	
+
 	@PostMapping("/setStatus")
 	public Byte setStatus(@RequestParam("id") Long id, @RequestParam("status") Byte status) {
 		mActivityService.setStatus(id, status);
 		return status;
 	}
-	
+
 	@PostMapping("/setTitleAndStatus")
 	public String setTitleAndStatus(@RequestParam("id") Long id, @RequestParam("title") String title, @RequestParam("status") Byte status) {
 		mActivityService.setTitleAndStatus(id, title, status);
 		return title + "|" + status;
 	}
-	
+
 	@PostMapping("/setCategoryAndDeadline")
-	public String setCategoryAndDeadline(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId, 
+	public String setCategoryAndDeadline(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId,
 			@RequestParam(value="deadlineDate") String deadlineDate, @RequestParam(value="deadlineTime") String deadlineTime) {
 		String interestCategoryName = mActivityService.setInterestCategoryAndDeadline(id, interestCategoryId, deadlineDate, deadlineTime);
 		return interestCategoryName + "." + deadlineDate + "." + deadlineTime;
 	}
-	
+
 	@GetMapping("/getUsers")
 	public List<UserStatusDto> getUsers(@RequestParam("id") Long id, @RequestParam("category") Long interestCategoryId) {
 		List<SimpleUser> userList = mUserService.getSimpleUserListWithInterestOnOff(interestCategoryId);
@@ -88,7 +88,7 @@ public class ActivityRestController {
 		List<ActivityUserDto> userList = mActivityService.setUsers(id, volunteerIdList, (byte) 1);
 		return userList;
 	}*/
-	
+
 	@PostMapping("/setDelivery")
 	public Byte setDelivery(@RequestParam("id") Long id, @RequestParam("delivery") Byte delivery) {
 		mActivityService.setDelivery(id, delivery);
@@ -100,7 +100,7 @@ public class ActivityRestController {
 		mActivityService.setPhoneAgree(id, phoneAgree);
 		return phoneAgree;
 	}*/
-	
+
 //	@PostMapping("/setVolunteerTime")
 //	public String setVolunteerTime(@RequestParam("id") Long id,
 //			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
@@ -114,30 +114,30 @@ public class ActivityRestController {
 		mActivityService.setVolunteerTime(id, volunteerId, time);
 		return time;
 	}
-	
+
 	@PostMapping("/setVolunteerTimeAndPlaceAndContent")
-	public String setVolunteerTimeAndPlaceAndContent(@RequestParam("id") Long id, 
+	public String setVolunteerTimeAndPlaceAndContent(@RequestParam("id") Long id,
 			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
 			@RequestParam("endDate") String endDate, @RequestParam("endTime") String endTime,
 			@RequestParam("place") String place, @RequestParam("content") String content) {
 		mActivityService.setVolunteerTimeAndPlaceAndContent(id, startDate, startTime, endDate, endTime, place, content);
 		return place + "|" + content +"|" +startDate + "|" + startTime + "|" + endDate + "|" + endTime;
 	}
-	
+
 	@PostMapping("/setPlace")
 	public String setPlace(@RequestParam("id") Long id, @RequestParam("place") String place) {
 		mActivityService.setPlace(id, place);
 		return place;
 	}
-	
+
 	@PostMapping("/setManager")
 	public String setManager(@RequestParam("id") Long id, @RequestParam("manager") Long managerId) {
 		String managerName = mActivityService.setManager(id, managerId);
 		return managerName;
 	}
-	
+
 	@PostMapping("/setPeople")
-	public ActivityPeopleDto setPeople(@RequestParam("id") Long id, 
+	public ActivityPeopleDto setPeople(@RequestParam("id") Long id,
 			@RequestParam(value="users[]", required=false) List<Long> userIdList,
 			/*@RequestParam(value="userStatusList[]", required=false) List<Byte> userStatusList,*/
 			@RequestParam(value="volunteers[]", required=false) List<Long> volunteerIdList,
@@ -146,20 +146,20 @@ public class ActivityRestController {
 		ActivityPeopleDto people = mActivityService.setPeople(id, userIdList, /*userStatusList,*/ volunteerIdList, volunteerStatusList, managerId);
 		return people;
 	}
-	
+
 	@PostMapping("/setContent")
 	public String setContent(@RequestParam("id") Long id, @RequestParam("content") String content) {
 		mActivityService.setContent(id, content);
 		return content;
 	}
-	
+
 	@PostMapping("/setDeadline")
-	public String setDeadline(@RequestParam("id") Long id, 
+	public String setDeadline(@RequestParam("id") Long id,
 			@RequestParam(value="deadlineDate") String deadlineDate, @RequestParam(value="deadlineTime") String deadlineTime) {
 		mActivityService.setDeadline(id, deadlineDate, deadlineTime);
 		return deadlineDate + "." + deadlineTime;
 	}
-	
+
 	@GetMapping("/getActivities")
 	public List<ActivityDto> getActivities(@RequestParam("id") Long interestCategoryId){
 		return mActivityService.getActivitylist(interestCategoryId);
@@ -181,7 +181,7 @@ public class ActivityRestController {
 		UserDto userDto = mUserService.createUser(email, name);
 		return mActivityService.getTop5ActivitylistForUser(userDto);
 	}
-	
+
 	@PostMapping("/unregister")
 	public String unregister(@RequestBody AppRequest unregisterForm) {
 		UserDto userDto = mUserService.createUser(unregisterForm.getEmail(), unregisterForm.getName());

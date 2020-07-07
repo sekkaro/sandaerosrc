@@ -25,6 +25,27 @@
 </script>
 
 <script th:fragment="change-onoff">
+
+    var status=userStatus();
+
+    function userStatus() {
+        var currentStatus;
+
+        $.get("/userdata/getBasicInfo", function (data) {
+            if(data.status==1) {
+                img.src="/img/on.png";
+                currentStatus=true;
+            } else {
+                img.src="/img/off.png";
+                currentStatus=false;
+            }
+        });
+
+        console.log(status);
+        return currentStatus;
+    }
+
+
     var img = document.getElementById("onoff");
 
     img.addEventListener('click', function () {
@@ -33,6 +54,20 @@
 
     function changeStatus() {
 
+        $.post("/userdata/setStatus", {isOn: !status}, function (data) {
+            // console.log(data);
+            if(data) {
+                status=data;
+                userStatus();
+                // img.src="/img/on.png";
+                // status=data;
+            } else {
+                status=data;
+                userStatus();
+                // img.src="/img/off.png";
+                // status=data;
+            }
+        });
         // if() {
         //     img.src="/img/off.png";
         // } else {

@@ -53,7 +53,7 @@ select {
   margin-right: 36px;
   border-radius: 30px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   -webkit-appearance: none;
   /* �꽕�씠�떚釉� �쇅�삎 媛먯텛湲� */
   -moz-appearance: none;
@@ -75,7 +75,7 @@ th, td {
   color: #000000;
 }
 #no, #actdate{
-  color: #727272;
+  color: #494949;
 }
 
 th{

@@ -1,49 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<!--<div th:fragment="menu1">-->
-<!--    <meta charset="UTF-8">-->
 
-<!--    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
-<!--        <a class="navbar-brand" th:href="@{/}">Sangdaero</a>-->
-<!--        <ul class="navbar-nav mr-auto">-->
-
-<!--        </ul>-->
-<!--        <div class="authenticated">-->
-<!--            <input id="toggle-event" class="authenticated" type="checkbox"-->
-<!--                   checked data-toggle="toggle" data-onstyle="success"-->
-<!--                   data-offstyle="danger"> 안녕하세요, <span id="user"></span>님 <a-->
-<!--                onClick="logout()"-->
-<!--                class="btn btn-outline-success my-2 my-sm-0 authenticated">Logout</a>-->
-<!--        </div>-->
-<!--        <a th:href="@{/login}"-->
-<!--           class="btn btn-outline-success my-2 my-sm-0 unauthenticated">Login</a>-->
-<!--    </nav>-->
-
-<!--    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" id="mySidebar" style="width: 15%; display: block">-->
-<!--        <button class="w3-bar-item w3-button w3-large"-->
-<!--                onclick="w3_close()">Close &times;</button>-->
-<!--        <a th:href="@{/activity}" class="w3-bar-item w3-button w3-border-bottom menu">활동 관리</a>-->
-<!--        <a th:href="@{/request}" class="w3-bar-item w3-button w3-border-bottom menu">앱에서 들어온 요청</a>-->
-<!--        <a th:href="@{/user}" class="w3-bar-item w3-button w3-border-bottom menu">회원 관리</a>-->
-<!--        <a th:href="@{/interest}" class="w3-bar-item w3-button w3-border-bottom menu">관심사 관리</a>-->
-<!--        <a th:href="@{/notice}" class="w3-bar-item w3-button w3-border-bottom menu">공지</a>-->
-<!--        <a th:href="@{/payment}" class="w3-bar-item w3-button w3-border-bottom menu">소액 결제</a>-->
-<!--        <a th:href="@{/community}" class="w3-bar-item w3-button w3-border-bottom menu">커뮤니티 관리</a>-->
-<!--        <a th:href="@{/volunteer}" class="w3-bar-item w3-button w3-border-bottom menu">봉사 시간</a>-->
-<!--        <a th:href="@{/ranking}" class="w3-bar-item w3-button w3-border-bottom menu">랭킹 관리</a>-->
-<!--        <a th:href="@{/ask}" class="w3-bar-item w3-button w3-border-bottom menu">문의</a>-->
-<!--    </div>-->
-<!--</div>-->
 <header th:fragment="header">
     <div id="logo">
         <a style="color: inherit;text-decoration: none;" th:href="@{/}">
-            <img style="width: 70%;padding-top: 7px;padding-left: 4px" src="/img/mainlogo.png">
+            <img style="width: 70%;padding-top: 7px;padding-left: 10px" src="/img/mainlogo.png">
         </a>
     </div>
-    <div id="button">
+    <div id="button" style="margin-top: 3px">
         <a id="userStatus"></a>
-<!--        <a class="unauthenticated" th:href="@{/login}"><img id="loginout" src="/img/login.png" alt="on"></a>-->
         <a th:href="@{/logout}"><img id="loginout" src="/img/logout.png" alt="on"></a>
     </div>
 </header>
@@ -65,35 +31,34 @@
         </li>
     </ul>
     <script>
-    	showSubMenu();
-    	
-    	function getStatus(){
-    		$.get("/userdata/getBasicInfo", function(data){
-        		var innerHtml = ""; 
-        		if(data.status == 1){
-        			innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/on.png' alt='on'>"; 
-        		}
-        		else{
-        			innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/off.png' alt='off'>";
-        		}
-        		$('#userStatus').html(innerHtml);
-        		addClickListener();
-        	});
-    	}
-    	
-    	getStatus();
-    	
-    	
-    	function addClickListener(){
-    		$('#onoff').click(function(){
-    			var isOn = !($('#onoff').attr('alt') == 'on');
-    			$.post("/userdata/setStatus", {isOn: isOn }, function(data){
-    				var innerHtml = "";
-    				getStatus();
-    			});
-    		});
-    	}
-    	
+        showSubMenu();
+
+        function getStatus(){
+            $.get("/userdata/getBasicInfo", function(data){
+                var innerHtml = "";
+                if(data.status == 1){
+                    innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/on.png' alt='on'>";
+                }
+                else{
+                    innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/off.png' alt='off'>";
+                }
+                $('#userStatus').html(innerHtml);
+                addClickListener();
+            });
+        }
+
+        getStatus();
+
+
+        function addClickListener(){
+            $('#onoff').click(function(){
+                var isOn = !($('#onoff').attr('alt') == 'on');
+                $.post("/userdata/setStatus", {isOn: isOn }, function(data){
+                    var innerHtml = "";
+                    getStatus();
+                });
+            });
+        }
     </script>
 </div>
 </html>

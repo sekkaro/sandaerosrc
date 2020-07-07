@@ -22,14 +22,20 @@
 <!--                            공백없이 2글자 이상 입력해주세요.-->
 <!--                        </small>-->
 <!--                        <small class="invalid-feedback">이름을 입력하세요.</small>-->
-                        <small style="font-size: 10px" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
+                    </div>
+                    <div>
+                        <div class="title" th:if="${#fields.hasErrors('name')}"></div>
+                        <small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
                     </div>
                 </div>
                 <div class="infoContent">
                     <div class="title">닉네임</div>
                     <div class="content">
                         <input class="ctext" type="text" id="nickname" th:field="*{nickname}" placeholder="공백없이 3글자 이상 10글자 이하로 입력해주세요." aria-describedby="nicknameHelp" required minlength="3" maxlength="10">
-                        <small th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
+                    </div>
+                    <div>
+                        <div class="title" th:if="${#fields.hasErrors('nickname')}"></div>
+                        <small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
                     </div>
 
 <!--                    <small id="nicknameHelp">-->
@@ -42,7 +48,11 @@
                     <div class="title">전화 번호</div>
                     <div class="content">
                         <input class="ctext" type="text" id="phone" th:field="*{phone}" placeholder="010-xxxx-xxxx 형태로 입력해주세요."pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}" aria-describedby="phoneHelp" required>
-                        <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small>
+
+                    </div>
+                    <div>
+                        <div class="title" th:if="${#fields.hasErrors('phone')}"></div>
+                        <small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</small>
                     </div>
 <!--                    -->
 <!--                    <small id="phoneHelp">-->

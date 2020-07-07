@@ -16,12 +16,12 @@ ul {
   background-color: #00c063;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
-  color: black;
+  color: #494949;
 }
 .firstMenu a {
   text-decoration: none;
   font-size: 16px;
-  color: black;
+  color: #494949;
   /*color: #4f4f4f;*/
 }
 .firstMenu span {
@@ -53,7 +53,7 @@ ul {
 }
 .clickedMenu{
   background-color: #00c063;
-  color: black;
+  color: #494949;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
 }
@@ -98,7 +98,7 @@ form{
   border: 1px solid #a5a5a5;
   font-size: 13px;
   padding:2px 6px 2px 6px;
-  color:black;
+  color:#494949;
   margin:1px;
 }
 #video{
@@ -107,7 +107,7 @@ form{
   border: 1px solid #a5a5a5;
   font-size: 13px;
   padding:2px 6px 2px 6px;
-  color:black;
+  color:#494949;
   margin:1px;
 }
 #locationShare{
@@ -141,19 +141,21 @@ select {
   margin-right: 36px;
   border-radius: 30px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   -webkit-appearance: none;
   /* 네이티브 외형 감추기 */
   -moz-appearance: none;
   appearance: none;
 }
-#category, #state{
+#category, #state, #managerId{
   background: url("/img/select_btn.png") no-repeat 90% 45%;
   background-size: 15px;
 }
 #user, #manager, #volunteer{
-  background: url("/img/scroll.png") no-repeat 90% 45%;
-  background-size: 10px;
+  background: url("/img/select_btn.png") no-repeat 90% 45%;
+  /*background: url("/img/scroll.png") no-repeat 90% 45%;*/
+  background-size: 15px;
+  font-weight: 400;
 }
 #date, #start_date, #end_date{
   width: 22%;
@@ -164,12 +166,12 @@ select {
   padding: 0;
   padding-left: 6px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   -webkit-appearance: none;
   /* 네이티브 외형 감추기 */
   -moz-appearance: none;
   appearance: none;
-  background: url("/img/calender.png") no-repeat 90% 45%;
+  /*background: url("/img/calender.png") no-repeat 90% 45%;*/
   background-size: 15px;
 }
 .sub1{
@@ -182,7 +184,7 @@ select {
   padding-left: 6px;
   border-radius: 30px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   -webkit-appearance: none;
   /* 네이티브 외형 감추기 */
   -moz-appearance: none;
@@ -201,7 +203,7 @@ select {
   appearance: none;
   border-radius: 30px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   width: 80%;;
   padding: 0 0 0 10px;
   height: 25px;
@@ -217,7 +219,7 @@ select {
   appearance: none;
   border-radius: 30px;
   border: 1px solid #a5a5a5;
-  color: #b3b3b3;
+  color: #494949;
   width: 100%;
   padding: 0 0 0 10px;
   height: 25px;
@@ -288,6 +290,7 @@ hr {
   position: relative;
   right: -10px;
   margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 #reset {

@@ -1,10 +1,10 @@
 package com.sangdaero.walab.request.controller;
 
+import com.sangdaero.walab.request.dto.RequestDto;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import com.sangdaero.walab.activity.dto.AppRequest;
-import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.request.service.RequestService;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.application.service.UserService;
@@ -25,7 +25,7 @@ public class RequestRestController {
 	@PostMapping("/setStatus")
 	public RequestDto setStatus(@RequestParam("id") Long id, @RequestParam("status") Byte status) {
 		RequestDto requestDto = mRequestService.setStatus(id, status);
-		
+
 		return requestDto;
 	}
 	

@@ -103,7 +103,8 @@ public class InterestService {
     }
 
     public List<InterestName> getAllInterest() {
-        List<InterestCategory> all = mInterestRepository.findAll();
+//        List<InterestCategory> all = mInterestRepository.findAll();
+        List<InterestCategory> all = mInterestRepository.findAllByOn_offEquals((byte)1);
         List<InterestName> result = new ArrayList<>();
 
         for(InterestCategory interest : all) {
