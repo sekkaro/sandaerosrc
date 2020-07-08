@@ -120,6 +120,12 @@
 		.v_menuval {
 			margin-top: 10px;
 		}
+		.fancybox-button svg {
+			width: 48px;
+			height: 48px;
+			right: 25px;
+			top: -5px;
+		}
 	</style>
 </head>
 <body>
@@ -230,8 +236,59 @@
 						<div id="userList" th:if="${activityDto.activityUsers.size()} > 0">
 							<div class="members user" th:each="activityUser : ${activityDto.activityUsers}">
 								<input type="hidden" class="userIds" th:value="${activityUser.user?.id}"/>
-								<span th:text="${activityUser.user?.name}"></span>
+								<a th:text="${activityUser.user?.name}" data-fancybox th:data-src="${'#userDetail' + activityUser.user?.id}" href="javascript:;"></a>
+<!--								<span th:text="${activityUser.user?.name}"></span>-->
 								<span th:text="${activityUser.user?.phone}"></span>
+								<div style="display: none;" th:id="${'userDetail' + activityUser.user?.id}">
+									<img src="/img/v_bar.png">
+									<h3 style="padding-left: 20px">이용자 정보</h3>
+									<div style="padding-left: 20px">
+										<div class="sub_heading">
+											기본 정보
+										</div>
+										<div>
+											<div class="user_left" style="width: 100%">
+												<div class="inlinebox">
+													<div class="v_menuname" style="float: left;">
+														이름
+													</div>
+													<input type="text" class="v_menuval" id="v_name" name="v_name" th:value="${activityUser.user.name}" disabled>
+												</div>
+												<br>
+												<div class="inlinebox">
+													<div class="v_menuname" style="float: left;">
+														전화번호
+													</div>
+													<input type="text" class="v_menuval" id="v_phone" name="v_phone" th:value="${activityUser.user.phone}" disabled>
+												</div>
+												<br>
+												<div class="inlinebox">
+													<div class="v_menuname" style="float: left;">
+														이메일
+													</div>
+													<input type="text" class="v_menuval" id="v_phone" name="v_email" th:value="${activityUser.user.socialId}" style="width: 200px" disabled>
+												</div>
+												<br>
+												<div class="inlinebox">
+													<div class="v_menuname" style="float: left;">
+														관심사
+													</div>
+<!--													유저 별 관심사 리스트가 필요할 듯..-->
+<!--													<span th:each="interest : ${interestList}">-->
+<!--														<input type="checkbox"-->
+<!--															   th:id="interest+${interest.id}"-->
+<!--															   name="userInterestList"-->
+<!--															   th:value="${interest.name}" hidden/>-->
+<!--														<div th:id="${interest.id}" class="button">-->
+<!--															<span th:text="${interest.name}"></span>-->
+<!--															<img src="/img/deactive.png">-->
+<!--														</div>-->
+<!--													</span>-->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div id="editUsers" style="display: none;">
@@ -419,7 +476,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="user_left">
+				<div class="user_left" style="margin-top: 30px">
 <!--					<div class="explanationbox">-->
 						<div class="inlinebox" style="float: left">
 							<div class="menu_name explain">상세설명</div>
@@ -438,15 +495,16 @@
 							<div class="menu_name">장소</div>
 						</div>
 						<div class="inlinebox searchbox">
-							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
+							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place} + ' 상세 주소' "></p>
 							<div id="editPlace" name="place" style="display: none;">
-								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" style="margin-bottom: 0px;height: 20px" onclick="execPostcode()">
+								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" style="margin-top: 50px;margin-bottom: 0px;height: 20px;" onclick="execPostcode()">
+								<input type="text" id="simple_addr" placeholder="상세주소" style="float:left;margin-top:10px;height: 20px;padding: 0 0 0 15px;width: 75%">
 								<input type="hidden" id="coordi_x">
 								<input type="hidden" id="coordi_y">
 							</div>
 						</div>
 					</div>
-					<div class="map" id="kakaomap" style="width:300px;height:300px;margin-left: 0px;margin-top: 17px"></div>
+					<div class="map" id="kakaomap" style="width:330px;height:300px;margin-left: 0px;margin-top: 17px"></div>
 					<input type="hidden" id="original_place" th:value="${activityDto.place}">
 				</div>
 			</div>

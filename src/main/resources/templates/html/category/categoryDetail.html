@@ -4,43 +4,6 @@
     <link rel="stylesheet" href="/css/insertAct.css">
     <th:block th:replace="common/head.html"/>
     <link rel="stylesheet" href="/css/boardType.css">
-<!--    <style>-->
-<!--        #buttonSet {-->
-<!--            float: right;-->
-<!--            position: relative;-->
-<!--            right: -10px;-->
-<!--            margin-top: 10px;-->
-<!--        }-->
-<!--        #reset, #submit, #edit {-->
-<!--            border: none;-->
-<!--            width: 130px;-->
-<!--            background: transparent;-->
-<!--        }-->
-<!--        .key, .content {-->
-<!--            float: left;-->
-<!--        }-->
-<!--        .key {-->
-<!--            width: 150px;-->
-<!--            text-align: left;-->
-<!--            color: #515151;-->
-<!--        }-->
-<!--        .section1 {-->
-<!--            margin-bottom: 30px;-->
-<!--        }-->
-<!--        textarea {-->
-<!--            width: 80%;-->
-<!--            height: 300px;-->
-<!--        }-->
-<!--        input {-->
-<!--            width: 400px;-->
-<!--            border-radius: 30px;-->
-<!--            border: 1px solid #a5a5a5;-->
-<!--            color: #b3b3b3;-->
-<!--            padding: 0 0 0 10px;-->
-<!--            height: 25px;-->
-<!--            margin-right: 36px;-->
-<!--        }-->
-<!--    </style>-->
 </head>
 <body>
     <header th:replace="common/menu :: header"></header>
@@ -50,7 +13,7 @@
     <div id="main">
         <h4>하위 카테고리 상세</h4>
 
-        <div id="actInfo" style="height: 200px">
+        <div id="actInfo" style="height: 150px">
             <input type="hidden" id="categoryId" th:value="${categoryDto.id}">
             <br>
             <div class="section1">
@@ -61,15 +24,15 @@
                     <input type="text" name="title" th:value="${categoryDto.memo}" disabled>
                 </div>
             </div>
-            <br>
-            <div class="section1">
-                <div class="key">
-                    상위 카테고리
-                </div>
-                <div class="content">
-                    <input type="text" name="parent" th:if="${categoryDto.topCategory==1}" value="공지사항" disabled>
-                </div>
-            </div>
+<!--            <br>-->
+<!--            <div class="section1">-->
+<!--                <div class="key">-->
+<!--                    상위 카테고리-->
+<!--                </div>-->
+<!--                <div class="content">-->
+<!--                    <input type="text" name="parent" th:if="${categoryDto.topCategory==1}" value="공지사항" disabled>-->
+<!--                </div>-->
+<!--            </div>-->
             <br>
             <div class="section1">
                 <div style="float: left;width: 60%">

@@ -4,85 +4,20 @@
 	<link rel="stylesheet" href="/css/insertAct.css">
 	<th:block th:replace="common/head.html"/>
 	<link rel="stylesheet" href="/css/boardType.css">
-<!--	<style>-->
-<!--		#buttonSet {-->
-<!--			float: right;-->
-<!--			position: relative;-->
-<!--			right: -10px;-->
-<!--			margin-top: 20px;-->
-<!--		}-->
-<!--		#reset, #submit {-->
-<!--			border: none;-->
-<!--			width: 130px;-->
-<!--			background: transparent;-->
-<!--		}-->
-<!--		.key, .content {-->
-<!--			float: left;-->
-<!--		}-->
-<!--		.key {-->
-<!--			width: 150px;-->
-<!--			text-align: left;-->
-<!--			color: #515151;-->
-<!--		}-->
-<!--		.section1 {-->
-<!--			margin-bottom: 30px;-->
-<!--		}-->
-<!--		textarea {-->
-<!--			width: 80%;-->
-<!--			height: 300px;-->
-<!--		}-->
-<!--		input {-->
-<!--			width: 400px;-->
-<!--			border-radius: 30px;-->
-<!--			border: 1px solid #a5a5a5;-->
-<!--			color: #b3b3b3;-->
-<!--			padding: 0 0 0 10px;-->
-<!--			height: 25px;-->
-<!--			margin-right: 36px;-->
-<!--		}-->
-<!--	</style>-->
+	<style>
+		#editor {
+			color: #494949;
+		}
+		#editor > div > div > div.ck-content {
+			height: 300px;
+		}
+
+	</style>
 </head>
 <body>
 <header th:replace="common/menu :: header"></header>
 
 <div lang="en" th:replace="common/menu :: menu"></div>
-	<!-- Summernote Editor -->
-	<script>
-		$(document).ready(function() {
-			$('#summernote').summernote({
-				height: 300,
-				minHeight: null,
-				maxHeight: null,
-				focus: true,
-				lang: "ko-KR",
-				placeholder: '최대 2048자',
-				callbacks: {
-					onImageUpload: function(files) {
-						uploadSummernoteImageFile(files[0], this);
-					}
-				}
-			});
-			
-			function uploadSummernoteImageFile(file, editor) {
-				data = new FormData();
-				data.append("file", file);
-				$.ajax({
-					data : data,
-					type : "POST",
-					url : "/summernoteFileUpload/uploadSummernoteImageFile",
-					contentType : false,
-					processData : false,
-					success : function(data) {
-						console.log(data);
-						$(editor).summernote('insertImage', location.origin+data.url);
-					},
-					error : function(data) {
-						console.log(data);
-					}
-				})
-			}
-		});
-	</script>
 
 	<div id="main">
 		<h4>공지 쓰기</h4>
@@ -132,9 +67,9 @@
 					</div>
 				</div>
 				<br>
-				<div class="editor_wrap">
-					<div class="key">내용</div>
-					<textarea name="content" id="summernote"></textarea>
+				<div id="editor" class="section1" style="margin-right:60px">
+					<div class="key" style="height: 300px">내용</div>
+					<textarea name="content" id="content"></textarea>
 				</div>
 			</div>
 			<div id="buttonSet">
@@ -145,11 +80,15 @@
 	</div>
     
     <div lang="en" th:replace="common/footer :: footer"></div>
-
 	<script>
 		function goBack() {
 			window.history.back();
 		}
+		ClassicEditor
+				.create( document.querySelector( '#content' ) )
+				.catch( error => {
+					console.error( error );
+				} );
 	</script>
 </body>
 </html>

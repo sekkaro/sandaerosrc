@@ -142,7 +142,18 @@
 
 				<div class="infoContent">
 					<div class="subtitle">담당 인원</div>
-					<div class="sectionLeft">
+					<div class="sectionLeft" style="width: 100%;margin-top: 10px;margin-bottom: 10px">
+						<div class="subcontent" style="float: left">담당 관제사
+							<div class="subsub" style="margin-left:40px">
+								<select th:field="*{managerId}">
+									<option value="0">관리자를 선택하세요</option>
+									<option th:each="manager : ${managers}" th:value="${manager.id}"
+											th:text="${manager.name}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="sectionLeft" style="margin-bottom: 15px">
 						<div class="subcontent">이용자
 							<div class="subsub">
 								<div class="multiselect">
@@ -162,7 +173,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="sectionRight">
+					<div class="sectionRight" style="margin-bottom: 15px">
 						<div class="subcontent">
 							<div style="float:left;">
 								봉사자
@@ -182,17 +193,6 @@
 								</div>
 								<ul id="clickedVolunteers" class="list-group mt-2 col-md-6">
 								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="sectionLeft" style="width: 100%;margin-top: 10px;margin-bottom: 10px">
-						<div class="subcontent" style="float: left">담당 관제사
-							<div class="subsub" style="margin-left:40px">
-								<select th:field="*{managerId}">
-									<option value="0">관리자를 선택하세요</option>
-									<option th:each="manager : ${managers}" th:value="${manager.id}"
-											th:text="${manager.name}"></option>
-								</select>
 							</div>
 						</div>
 					</div>
@@ -223,6 +223,7 @@
 							</div>
 							<div class="subsub2 sub" style="float: left;margin-left: 85px">
 								<input type="text" id="place" th:field="*{place}" placeholder="주소를 입력하세요." onclick="execPostcode()">
+								<input type="text" id="simple_addr" placeholder="상세주소를 입력하세요.">
 							</div>
 						</div>
 					</div>

@@ -1,12 +1,12 @@
 package com.sangdaero.walab.user.controller;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.sangdaero.walab.activity.dto.AppRequest;
 import com.sangdaero.walab.common.entity.InterestCategory;
+import com.sangdaero.walab.common.entity.UserInterest;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
+import com.sangdaero.walab.mapper.repository.UserInterestRepository;
 import com.sangdaero.walab.user.application.dto.*;
 import com.sangdaero.walab.user.application.validator.NicknameValidator;
 import com.sangdaero.walab.user.application.validator.PhoneValidator;
@@ -31,6 +31,7 @@ public class UserRestController {
 	private final NicknameValidator nicknameValidator;
 	private final PhoneValidator phoneValidator;
 	private final InterestRepository mInterestRepository;
+	private final UserInterestRepository mUserInterestRepository;
 
 	@InitBinder("userNickname")
 	public void initBinder(WebDataBinder webDataBinder) {
@@ -182,5 +183,26 @@ public class UserRestController {
 		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
 
 		mUserService.removeInterest(userDto.getId(), interest);
+	}
+
+	@PostMapping("/eachUserInterest")
+	public Set<eachUserInterest> eachUserInterest(@RequestBody AppRequest userForm) {
+
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+
+		List<UserInterest> byUser_id = mUserInterestRepository.findByUser_Id(userDto.getId());
+
+
+		Set<eachUserInterest> interests = new HashSet<>();
+
+		for(UserInterest e : byUser_id) {
+			Optional<InterestCategory> byId = mInterestRepository.findById(e.getInterest().getId());
+			eachUserInterest test = new eachUserInterest();
+			test.setId(byId.get().getId());
+			test.setInterestName(byId.get().getName());
+			interests.add(test);
+		}
+
+		return interests;
 	}
 }
