@@ -3,46 +3,47 @@
 <head>
     <link rel="stylesheet" href="/css/insertAct.css">
     <th:block th:replace="common/head.html"/>
-    <style>
-        #buttonSet {
-            float: right;
-            position: relative;
-            right: -10px;
-            margin-top: 10px;
-        }
-        #reset, #submit {
-            border: none;
-            width: 130px;
-            background: transparent;
-        }
-        .key, .content {
-            float: left;
-        }
-        .key {
-            width: 150px;
-            text-align: left;
-            color: #515151;
-        }
-        .section1 {
-            margin-bottom: 30px;
-        }
-        textarea {
-            width: 80%;
-            height: 300px;
-        }
-        input {
-            width: 400px;
-            border-radius: 30px;
-            border: 1px solid #a5a5a5;
-            color: #b3b3b3;
-            padding: 0 0 0 10px;
-            height: 25px;
-            margin-right: 36px;
-        }
-        span {
-            color: #515151;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/boardType.css">
+<!--    <style>-->
+<!--        #buttonSet {-->
+<!--            float: right;-->
+<!--            position: relative;-->
+<!--            right: -10px;-->
+<!--            margin-top: 10px;-->
+<!--        }-->
+<!--        #reset, #submit {-->
+<!--            border: none;-->
+<!--            width: 130px;-->
+<!--            background: transparent;-->
+<!--        }-->
+<!--        .key, .content {-->
+<!--            float: left;-->
+<!--        }-->
+<!--        .key {-->
+<!--            width: 150px;-->
+<!--            text-align: left;-->
+<!--            color: #515151;-->
+<!--        }-->
+<!--        .section1 {-->
+<!--            margin-bottom: 30px;-->
+<!--        }-->
+<!--        textarea {-->
+<!--            width: 80%;-->
+<!--            height: 300px;-->
+<!--        }-->
+<!--        input {-->
+<!--            width: 400px;-->
+<!--            border-radius: 30px;-->
+<!--            border: 1px solid #a5a5a5;-->
+<!--            color: #b3b3b3;-->
+<!--            padding: 0 0 0 10px;-->
+<!--            height: 25px;-->
+<!--            margin-right: 36px;-->
+<!--        }-->
+<!--        span {-->
+<!--            color: #515151;-->
+<!--        }-->
+<!--    </style>-->
 </head>
 <body>
     <header th:replace="common/menu :: header"></header>
@@ -53,7 +54,7 @@
         <h4>서브 카테고리 추가</h4>
 
         <form action="/notice/category/add" method="post" style="width: 100%">
-            <div id="actInfo" style="height: 250px">
+            <div id="actInfo" style="height: 200px">
                 <br>
                 <div class="section1">
                     <div class="key">
@@ -69,7 +70,7 @@
                         게시판
                     </div>
                     <div class="content">
-                        <span th:if="${category==1}" th:text="공지사항"></span>
+                        <span th:if="${category==1}" th:text="공지사항" style="color: #494949"></span>
                         <input type="hidden" name="topCategory" th:value="${category}"/>
                     </div>
                 </div>

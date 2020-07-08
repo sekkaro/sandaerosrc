@@ -149,9 +149,9 @@
 
 			</form>
 
+			<!--  paging -->
 			<div class="down">
 				<div id="Paging">
-					<!--  <button id="prevv" type="submit" name="button"><<</button> -->
 					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
 						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}"><</a>
 					</button>
@@ -167,7 +167,6 @@
 					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
 						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">></a>
 					</button>
-					<!--  <button id="nextt" type="submit" name="button">>></button> --> 
 				</div>
 			</div>
 			<!-- paging end -->
@@ -184,7 +183,7 @@
 						
 	            	});
 				}
-				
+
 				function cancelRejectRequest(id, event){
 					$.post("/requestdata/setStatus", {id: id, status: 0}, function(data) {
 						if(data.status == 0){
@@ -195,15 +194,15 @@
 							else{
 								innerHtml = "<a href='/request/permit/"+ id +"'><img src='/img/app_approve.png'></a>";
 							}
-							
+
 							$(event).parent().prev().prev().text("대기");
-							
+
 							$(event).parent().next().children().first().html("<img src='/img/reject_act.png' onClick='rejectRequest("+ id +", this)'>");
 							$(event).parent().next().show();
 							$(event).parent().html(innerHtml);
-							
+
 						}
-	            	});
+					});
 				}
 			
 			</script>

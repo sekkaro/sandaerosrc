@@ -44,10 +44,10 @@
 			border: 0.5px solid #e6e6e6;
 		}
 		.edit {
-			margin-right: 30px;
+			margin-right: 15px;
 		}
 		#deadline, #volunteerTime, #content, #place, #delivery {
-			color: black;
+			color: #494949;
 			font-size: 16px;
 			font-weight: 400;
 		}
@@ -67,7 +67,7 @@
 		}
 		#clickedUsers, #clickedVolunteers, #users, #volunteers {
 			font-size: 14px;
-			color: black;
+			color: #494949;
 		}
 		#clickedUsers > li {
 			margin-top: 5px;
@@ -90,7 +90,7 @@
 			background: #FAEDE6
 		}
 		#sign {
-			color: black;
+			color: #494949;
 		}
 		@media (max-width:1170px){
 			#activity_map {
@@ -110,7 +110,7 @@
 			text-align: left;
 		}
 		.v_menuname{
-			color: #515151;
+			color: #494949;
 			font-weight: normal;
 			font-size: 16px;
 			clear: both;
@@ -166,11 +166,11 @@
 
 		<div id="actManage" style="border-radius: 0px 0px 15px 15px">
 			<div class="row1">
-				<div class="endtimemenu inlinebox">
+				<div class="endtimemenu inlinebox" style="width:50%">
 					<div class="inlinebox">
 						<div class="sub_heading">카테고리</div>
 					</div>
-					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory?.name}" disabled>
+					<input type="text" id="category" name="category" th:value="${activityDto.interestCategory?.name}" style="margin-left: 10px;" disabled>
 
 					<select id="editCategory" style="display: none;">
 						<option value="0">관심사를 선택하세요</option>
@@ -179,7 +179,7 @@
 								th:selected="${interest.id} == ${activityDto.interestCategory?.id}"></option>
 					</select>
 				</div>
-				<div class="endtimemenu inlinebox" style="margin-left: 80px">
+				<div class="endtimemenu inlinebox" style="margin-left: -10px">
 					<div class="inlinebox">
 						<div class="sub_heading">마감기한</div>
 					</div>
@@ -217,9 +217,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="user_left">
+				<div class="user_left" style="margin-bottom: 15px">
 <!--					<div class="inlinebox" style="width: 100px">-->
-						<div class="menu_name workertext" style="width: 80px">이용자</div>
+						<div class="menu_name workertext" style="width: 83px">이용자</div>
 <!--					</div>-->
 					<div class="workerblock" style="width: 80%">
 					<div class="inlinebox">
@@ -254,8 +254,8 @@
 					</div>
 				</div>
 
-				<div class="user_right">
-					<div class="menu_name workertext" style="width: 80px">봉사자</div>
+				<div class="user_right" style="margin-bottom: 15px">
+					<div class="menu_name workertext" style="width: 83px">봉사자</div>
 
 					<div class="workerblock" style="width: 80%">
 						<div class="inlinebox">
@@ -313,13 +313,13 @@
 														</div>
 														<br>
 														<div class="inlinebox">
-															<div class="v_menuname" style="float: left;">
-																위치 공유 동의
-															</div>
-															<div style="float:left;margin-top: 10px">
-																<img style="width: 15px" th:if="${activityVolunteer.locationAgree == 1}" src="/img/v_ok.png"/>
-																<img style="width: 15px" th:if="${activityVolunteer.locationAgree == 0}" src="/img/v_nok.png"/>
-															</div>
+<!--															<div class="v_menuname" style="float: left;">-->
+<!--																위치 공유 동의-->
+<!--															</div>-->
+<!--															<div style="float:left;margin-top: 10px">-->
+<!--																<img style="width: 15px" th:if="${activityVolunteer.locationAgree == 1}" src="/img/v_ok.png"/>-->
+<!--																<img style="width: 15px" th:if="${activityVolunteer.locationAgree == 0}" src="/img/v_nok.png"/>-->
+<!--															</div>-->
 														</div>
 														<br>
 														<div class="inlinebox">
@@ -400,7 +400,7 @@
 					<button id="editActivityGroupBtn" class="edit">편집</button>
 					<button id="cancelActivityGroupBtn" class="edit" style="display: none;">취소</button>
 				</div>
-				<div>
+				<div style="height:40px">
 					<div class="inlinebox">
 						<div class="menu_name">활동 시간</div>
 					</div>
@@ -412,10 +412,10 @@
 
 						<div id="editVolunteerTime" style="display: none;">
 							<input type="date" id="startdate" name="startDate" th:value="${activityDto.startTime?.toLocalDate()}" style="width: 130px">
-							<input type="time" id="starttime" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}" style="width: 90px">
+							<input type="time" id="starttime" name="startTime" th:value="${activityDto.startTime?.toLocalTime()}" style="width: 100px">
 							<span id="sign">~</span>
 							<input type="date" id="enddate" name="endDate" th:value="${activityDto.endTime?.toLocalDate()}" style="width: 130px">
-							<input type="time" id="endtime" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}" style="width: 90px">
+							<input type="time" id="endtime" name="endTime" th:value="${activityDto.endTime?.toLocalTime()}" style="width: 100px">
 						</div>
 					</div>
 				</div>
@@ -424,7 +424,7 @@
 						<div class="inlinebox" style="float: left">
 							<div class="menu_name explain">상세설명</div>
 						</div>
-						<div class="inlinebox explain_textarea" style="float: left">
+						<div class="inlinebox explain_textarea" style="float: left;margin-top:5px">
 							<p id="content" th:if="${activityDto.content.isEmpty()}">세부내용 없음</p>
 							<p id="content" th:if="${activityDto.content != ''}" th:text="${activityDto.content}"></p>
 							<input type="textarea" id="explianation" name="explanation" th:value="${activityDto.content}" style="display: none;">
@@ -433,20 +433,20 @@
 				</div>
 
 				<div id="activity_map" class="user_right" style="top: 0px">
-					<div class="search_box">
+					<div class="search_box" style="margin-left: 0px">
 						<div class="inlinebox">
 							<div class="menu_name">장소</div>
 						</div>
 						<div class="inlinebox searchbox">
 							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place}"></p>
 							<div id="editPlace" name="place" style="display: none;">
-								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" onclick="execPostcode()">
+								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" style="margin-bottom: 0px;height: 20px" onclick="execPostcode()">
 								<input type="hidden" id="coordi_x">
 								<input type="hidden" id="coordi_y">
 							</div>
 						</div>
 					</div>
-					<div class="map" id="kakaomap" style="width:300px;height:300px;"></div>
+					<div class="map" id="kakaomap" style="width:300px;height:300px;margin-left: 0px;margin-top: 17px"></div>
 					<input type="hidden" id="original_place" th:value="${activityDto.place}">
 				</div>
 			</div>
@@ -617,15 +617,13 @@
 		function editVolunteerTime(volunteerId){
 
 			volunteerTime = $('#editVolunteerTime' + volunteerId).val();
-			
+
 			if($('#editVolunteerTimeBtn' + volunteerId).html().toString().includes('편집')){
 				$('#volunteerTime' + volunteerId).hide();
 				$('#editVolunteerTime' + volunteerId).show();
 				$('#cancelVolunteerTimeBtn' + volunteerId).show();
-				
 				$('#editVolunteerTimeBtn' + volunteerId).html('완료');
-			}
-			else{
+			} else{
 				if($('#editVolunteerTime' + volunteerId).val().length == 0){
 
 					$('#message').removeClass("alert-info");
@@ -642,7 +640,7 @@
 					$.post("/activitydata/setVolunteerTime", {id: $('#activityId').val(), volunteerId: volunteerId, time: volunteerTime}, function(data) {
 
 						$('#volunteerTime' + volunteerId).html(data);
-						
+
 						$('#editVolunteerTimeBtn' + volunteerId).html('편집');
 						$('#volunteerTime' + volunteerId).show();
 						$('#editVolunteerTime' + volunteerId).hide();
@@ -1120,7 +1118,7 @@
 
 				}
 				else{
-					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
+					innerHtml = "해당 이용자가 없습니다.";
 				}
 
 			}
@@ -1180,7 +1178,7 @@
 
 				}
 				else{
-					innerHtml = "그 이름의 이용자를 찾지 못했습니다";
+					innerHtml = "해당 이용자가 없습니다.";
 				}
 
 			}
@@ -1334,59 +1332,56 @@
 						if(data.volunteers.length > 0){
 							$('#volunteerList').removeClass("members worker");
 							data.volunteers.forEach(function(item){
-									
 								innerVolunteersHtml += "<div class='members worker'><input type='hidden' class='volunteerIds' value='"+ item.user.id +"'/><div><a data-fancybox data-src='#volunteerDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='volunteerDetail" + item.user.id +"'><img src='/img/v_bar.png'><h3 style='padding-left: 20px'>봉사자 정보</h3><div style='padding-left: 20px'><div class='sub_heading'>기본 정보</div><div><div class='user_left'><div class='inlinebox'><div class='v_menuname' style='float: left;'>이름</div><input type='text' class='v_menuval' id='v_name' name='v_name' value='"+ item.user.name +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호</div><input type='text' class='v_menuval' id='v_phone' name='v_phone' value='"+ item.user.phone +"' disabled></div><br>";
-																
+
 								var status = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>상태</div>";
+
 								switch(item.status){
-								case 0: status +="<input type='text' class='v_menuval' id='v_status0' name='v_status' value='대기' disabled>";
-									break;
-								case 1: status +="<input type='text' class='v_menuval' id='v_status1' name='v_status' value='승인' disabled>";
-									break;
-								case 2: status +="<input type='text' class='v_menuval' id='v_status2' name='v_status' value='거절' disabled>";
+									case 0: status +="<input type='text' class='v_menuval' id='v_status0' name='v_status' value='대기' disabled>";
+										break;
+									case 1: status +="<input type='text' class='v_menuval' id='v_status1' name='v_status' value='승인' disabled>";
+										break;
+									case 2: status +="<input type='text' class='v_menuval' id='v_status2' name='v_status' value='거절' disabled>";
 								}
-								
+
 								status += "</div></div>";
-							
+
 								var phoneAgree = "<div class='user_right'><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호 공유 동의</div><div style='float:left;margin-top: 10px'>"
-									
+
 								phoneAgree += (item.phoneAgree==1)?"<img style='width: 15px' src='/img/v_ok.png'/>":"<img style='width: 15px' src='/img/v_nok.png'/>";
 								phoneAgree += "</div></div><br>";
 
 								var locationAgree = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>위치 공유 동의</div><div style='float:left;margin-top: 10px'>";
-										
+
 								locationAgree += (item.locationAgree==1)?"<img style='width: 15px' src='/img/v_ok.png'/>":"<img style='width: 15px' src='/img/v_nok.png'/>";
 								locationAgree += "</div></div><br>";
-								
+
 								var volunteerTime = "<div class='inlinebox'><div class='v_menuname' style='float: left;'>봉사 시간</div><div style='float: left;margin-top: 10px'><span id='volunteerTime"+ item.user.id +"'>"+ item.volunteerTime +"</span>시간<input id='editVolunteerTime"+ item.user.id +"' type='text' style='display:none;width: 75px' value='"+ item.volunteerTime +"'><button id='editVolunteerTimeBtn"+ item.user.id +"' onclick='editVolunteerTime("+ item.user.id +");'>편집</button><button id='cancelVolunteerTimeBtn"+ item.volunteerTime +"' onclick='cancelVolunteerTime("+ item.user.id +");' style='display: none;'>취소</button></div></div></div></div></div>";
-								
-								
+
+
 								var startImage = "<hr class='line'><div style='padding-left: 20px'><div class='sub_heading'>활동 사진</div><div><div class='user_left'><div class='v_menuname'>시작 사진</div><div>";
-								
+
 								if(item.startImage != null){
 									startImage += "<img style='display:block; width: 300px' alt='image' src='"+ item.startImage +"' width='300px' height='250px'>";
-								}
-								else{
+								} else{
 									startImage += "<span>없음</span>"
 								}
-								
+
 								startImage += "</div></div>";
-								
-								
-						
+
 								var endImage = "<div class='user_right'><div class='v_menuname'>끝 사진</div><div>";
-		
+
 								if(item.endImage != null){
 									endImage += "<img style='display:block; width: 300px' alt='image' src='"+ item.endImage +"' width='300px' height='250px'>";
 								}
 								else{
 									endImage += "<span>없음</span>"
 								}
-		
+
 								endImage += "</div></div></div></div></div></div></div>";
-								
 
 								innerVolunteersHtml += status + phoneAgree + locationAgree + volunteerTime + startImage + endImage;
+
 							})
 						}
 						else{

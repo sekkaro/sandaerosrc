@@ -88,16 +88,17 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="down">
+	<div class="down" style="margin-top: 40px;">
 		<div id="Paging">
 		</div>
 		<button id="list" type="button" name="button">
-			<a th:href="@{'/'+${path}+'/category/add?path='+${path}}"><img src="/img/register.png"/></a>
+			<a th:href="@{'/'+${path}+'/category/add?path='+${path}}"><img src="/img/write_big.png"/></a>
 		</button>
 		<button id="list" type="button" name="button">
-			<a th:href="@{'/'+${path}}"><img src="/img/cancel.png"/></a>
+			<a th:href="@{'/'+${path}}"><img src="/img/cancle_big.png"/></a>
 		</button>
 	</div>
+	<br>
 </div>
 
 <div lang="en" th:replace="common/footer :: footer"></div>

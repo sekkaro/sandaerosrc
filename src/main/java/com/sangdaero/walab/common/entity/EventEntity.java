@@ -116,7 +116,7 @@ public class EventEntity extends TimeEntity {
 	private String evaluate;
 
 	private LocalDateTime deadline;
-	
+
 	private Integer type;
 
 	@Builder
@@ -124,7 +124,7 @@ public class EventEntity extends TimeEntity {
 			String place,  LocalDateTime startTime, LocalDateTime endTime, String content, Byte deliveryFlag,
 			Byte phoneAgree, String donator, Byte selectSupport, Integer donationPrice, Byte billType,
 			Byte paymentCheck, String donatorName, String donatorPhone, String businessPicture, String evaluate,
-			LocalDateTime deadline, Integer type) {
+					   LocalDateTime deadline, Integer type) {
 		this.id = id;
 		this.title = title;
 		this.status = status;

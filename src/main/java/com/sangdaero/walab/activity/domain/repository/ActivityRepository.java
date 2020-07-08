@@ -50,13 +50,11 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory,
-			InterestCategory interestCategory, Byte status);
-	
+																											   InterestCategory interestCategory, Byte status);
+
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte status);
-	
-	Long countByEventCategory(int eventCategory);
 
-	
+	Long countByEventCategory(int eventCategory);
 
 }

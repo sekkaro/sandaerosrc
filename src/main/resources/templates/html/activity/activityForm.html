@@ -45,11 +45,15 @@
 			background: #EDFAF3;
 			border-radius: 10px;
 			width: 200px;
+			padding-left: 10px;
+			padding-bottom: 6px;
 		}
 		#clickedVolunteers > li {
 			margin-top: 5px;
 			border-radius: 10px;
 			width: 200px;
+			padding-left: 10px;
+			padding-bottom: 6px;
 		}
 		#clickedVolunteers > .list-group-item-warning {
 			background: #F4FAE5
@@ -71,6 +75,10 @@
 			width: 200px;
 		}
 
+		hr {
+			width: 99%;
+		}
+
 	</style>
 </head>
 <body>
@@ -88,24 +96,30 @@
 				<div class="infoContent">
 					<div class="subtitle">기본 정보</div>
 					<div class="sectionLeft">
-						<div class="subcontent">카테고리
+						<div class="subcontent">
+							카테고리
 							<div class="subsub">
 								<select id="category" th:field="*{interestCategoryId}">
 									<option value="0">관심사를 선택하세요</option>
 									<option th:each="interest : ${interests}" th:value="${interest.id}"
 											th:text="${interest.name}"></option>
 								</select>
-								<span th:if="${#fields.hasErrors('interestCategoryId')}">카테고리를 선택해주세요</span>
+								<div>
+									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('interestCategoryId')}">카테고리를 선택해주세요</small>
+								</div>
 							</div>
 						</div>
-						<div class="subcontent" style="width: 400px">
+						<div class="subcontent" style="width: 600px">
 							<div style="float: left;">
+								<br th:if="${#fields.hasErrors('deadlineDate') or #fields.hasErrors('deadlineTime')}">
 								마감 기한
 							</div>
-							<div class="subsub" style="float: left;margin-left: 60px">
-								<input id="date" type="date" th:field="*{deadlineDate}" style="width: 120px">
-								<input id="time" type="time" th:field="*{deadlineTime}">
-								<span th:if="${#fields.hasErrors('deadlineDate') or #fields.hasErrors('deadlineTime')}">마감 기한을 입력해주세요</span>
+							<div class="subsub" style="float: left;margin-left: 60px;width:400px">
+								<input id="date" type="date" th:field="*{deadlineDate}" style="width: 150px">
+								<input id="time" type="time" th:field="*{deadlineTime}" style="width: 120px">
+								<div>
+									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('deadlineDate') or #fields.hasErrors('deadlineTime')}">마감 기한을 입력해주세요</small>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -116,7 +130,9 @@
 							</div>
 							<div class="subsub2" style="float: left;margin-left: 93px;width:290px">
 								<input id="titletext" type="text" th:field="*{title}" placeholder="제목을 입력하세요.">
-								<span th:if="${#fields.hasErrors('title')}">2자 이상 입력해주세요</span>
+								<div>
+									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('title')}">2자 이상 입력해주세요</small>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -145,15 +161,6 @@
 								</ul>
 							</div>
 						</div>
-						<div class="subcontent">담당 관제사
-							<div class="subsub">
-								<select th:field="*{managerId}">
-									<option value="0">관리자를 선택하세요</option>
-									<option th:each="manager : ${managers}" th:value="${manager.id}"
-											th:text="${manager.name}"></option>
-								</select>
-							</div>
-						</div>
 					</div>
 					<div class="sectionRight">
 						<div class="subcontent">
@@ -178,6 +185,17 @@
 							</div>
 						</div>
 					</div>
+					<div class="sectionLeft" style="width: 100%;margin-top: 10px;margin-bottom: 10px">
+						<div class="subcontent" style="float: left">담당 관제사
+							<div class="subsub" style="margin-left:40px">
+								<select th:field="*{managerId}">
+									<option value="0">관리자를 선택하세요</option>
+									<option th:each="manager : ${managers}" th:value="${manager.id}"
+											th:text="${manager.name}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<hr class="divgap">
@@ -185,14 +203,16 @@
 				<div class="infoContent2">
 					<div class="subtitle">활동 내용</div>
 					<div class="sectionLeft2" style="float:left;">
-						<div class="subcontent" style="width: 630px">
+						<div class="subcontent" style="width: 1000px">
 							<div style="float: left">
 								활동 시간
 							</div>
-							<div class="subsub2 sub1" style="float: left; margin-left: 53px">
-								<input id="start_date" type="date" th:field="*{startDate}"><input id="start_time" type="time" th:field="*{startTime}"><span id="and"> ~ </span>
-								<input id="end_date" type="date" th:field="*{endDate}"><input id="end_time" type="time" th:field="*{endTime}">
-								<span th:if="${#fields.hasErrors('startDate') or #fields.hasErrors('startTime') or #fields.hasErrors('endDate') or #fields.hasErrors('endTime') }">활동시간을 입력해주세요</span>
+							<div class="subsub2 sub1" style="float: left; margin-left: 53px;width: 700px">
+								<input id="start_date" type="date" th:field="*{startDate}" style="width: 150px"><input id="start_time" type="time" th:field="*{startTime}" style="width: 120px"><span id="and"> ~ </span>
+								<input id="end_date" type="date" th:field="*{endDate}" style="width: 150px"><input id="end_time" type="time" th:field="*{endTime}" style="width: 120px">
+								<div>
+									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('startDate') or #fields.hasErrors('startTime') or #fields.hasErrors('endDate') or #fields.hasErrors('endTime') }">활동시간을 입력해주세요</small>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -617,13 +637,12 @@
 					}
 				}
 				else{
-					
 					if(activityForm.userId != null){
 						activityForm.userId.forEach(function(id){
 							clickedUsers.push(id.toString());
 						})
 					}
-					
+
 					if(activityForm.volunteerId != null){
 						var idx = 0;
 						activityForm.volunteerId.forEach(function(id){
@@ -636,27 +655,8 @@
 							}
 							idx++;
 						})
-						
+
 					}
-					/*if(permittedUser != null){
-						if(userType == 1){
-							clickedVolunteers.push(permittedUser.id.toString());
-							for(var i = 0; i < userStatusList.length ; i++){
-								if(userStatusList[i].id == permittedUser.id){
-									userStatusList[i].status = 1;
-									break;
-								}
-							}
-						} else {
-							clickedUsers.push(permittedUser.id.toString());
-							for(var i = 0; i < userStatusList.length ; i++){
-								if(userStatusList[i].id == permittedUser.id){
-									userStatusList[i].status = 1;
-									break;
-								}
-							}
-						}
-					}*/
 				}
 
 				searchUsers("");

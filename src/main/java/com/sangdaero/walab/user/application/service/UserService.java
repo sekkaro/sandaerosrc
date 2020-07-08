@@ -82,7 +82,7 @@ public class UserService extends OidcUserService {
     	return userDto;
     }
     
-    public void setStatus(@AuthenticationPrincipal OAuth2User principal, Boolean isOn) {
+    public boolean setStatus(@AuthenticationPrincipal OAuth2User principal, Boolean isOn) {
     	User user = mUserRepository.findBySocialId(principal.getAttribute("email"));
     	
     	if(isOn) {
@@ -93,7 +93,8 @@ public class UserService extends OidcUserService {
     	}
     	
     	mUserRepository.save(user);
-    	
+
+    	return user.getStatus()==1;
     }
 
     public void addUser(UserDto userDTO) {
@@ -385,40 +386,40 @@ public class UserService extends OidcUserService {
         list.setEndImage(fileDownloadUri);
     }
 
-	public Boolean checkNewUser(String email, String name) {
-		
-		User user = mUserRepository.findBySocialId(email);
-		
-		if(user != null) {
-			user.setName(name);
-			mUserRepository.save(user);
-			return false;
-		}
-		
-		return true;
-		
-	}
+    public Boolean checkNewUser(String email, String name) {
 
-	public void setPhoneAgree(Long id, Boolean phoneAgree) {
-		User user = mUserRepository.findById(id).orElse(null);
-		
-		if(user!=null) {
-			user.setPhoneAgree((byte) ((phoneAgree)?1:0));
-			mUserRepository.save(user);
-		}
-		
-	}
+        User user = mUserRepository.findBySocialId(email);
 
-	public void setBasicInfo(Long id, String phone, String nickname, Boolean phoneAgree) {
-		User user = mUserRepository.findById(id).orElse(null);
-		
-		if(user!=null) {
-			user.setPhone(phone);
-			user.setNickname(nickname);
-			user.setPhoneAgree((byte) ((phoneAgree)?1:0));
-			mUserRepository.save(user);
-		}
-	}
+        if(user != null) {
+            user.setName(name);
+            mUserRepository.save(user);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public void setPhoneAgree(Long id, Boolean phoneAgree) {
+        User user = mUserRepository.findById(id).orElse(null);
+
+        if(user!=null) {
+            user.setPhoneAgree((byte) ((phoneAgree)?1:0));
+            mUserRepository.save(user);
+        }
+
+    }
+
+    public void setBasicInfo(Long id, String phone, String nickname, Boolean phoneAgree) {
+        User user = mUserRepository.findById(id).orElse(null);
+
+        if(user!=null) {
+            user.setPhone(phone);
+            user.setNickname(nickname);
+            user.setPhoneAgree((byte) ((phoneAgree)?1:0));
+            mUserRepository.save(user);
+        }
+    }
 
 
 }

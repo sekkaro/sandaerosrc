@@ -48,8 +48,8 @@ public class ActivityDto {
 	@Builder
 	public ActivityDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, 
 			Set<ActivityUserDto> activityUsers, Set<Long> userIds, Set<ActivityUserDto> activityVolunteers, Set<Long> volunteerIds, User manager, String place, LocalDateTime startTime, 
-			LocalDateTime endTime, String content, Byte deliveryFlag, String evaluate, 
-			LocalDateTime deadline, Integer type, LocalDateTime regDate, LocalDateTime modDate) {
+			LocalDateTime endTime, String content, Byte deliveryFlag, String evaluate,
+					   LocalDateTime deadline, Integer type, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.title = title;
 		this.status = status;

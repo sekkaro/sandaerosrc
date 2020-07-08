@@ -11,7 +11,7 @@
             border-color: #a5a5a5;
             padding: 5px 16px;
             width: 150px;
-            color: #000000;
+            color: #494949;
             /*margin-right: 50px;*/
             margin-bottom: 10px;
             text-align: center;
@@ -51,8 +51,8 @@
 
         <div class="down">
             <div class="addinterest">
-                <div id="addtext">관심사 추가</div>
                 <form action="/interest/add" th:object="${interestDto}" method="post" style="width: 500px" novalidate>
+                    <div id="addtext">관심사 추가</div>
                     <div class="interestadd">
                         <input id="name" type="text" name="name" placeholder="관심사 이름을 2글자 이상 입력해주세요." aria-describedby="nameHelp" required minlength="2">
                     </div>
@@ -61,11 +61,14 @@
                     <!--                        2글자 이상 입력해주세요.-->
                     <!--                    </small>-->
                     <!--                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-                    <!--                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
+
                     <!--                    <br>-->
                     <button id="register" type="submit" name="button">
                         <img src="/img/add_interest.png">
                     </button>
+                    <div style="margin-top:-10px;margin-bottom:15px">
+                        <small th:if="${#fields.hasErrors('name')}" style="font-size: 13px;color:red" th:errors="*{name}">Name Error</small>
+                    </div>
                     <!--                    <input type="submit" value="관심사 추가">-->
                 </form>
             </div>
@@ -147,7 +150,7 @@
                                 <button class="active" name="button" th:if="${interest.on_off==0}">
                                     <img class="condition" src="/img/activation.png">
                                 </button>
-                                <a class="active" name="button" th:if="${interest.on_off==1}" th:onclick="'changeStatus(' + ${interest.id} + ')'">
+                                <a class="active" name="button" th:if="${interest.on_off==1}" th:onclick="'changeStatus(' + ${interest.id} + ',' + ${interest.count} +')'">
                                     <img class="condition" src="/img/deactivation.png">
                                 </a>
                             </form>
@@ -171,11 +174,15 @@
 
     <script type="text/javascript">
 
-        function changeStatus(id) {
-            if(confirm("관심있는 유저가 있습니다. 정말 비활성화 하시겠습니까?")==true) {
-                document.getElementById('active-form' + id).submit();
+        function changeStatus(id, cnt) {
+            if(cnt>0) {
+                if(confirm("관심있는 유저가 있습니다. 정말 비활성화 하시겠습니까?")==true) {
+                    document.getElementById('active-form' + id).submit();
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                document.getElementById('active-form' + id).submit();
             }
         }
         
