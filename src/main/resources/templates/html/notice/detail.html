@@ -4,44 +4,16 @@
 	<link rel="stylesheet" href="/css/insertAct.css">
 	<th:block th:replace="common/head.html"/>
 	<link rel="stylesheet" href="/css/boardType.css">
-<!--	<style>-->
-<!--		#buttonSet {-->
-<!--			float: right;-->
-<!--			position: relative;-->
-<!--			right: -10px;-->
-<!--			margin-top: 20px;-->
-<!--		}-->
-<!--		#reset, #submit, #edit {-->
-<!--			border: none;-->
-<!--			width: 130px;-->
-<!--			background: transparent;-->
-<!--		}-->
-<!--		.key, .content {-->
-<!--			float: left;-->
-<!--		}-->
-<!--		.key {-->
-<!--			width: 150px;-->
-<!--			text-align: left;-->
-<!--			color: #019783;-->
-<!--			font-size: 18px;-->
-<!--		}-->
-<!--		.section1 {-->
-<!--			margin-bottom: 18px;-->
-<!--		}-->
-<!--		textarea {-->
-<!--			width: 80%;-->
-<!--			height: 300px;-->
-<!--		}-->
-<!--		input {-->
-<!--			width: 400px;-->
-<!--			border-radius: 30px;-->
-<!--			border: 1px solid #a5a5a5;-->
-<!--			color: #494949;-->
-<!--			padding: 0 0 0 10px;-->
-<!--			height: 25px;-->
-<!--			margin-right: 36px;-->
-<!--		}-->
-<!--	</style>-->
+	<style>
+		#notice_content {
+			color: #494949;
+			width: 80%;
+			height: 300px;
+			border: 1px solid #a5a5a5;
+			float: left;
+			padding: 10px;
+		}
+	</style>
 </head>
 <body>
 	<header th:replace="common/menu :: header"></header>
@@ -112,7 +84,10 @@
 			<br>
 			<div class="editor_wrap">
 				<div class="key">내용</div>
-				<textarea name="content" id="summernote" style="margin-top: 16px" disabled>[[${noticeDto.content}]]</textarea>
+				<div id="notice_content"></div>
+<!--				<textarea id="notice_content" style="margin-top: 16px" disabled></textarea>-->
+				<input id="content_value" type="hidden" th:value="${noticeDto.content}">
+<!--				<textarea name="content" id="summernote" style="margin-top: 16px" disabled>[[${noticeDto.content}]]</textarea>-->
 			</div>
 		</div>
 		<div id="buttonSet">
@@ -136,6 +111,10 @@
 			path+=document.getElementById("noticeId").value;
 			location.href=path;
 		}
+
+		var content = document.getElementById('notice_content');
+		var notice = document.getElementById('content_value').value;
+		content.innerHTML= notice;
 	</script>
 </body>
 </html>

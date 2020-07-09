@@ -210,8 +210,19 @@ select {
   background: url("/img/search.png") no-repeat 80% 40%;
   background-position: right;
   background-size: 17px;
-
 }
+
+#simple_addr {
+  margin-top: 10px;
+  appearance: none;
+  border-radius: 30px;
+  border: 1px solid #a5a5a5;
+  color: #494949;
+  width: 80%;;
+  padding: 0 0 0 10px;
+  height: 25px;
+}
+
 #titletext{
   -webkit-appearance: none;
   /* 네이티브 외형 감추기 */

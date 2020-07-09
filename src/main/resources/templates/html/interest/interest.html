@@ -52,24 +52,17 @@
         <div class="down">
             <div class="addinterest">
                 <form action="/interest/add" th:object="${interestDto}" method="post" style="width: 500px" novalidate>
-                    <div id="addtext">관심사 추가</div>
+                    <div id="addtext" style="margin-top: 5px">관심사 추가</div>
                     <div class="interestadd">
                         <input id="name" type="text" name="name" placeholder="관심사 이름을 2글자 이상 입력해주세요." aria-describedby="nameHelp" required minlength="2">
                     </div>
 
-                    <!--                    <small id="nameHelp">-->
-                    <!--                        2글자 이상 입력해주세요.-->
-                    <!--                    </small>-->
-                    <!--                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-
-                    <!--                    <br>-->
                     <button id="register" type="submit" name="button">
                         <img src="/img/add_interest.png">
                     </button>
                     <div style="margin-top:-10px;margin-bottom:15px">
                         <small th:if="${#fields.hasErrors('name')}" style="font-size: 13px;color:red" th:errors="*{name}">Name Error</small>
                     </div>
-                    <!--                    <input type="submit" value="관심사 추가">-->
                 </form>
             </div>
         </div>
@@ -77,7 +70,6 @@
         <div id="actList">
 
             <div class="table-scroll">
-<!--            <div class="table-box-wrap">-->
                 <div class="table-box">
                 <table style="width: 100%;" cellpadding="0" cellspacing="0">
                     <thead id="interestth">
@@ -85,7 +77,7 @@
                         <th class="fixedHeader" style="border-radius: 15px 0 0 0;">No.</th>
                         <th class="fixedHeader" >관심사</th>
                         <th class="fixedHeader" >사용자 수</th>
-                        <th class="fixedHeader"  style="border-radius: 0 15px 0 0;">비활성화</th>
+                        <th class="fixedHeader"  style="border-radius: 0 15px 0 0;">사용 여부</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -99,15 +91,8 @@
                                    style="display: none;" placeholder="관심사 이름을 입력하세요."
                                    aria-describedby="interestNameHelp" required minlength="2">
 
-<!--                            <small th:id="interestNameHelp+${interest.id}" style="display: none;">-->
-<!--                                2글자 이상 입력해주세요.-->
-<!--                            </small>-->
-
                             <small th:id="error+${interest.id}" style="display: none;color: red">
                             </small>
-                            <!--                        <small th:id="test+${interest.id}" class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-                            <!--                        <small th:if="${msg}">hello</small>-->
-                            <!--                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
                             <button class="edit" th:id="editBtn+${interest.id}" th:onclick="|javascript:edit('${interest.id}')|">
                                 <img src="/img/mod_interest.png" style="width: 56px">
                             </button>
@@ -117,27 +102,6 @@
                             <button class="completeBtn" th:id="completeBtn+${interest.id}" th:onclick="|javascript:complete('${interest.id}')|" style="display: none;">
                                 <img src="/img/interest_complete.png">
                             </button>
-
-
-                            <!--                        <form class="needs-validation col-sm-7" th:action="@{'/interest/edit/' + ${interest.id}}" th:object="${mod_interest}" th:method="post" novalidate>-->
-                            <!--                            <input type="hidden" name="_method" value="put"/>-->
-
-                            <!--                            <div class="row">-->
-                            <!--                                <div class="form-group">-->
-                            <!--                                    <input th:id="u_name+${interest.id}" type="text" name="name" style="width: 100px;" th:value="${interest.name}" placeholder="관심사 이름을 입력하세요."-->
-                            <!--                                           aria-describedby="u_nameHelp" required minlength="2" > <br>-->
-                            <!--&lt;!&ndash;                                   readonly ondblclick="this.readOnly='';" onblur="this.readOnly='true;'" &ndash;&gt;-->
-                            <!--                                    <small id="u_nameHelp">-->
-                            <!--                                        2글자 이상 입력해주세요.-->
-                            <!--                                    </small>-->
-                            <!--                                    <small class="invalid-feedback">2글자 이상의 이름을 입력해주세요</small>-->
-                            <!--                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>-->
-                            <!--                                </div>-->
-                            <!--                                <div>-->
-                            <!--                                    <input type="submit" value="수정">-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
-                            <!--                        </form>-->
                         </td>
                         <td>
                             <div>
@@ -161,12 +125,7 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
-
-
 
     <div lang="en" th:replace="common/footer :: footer"></div>
 
@@ -230,45 +189,6 @@
             $('#error'+id).hide();
             $('#interestNameHelp'+id).hide();
         }
-
-        // function edit(id) {
-        //     const editName = '#editName' + id;
-        //
-        //     $(editName).toggle();
-        //
-        //     $('#InterestName'+id).toggle();
-        //
-        //     $('#cancleBtn'+id).toggle();
-        //
-        //     $('#interestNameHelp'+id).toggle();
-        //
-        //     if($('#editBtn'+id).html() == '수정'){
-        //         $('#editBtn'+id).html('완료');
-        //     } else{
-        //         $('#editBtn'+id).html('수정');
-        //         $.post("/interestdata/edit", {
-        //             id: id,
-        //             name: $(editName).val()
-        //         }, function(data) {
-        //             console.log(data.message);
-        //             if(data.message==null) {
-        //                 $('#InterestName'+id).html(data.name);
-        //                 $('#error'+id).hide();
-        //                 $('#interestNameHelp'+id).hide();
-        //             } else {
-        //                 $(editName).show();
-        //                 $('#InterestName'+id).hide();
-        //                 $('#cancleBtn'+id).show();
-        //                 $('#editBtn'+id).html('완료');
-        //                 $('#error'+id).html(data.message);
-        //                 $('#error'+id).show();
-        //                 $('#interestNameHelp'+id).hide();
-        //             }
-        //         });
-        //     }
-        // }
-
-
     </script>
 </body>
 </html>

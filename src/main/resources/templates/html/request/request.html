@@ -138,9 +138,11 @@
 									<img src="/img/app_registered.png">
 								</a>
 							</td>
-							<td class="activeBtn" th:if="${request.status == 2}"><button type="button" th:data-requestId="${request.id}" onClick="cancelRejectRequest(this.getAttribute('data-requestId'), this)">거절 취소</button></td>
+							<td class="activeBtn" th:if="${request.status == 2}" colspan="2">
+								<img th:data-requestId="${request.id}" src="/img/reverse.png" onClick="cancelRejectRequest(this.getAttribute('data-requestId'), this)">
+							</td>
 							<td class="activeBtn" th:if="${request.status == 2}" style="display: none;">
-								<img th:data-requestId="${request.id}" src="/img/reject_act.png" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">
+								<img th:data-requestId="${request.id}" src="/img/app_reject.png" onClick="rejectRequest(this.getAttribute('data-requestId'), this)">
 							</td>
 						</tr>
 						</tbody>
@@ -176,8 +178,12 @@
 				function rejectRequest(id, event){
 					$.post("/requestdata/setStatus", {id: id, status: 2}, function(data) {
 						if(data.status == 2){
+							var test = $(event).parent();
+							console.log(test);
 							$(event).parent().prev().prev().prev().text("거절");
-							$(event).parent().prev().html("<button type='button' onClick='cancelRejectRequest("+ id +", this)'>거절 취소</button>");
+							$(event).parent().prev().attr("colspan", 2);
+							$(event).parent().prev().html("<img src='/img/reverse.png' onClick='cancelRejectRequest("+ id +", this)'>");
+							// $(event).parent().prev().html("<button type='button' onClick='cancelRejectRequest("+ id +", this)'>거절 취소</button>");
 							$(event).parent().hide();
 						}
 						
@@ -196,8 +202,8 @@
 							}
 
 							$(event).parent().prev().prev().text("대기");
-
-							$(event).parent().next().children().first().html("<img src='/img/reject_act.png' onClick='rejectRequest("+ id +", this)'>");
+							$(event).parent().attr("colspan", 1);
+							// $(event).parent().next().children().first().html("<img src='/img/reject_act.png' onClick='rejectRequest("+ id +", this)'>");
 							$(event).parent().next().show();
 							$(event).parent().html(innerHtml);
 
