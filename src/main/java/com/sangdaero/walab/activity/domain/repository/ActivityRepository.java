@@ -46,14 +46,21 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 			LocalDateTime currentDate, LocalDateTime endDate);
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	List<EventEntity> findTop5ByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte status);
+	List<EventEntity> findTop5ByEventCategoryAndDeliveryFlagAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte deliveryFlag, Byte status);
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory,
-																											   InterestCategory interestCategory, Byte status);
-
+	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(int eventCategory,
+			InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
+	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	List<EventEntity> findAllByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(int eventCategory, Byte status);
+	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(int eventCategory,
+			InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
+	
+	@EntityGraph(attributePaths = { "interestCategory", "manager" })
+	List<EventEntity> findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(int eventCategory, Byte deliveryFlag, Byte status1, Byte status2);
+	
+	@EntityGraph(attributePaths = { "interestCategory", "manager" })
+	List<EventEntity> findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(int eventCategory, Byte deliveryFlag, Byte status1, Byte status2);
 
 	Long countByEventCategory(int eventCategory);
 

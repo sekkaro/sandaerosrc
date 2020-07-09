@@ -34,6 +34,7 @@ import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
+import com.sangdaero.walab.mapper.repository.UserInterestRepository;
 import com.sangdaero.walab.request.repository.RequestRepository;
 import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDetailDto;
@@ -50,13 +51,15 @@ public class ActivityService {
 	private FileRepository mFileRepository;
 	private RequestRepository mRequestRepository;
 	private NotificationRepository mNotificationRepository;
+	private UserInterestRepository mUserInterestRepository;
 
     private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
 
 	// constructor
 	public ActivityService(ActivityRepository activityRepository, InterestRepository interestRepository, 
 			UserRepository userRepository, UserEventMapperRepository userEventMapperRepository,
-						   FileRepository fileRepository, RequestRepository requestRepository, NotificationRepository notificationRepository) {
+			FileRepository fileRepository, RequestRepository requestRepository, NotificationRepository notificationRepository,
+			UserInterestRepository userInterestRepository) {
 		mActivityRepository = activityRepository;
 		mInterestRepository = interestRepository;
 		mUserRepository = userRepository;
@@ -64,6 +67,7 @@ public class ActivityService {
 		mFileRepository = fileRepository;
 		mRequestRepository = requestRepository;
 		mNotificationRepository = notificationRepository;
+		mUserInterestRepository = userInterestRepository;
 	}
 	
 	
@@ -158,8 +162,19 @@ public class ActivityService {
         Set<ActivityUserDto> activityVolunteers = new HashSet<>();
         Set<Long> volunteerIds = new HashSet<>();
         
+        List<UserInterest> userInterestList = new ArrayList<>();
+    	Set<InterestCategory> interestList;
+        
+        
         for(UserEventMapper userEvent: userEventList) {
         	if(userEvent.getUserType() == 0) {
+        		userInterestList = mUserInterestRepository.findByUser_Id(userEvent.getUser().getId());
+            	interestList = new HashSet<>();
+            	
+            	for(UserInterest userInterest: userInterestList) {
+            		interestList.add(userInterest.getInterest());
+            	}
+            	
         		ActivityUserDto activityUser = new ActivityUserDto();
         		
         		activityUser.setUser(userEvent.getUser());
@@ -169,6 +184,8 @@ public class ActivityService {
         		activityUser.setStartImage(userEvent.getStartImage());
         		activityUser.setEndImage(userEvent.getEndImage());
 				activityUser.setVolunteerTime(userEvent.getVolunteerTime());
+				activityUser.setMemo(userEvent.getMemo());
+				activityUser.setUserInterestList(interestList);
         		activityUser.setRegDate(userEvent.getRegDate());
         		activityUser.setModDate(userEvent.getModDate());
         		
@@ -185,6 +202,7 @@ public class ActivityService {
         		activityVolunteer.setStartImage(userEvent.getStartImage());
         		activityVolunteer.setEndImage(userEvent.getEndImage());
 				activityVolunteer.setVolunteerTime(userEvent.getVolunteerTime());
+				activityVolunteer.setMemo(userEvent.getMemo());
         		activityVolunteer.setRegDate(userEvent.getRegDate());
         		activityVolunteer.setModDate(userEvent.getModDate());
         		
@@ -205,7 +223,7 @@ public class ActivityService {
     @Transactional
     public Long saveActivity(String title, Long interestCategoryId, List<Long> userIdList, /*List<Byte> userStatusList,*/ Byte delivery, 
     		Long managerId, String startDate, String startTime, String endDate, String endTime, String place,
-							 String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile file, Long requestId, String requestFileName) {
+							 String deadlineDate, String deadlineTime, String content, List<Long> volunteerIdList, List<Byte> volunteerStatusList, MultipartFile file, Long requestId, String requestFileName, String placeDetail) {
 		
     	ActivityDto activityDto = new ActivityDto();
     	
@@ -218,6 +236,7 @@ public class ActivityService {
     	activityDto.setStartTime((startDate.isEmpty()||startTime.isEmpty())?null:LocalDateTime.parse(startDate + startTime, formatter));
     	activityDto.setEndTime((endDate.isEmpty()||endTime.isEmpty())?null:LocalDateTime.parse(endDate + endTime, formatter));
     	activityDto.setPlace(place);
+    	activityDto.setPlaceDetail(placeDetail);
     	activityDto.setDeadline((deadlineDate.isEmpty()||deadlineTime.isEmpty())?null:LocalDateTime.parse(deadlineDate + deadlineTime, formatter));
     	activityDto.setContent(content);
 		activityDto.setType((requestId!=null)?0:1);
@@ -560,6 +579,13 @@ public class ActivityService {
     		for(Long userId: userIdList) {
        		 Optional<User> userWrapper = mUserRepository.getById(userId);
        		 UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserId(id, userId);
+       		 List<UserInterest> userInterestList = mUserInterestRepository.findByUser_Id(userId);
+       		 Set<InterestCategory> interestList = new HashSet<>();
+       		 
+       		 for(UserInterest userInterest: userInterestList) {
+       			 interestList.add(userInterest.getInterest());
+       		 }
+       		 
        	     User user = userWrapper.get();
        	     
        	     ActivityUserDto activityUser = new ActivityUserDto();
@@ -573,6 +599,8 @@ public class ActivityService {
        	     activityUser.setRegDate(userEventMapper.getRegDate());
        	     activityUser.setModDate(userEventMapper.getModDate());
 			 activityUser.setVolunteerTime(userEventMapper.getVolunteerTime());
+			 activityUser.setMemo(userEventMapper.getMemo());
+			 activityUser.setUserInterestList(interestList);
        	     
        	     activityUsers.add(activityUser);
        	     
@@ -636,6 +664,14 @@ public class ActivityService {
 		activity.setTitle(title);
 		activity.setStatus(status);
 		
+		if(status == 6) {
+			Request request = mRequestRepository.findByEventAndInterestCategory(activity, activity.getInterestCategory());
+			
+			Notification notification = new Notification();
+			notification.setUser(request.getClient());
+        	notification.setMessage(activity.getTitle() + "이 물건 거절 되었습니다");
+		}
+		
 		mActivityRepository.save(activity);
 	}
     
@@ -657,7 +693,7 @@ public class ActivityService {
 	}
     
     public void setVolunteerTimeAndPlaceAndContent(Long id, String startDate, String startTime, String endDate,
-			String endTime, String place, String content) {
+			String endTime, String place, String content, String placeDetail) {
     	EventEntity activity = mActivityRepository.findById(id).orElse(null);
     	
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
@@ -665,6 +701,7 @@ public class ActivityService {
     	activity.setStartTime((startDate.isEmpty()||startTime.isEmpty())?null:LocalDateTime.parse(startDate + startTime, formatter));
     	activity.setEndTime((endDate.isEmpty()||endTime.isEmpty())?null:LocalDateTime.parse(endDate + endTime, formatter));
     	activity.setPlace(place);
+    	activity.setPlaceDetail(placeDetail);
     	activity.setContent(content);
     	
     	mActivityRepository.save(activity);
@@ -676,37 +713,38 @@ public class ActivityService {
 		mUserEventMapperRepository.save(eventUserMapper);
 	}
 
-	public List<ActivityDto> getActivitylist(Long interestCategoryId) {
-
+    public List<ActivityDto> getActivitylist(Long interestCategoryId) {
 		List<EventEntity> eventList = new ArrayList<>();
-		if(interestCategoryId!=0) {
-			InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
-			eventList = mActivityRepository.findAllByEventCategoryAndInterestCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, interestCategory, (byte) 0);
-		}
-		else {
-			eventList = mActivityRepository.findAllByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, (byte) 0);
-		}
+    	if(interestCategoryId!=0) {
+    		InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
+    		eventList = mActivityRepository.findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(0, interestCategory,(byte) 0, (byte) 1, (byte) 3);
+    		eventList.addAll(mActivityRepository.findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(0, interestCategory,(byte) 0, (byte) 4, (byte) 6));
+    	}
+    	else {
+    		eventList = mActivityRepository.findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(0, (byte) 0, (byte) 1, (byte) 3);
+    		eventList.addAll(mActivityRepository.findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(0, (byte) 0, (byte) 4, (byte) 6));
+    	}
+    	
 		List<ActivityDto> activityList = new ArrayList<>();
 		Set<ActivityUserDto> activityUsers;
 		Set<ActivityUserDto> activityVolunteers;
 		ActivityUserDto activityUser;
-
 		ActivityDto activity;
 		List<UserEventMapper> userEventList;
-
+		
 		for(EventEntity event: eventList) {
 			activity = convertEventEntityToActivityDto(event);
 			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
 			activityUsers = new HashSet<>();
 			activityVolunteers = new HashSet<>();
-
 			for(UserEventMapper userEvent : userEventList) {
 				activityUser = new ActivityUserDto();
 				activityUser.setUser(userEvent.getUser());
 				activityUser.setLocationAgree(userEvent.getLocationAgree());
 				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
 				activityUser.setStatus(userEvent.getStatus());
-
+				activityUser.setMemo((userEvent.getMemo()!=null)?userEvent.getMemo():null);
+				
 				if(userEvent.getUserType() == 1) {
 					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
 					activityVolunteers.add(activityUser);
@@ -719,15 +757,44 @@ public class ActivityService {
 			activity.setActivityVolunteers(activityVolunteers);
 			activityList.add(activity);
 		}
-
-		return activityList;
+		
+		
+    	return activityList;
 	}
 
 	public List<ActivityDto> getTop5Activitylist() {
-		List<EventEntity> eventList = mActivityRepository.findTop5ByEventCategoryAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, (byte) 0);
+		List<EventEntity> eventList = mActivityRepository.findTop5ByEventCategoryAndDeliveryFlagAndStatusGreaterThanOrderByStatusAscDeadlineAsc(0, (byte) 0, (byte) 0);
 		List<ActivityDto> activityList = new ArrayList<>();
+		Set<ActivityUserDto> activityUsers;
+		Set<ActivityUserDto> activityVolunteers;
+		ActivityUserDto activityUser;
+		ActivityDto activity;
+		List<UserEventMapper> userEventList;
+		
 		for(EventEntity event: eventList) {
-			activityList.add(convertEventEntityToActivityDto(event));
+			activity = convertEventEntityToActivityDto(event);
+			userEventList = mUserEventMapperRepository.findAllByEventId(event.getId());
+			activityUsers = new HashSet<>();
+			activityVolunteers = new HashSet<>();
+			for(UserEventMapper userEvent : userEventList) {
+				activityUser = new ActivityUserDto();
+				activityUser.setUser(userEvent.getUser());
+				activityUser.setLocationAgree(userEvent.getLocationAgree());
+				activityUser.setPhoneAgree(userEvent.getPhoneAgree());
+				activityUser.setStatus(userEvent.getStatus());
+				activityUser.setMemo((userEvent.getMemo()!=null)?userEvent.getMemo():null);
+				
+				if(userEvent.getUserType() == 1) {
+					activityUser.setVolunteerTime(userEvent.getVolunteerTime());
+					activityVolunteers.add(activityUser);
+				}
+				else {
+					activityUsers.add(activityUser);
+				}
+			}
+			activity.setActivityUsers(activityUsers);
+			activity.setActivityVolunteers(activityVolunteers);
+			activityList.add(activity);
 		}
 		return activityList;
 	}
@@ -754,6 +821,7 @@ public class ActivityService {
 					activityUser.setLocationAgree(userEvent.getLocationAgree());
 					activityUser.setPhoneAgree(userEvent.getPhoneAgree());
 					activityUser.setStatus(userEvent.getStatus());
+					activityUser.setMemo((userEvent.getMemo()!=null)?userEvent.getMemo():null);
 
 					if(userEvent.getUserType() == 1) {
 						activityUser.setVolunteerTime(userEvent.getVolunteerTime());
@@ -793,6 +861,7 @@ public class ActivityService {
 					activityUser.setLocationAgree(userEvent.getLocationAgree());
 					activityUser.setPhoneAgree(userEvent.getPhoneAgree());
 					activityUser.setStatus(userEvent.getStatus());
+					activityUser.setMemo((userEvent.getMemo()!=null)?userEvent.getMemo():null);
 
 					if(userEvent.getUserType() == 1) {
 						activityUser.setVolunteerTime(userEvent.getVolunteerTime());
@@ -820,6 +889,19 @@ public class ActivityService {
 		mUserEventMapperRepository.save(userEventMapper);
 		mUserRepository.save(user);
 	}
+	
+	public void setMemoForUserEventMapper(Long eventId, Long userId, String memo) {
+		UserEventMapper userEventMapper = mUserEventMapperRepository.findByEventIdAndUserId(eventId, userId);
+		
+		if(userEventMapper.getMemo()==null) {
+			userEventMapper.setMemo(memo);
+		}
+		else {
+			userEventMapper.setMemo(userEventMapper.getMemo() + "\n" + memo);
+		}
+		
+		
+	}
     
 	// EventEntity -> ActivityDto conversion
 		private ActivityDto convertEventEntityToActivityDto(EventEntity eventEntity) {
@@ -838,6 +920,7 @@ public class ActivityService {
 					.evaluate(eventEntity.getEvaluate())
 					.deadline(eventEntity.getDeadline())
 					.type(eventEntity.getType())
+					.placeDetail(eventEntity.getPlaceDetail())
 					.regDate(eventEntity.getRegDate())
 					.modDate(eventEntity.getModDate())
 					.build();

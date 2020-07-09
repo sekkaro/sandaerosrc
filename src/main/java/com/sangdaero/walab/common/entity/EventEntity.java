@@ -118,13 +118,15 @@ public class EventEntity extends TimeEntity {
 	private LocalDateTime deadline;
 
 	private Integer type;
+	
+	private String placeDetail;
 
 	@Builder
 	public EventEntity(Long id, String title, Byte status, Integer eventCategory, User manager,
 			String place,  LocalDateTime startTime, LocalDateTime endTime, String content, Byte deliveryFlag,
 			Byte phoneAgree, String donator, Byte selectSupport, Integer donationPrice, Byte billType,
 			Byte paymentCheck, String donatorName, String donatorPhone, String businessPicture, String evaluate,
-					   LocalDateTime deadline, Integer type) {
+					   LocalDateTime deadline, Integer type, String placeDetail) {
 		this.id = id;
 		this.title = title;
 		this.status = status;
@@ -146,6 +148,7 @@ public class EventEntity extends TimeEntity {
 		this.businessPicture = businessPicture;
 		this.evaluate = evaluate;
 		this.deadline = deadline;
+		this.placeDetail = placeDetail;
 		this.type = type;
 	}
 

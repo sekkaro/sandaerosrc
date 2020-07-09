@@ -223,7 +223,7 @@
 							</div>
 							<div class="subsub2 sub" style="float: left;margin-left: 85px">
 								<input type="text" id="place" th:field="*{place}" placeholder="주소를 입력하세요." onclick="execPostcode()">
-								<input type="text" id="simple_addr" placeholder="상세주소를 입력하세요.">
+								<input type="text" id="simple_addr" th:field="*{placeDetail}" placeholder="상세주소를 입력하세요.">
 							</div>
 						</div>
 					</div>
@@ -253,9 +253,9 @@
 					<div class="subtitle">나눔 내용</div>
 					<div class="sectionLeft">
 						<div class="subcontent">수령 방법</div>
-							<input type="radio" id="direct" th:field="*{delivery}" value="0" checked>
+							<input type="radio" id="direct" th:field="*{delivery}" value="1">
 							<label for="direct">직접 수령</label>
-							<input type="radio" id="through" th:field="*{delivery}" value="1">
+							<input type="radio" id="through" th:field="*{delivery}" value="0" checked>
 							<label for="through">봉사사 통해 전달</label>
 					</div>
 					<div class="sectionRight">

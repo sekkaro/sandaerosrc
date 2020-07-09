@@ -205,4 +205,11 @@ public class UserRestController {
 
 		return interests;
 	}
+	
+	@PostMapping("/unregisterUser")
+	public void unregisterUser(@RequestBody AppRequest userForm) {
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+		
+		mUserService.changeUserType(userDto.getId(), (byte) 2);
+	}
 }

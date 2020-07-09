@@ -60,4 +60,7 @@ public class UserEventMapper extends TimeEntity {
 	@ColumnDefault("0")
 	private Integer volunteerTime;
 	
+	@Column(name="memo", nullable = true)
+	private String memo;
+	
 }

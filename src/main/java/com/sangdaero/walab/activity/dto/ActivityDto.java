@@ -41,6 +41,7 @@ public class ActivityDto {
 	private String evaluate;
 	private LocalDateTime deadline;
 	private Integer type;
+	private String placeDetail;
 	
 	private LocalDateTime regDate;
 	private LocalDateTime modDate;
@@ -49,7 +50,7 @@ public class ActivityDto {
 	public ActivityDto(Long id, String title, Byte status, Integer eventCategory, InterestCategory interestCategory, 
 			Set<ActivityUserDto> activityUsers, Set<Long> userIds, Set<ActivityUserDto> activityVolunteers, Set<Long> volunteerIds, User manager, String place, LocalDateTime startTime, 
 			LocalDateTime endTime, String content, Byte deliveryFlag, String evaluate,
-					   LocalDateTime deadline, Integer type, LocalDateTime regDate, LocalDateTime modDate) {
+					   LocalDateTime deadline, Integer type, String placeDetail, LocalDateTime regDate, LocalDateTime modDate) {
 		this.id = id;
 		this.title = title;
 		this.status = status;
@@ -68,6 +69,7 @@ public class ActivityDto {
 		this.evaluate = evaluate;
 		this.deadline = deadline;
 		this.type = type;
+		this.placeDetail = placeDetail;
 		this.regDate = regDate;
 		this.modDate = modDate;
 	}
@@ -95,6 +97,7 @@ public class ActivityDto {
 					.evaluate(evaluate)
 					.deadline(deadline)
 					.type(type)
+					.placeDetail(placeDetail)
 					.build();
 			
 			return eventEntity;

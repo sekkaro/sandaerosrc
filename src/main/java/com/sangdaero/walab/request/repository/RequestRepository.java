@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.sangdaero.walab.common.entity.EventEntity;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.Request;
 
@@ -25,5 +26,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	
 	@EntityGraph(attributePaths = { "interestCategory", "client" })
 	Optional<Request> getById(Long id);
+	
+	@EntityGraph(attributePaths = { "client" })
+	Request findByEventAndInterestCategory(EventEntity activity, InterestCategory interestCategory);
 
 }

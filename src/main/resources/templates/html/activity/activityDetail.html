@@ -165,6 +165,7 @@
 				<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
 				<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
 				<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
+				<option th:if="${activityDto.interestCategory?.name?.contains('물건')}" th:value="6" th:selected="${activityDto.status} == 6">물건 거절</option>
 			</select>
 			<button id="editTitleGroupBtn" class="inlinebox edit" style="padding-top: 6px">편집</button>
 			<button id="cancelTitleGroupBtn" class="inlinebox edit" style="display: none;padding-top: 6px">취소</button>
@@ -273,17 +274,16 @@
 													<div class="v_menuname" style="float: left;">
 														관심사
 													</div>
-<!--													유저 별 관심사 리스트가 필요할 듯..-->
-<!--													<span th:each="interest : ${interestList}">-->
-<!--														<input type="checkbox"-->
-<!--															   th:id="interest+${interest.id}"-->
-<!--															   name="userInterestList"-->
-<!--															   th:value="${interest.name}" hidden/>-->
-<!--														<div th:id="${interest.id}" class="button">-->
-<!--															<span th:text="${interest.name}"></span>-->
-<!--															<img src="/img/deactive.png">-->
-<!--														</div>-->
-<!--													</span>-->
+													<span th:each="interest : ${activityUser.userInterestList}">
+														<input type="checkbox"
+															   th:id="interest+${interest.id}"
+															   name="userInterestList"
+															   th:value="${interest.name}" hidden/>
+														<div th:id="${interest.id}" class="button">
+															<span th:text="${interest.name}"></span>
+															<img src="/img/deactive.png">
+														</div>
+													</span>
 												</div>
 											</div>
 										</div>
@@ -495,10 +495,10 @@
 							<div class="menu_name">장소</div>
 						</div>
 						<div class="inlinebox searchbox">
-							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.place} + ' 상세 주소' "></p>
+							<p id="place" th:if="${activityDto.place}" th:text="${activityDto.placeDetail != null} ? ${ activityDto.place + ' ' + activityDto.placeDetail} : ${activityDto.place}"></p>
 							<div id="editPlace" name="place" style="display: none;">
 								<input type="text" id="address" placeholder="주소" th:value="${activityDto.place}" style="margin-top: 50px;margin-bottom: 0px;height: 20px;" onclick="execPostcode()">
-								<input type="text" id="simple_addr" placeholder="상세주소" style="float:left;margin-top:10px;height: 20px;padding: 0 0 0 15px;width: 75%">
+								<input type="text" id="simple_addr" placeholder="상세주소" th:value="${activityDto.placeDetail}" style="float:left;margin-top:10px;height: 20px;padding: 0 0 0 15px;width: 75%">
 								<input type="hidden" id="coordi_x">
 								<input type="hidden" id="coordi_y">
 							</div>
@@ -518,11 +518,11 @@
 						<div class="menu_name">전달 여부</div>
 					</div>
 					<div class="inlinebox">
-						<span id="delivery" th:text="${activityDto.deliveryFlag == 0} ? '직접 수령' : '봉사자 통해 전달'" ></span>
+						<span id="delivery" th:text="${activityDto.deliveryFlag == 1} ? '직접 수령' : '봉사자 통해 전달'" ></span>
 						<div id="editDelivery" style="display: none;">
-							<input type="radio" id="direct" name="delivery" value="0" th:checked="${activityDto.deliveryFlag} == 0">
+							<input type="radio" id="direct" name="delivery" value="1" th:checked="${activityDto.deliveryFlag} == 1">
 							<label for="direct">직접 수령</label>
-							<input type="radio" id="through" name="delivery" value="1" th:checked="${activityDto.deliveryFlag} == 1">
+							<input type="radio" id="through" name="delivery" value="0" th:checked="${activityDto.deliveryFlag} == 0">
 							<label for="through">봉사사 통해 전달</label>
 						</div>
 					</div>
@@ -1379,7 +1379,15 @@
 						if(data.users.length > 0){
 							$('#userList').removeClass("members user");
 							data.users.forEach(function(item){
-								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><span>"+ item.user.name +"</span><span>"+ item.user.phone +"</span></div>";
+								
+								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><a data-fancybox data-src='#userDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='userDetail" + item.user.id +"'><img src='/img/v_bar.png'><h3 style='padding-left: 20px'>이용자 정보</h3><div style='padding-left: 20px'><div class='sub_heading'>기본 정보</div><div><div class='user_left' style='width: 100%'><div class='inlinebox'><div class='v_menuname' style='float: left;'>이름</div><input type='text' class='v_menuval' id='v_name' name='v_name' value='"+ item.user.name +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호</div><input type='text' class='v_menuval' id='v_phone' name='v_phone' value='"+ item.user.phone +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>이메일</div><input type='text' class='v_menuval' id='v_phone' name='v_email' value='"+ item.user.socialId +"' style='width: 200px' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>관심사</div>";
+								
+								item.userInterestList.forEach(function(interest){
+									innerUsersHtml += "<span><input type='checkbox' id='interest" + interest.id +"' name='userInterestList' value='"+ interest.name +"' hidden/><div id='"+ interest.id +"' class='button'><span>"+ interest.name +"</span><img src='/img/deactive.png'></div></span>";
+								});
+								
+								innerUsersHtml += "</div></div></div></div></div></div>";
+								
 							})
 						}
 						else{
@@ -1651,6 +1659,7 @@
 								endDate: endDate,
 								endTime: endTime,
 								place: $('#address').val(),
+								placeDetail: $('#simple_addr').val(),
 								content: $('#explianation').val()
 							},
 							function(data) {

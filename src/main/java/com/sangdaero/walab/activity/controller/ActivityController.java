@@ -161,7 +161,8 @@ public class ActivityController {
 				activityForm.getDelivery(), activityForm.getManagerId(), activityForm.getStartDate(), activityForm.getStartTime(),
 				activityForm.getEndDate(), activityForm.getEndTime(), activityForm.getPlace(), activityForm.getDeadlineDate(),
 				activityForm.getDeadlineTime(), activityForm.getContent(), activityForm.getVolunteerId(),
-				activityForm.getVolunteerStatus(), activityForm.getFiles(), activityForm.getRequestId(), activityForm.getFile());
+				activityForm.getVolunteerStatus(), activityForm.getFiles(), activityForm.getRequestId(), activityForm.getFile(),
+				activityForm.getPlaceDetail());
 
 		return "redirect:/activity";
 	}
