@@ -119,8 +119,9 @@ public class ActivityRestController {
 	public String setVolunteerTimeAndPlaceAndContent(@RequestParam("id") Long id,
 			@RequestParam("startDate") String startDate, @RequestParam("startTime") String startTime,
 			@RequestParam("endDate") String endDate, @RequestParam("endTime") String endTime,
-			@RequestParam("place") String place, @RequestParam("placeDetail") String placeDetail,
-			@RequestParam("content") String content) {
+		 	@RequestParam("place") String place, @RequestParam("placeDetail") String placeDetail,
+		 	@RequestParam("content") String content) {
+
 		mActivityService.setVolunteerTimeAndPlaceAndContent(id, startDate, startTime, endDate, endTime, place, content, placeDetail);
 		return place + " " + placeDetail + "|" + content +"|" +startDate + "|" + startTime + "|" + endDate + "|" + endTime;
 	}
@@ -245,7 +246,7 @@ public class ActivityRestController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
 	}
-	
+
 	@PostMapping("/updateMemo")
 	public void updateMemo(@RequestBody AppRequest unregisterForm) {
 		UserDto userDto = mUserService.createUser(unregisterForm.getEmail(), unregisterForm.getName());

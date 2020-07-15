@@ -147,16 +147,50 @@
 		<input type="hidden" id="activityId" th:value="${activityDto.id}"/>
 
 		<div>
-		<div class="bar">
+		<div id="activity_bar" class="bar">
 			<div class="heading" id="titleText" th:text="${activityDto.title}"></div>
 			<input id="editTitleField" type="text" th:value="${activityDto.title}" style="display: none;">
 
-			<span id="status" th:if="${activityDto.status == 0}"><img id="tag" src="/img/before_matching.png"></span>
-			<span id="status" th:if="${activityDto.status == 1}"><img id="tag" src="/img/ing_matching.png"></span>
-			<span id="status" th:if="${activityDto.status == 2}"><img id="tag" src="/img/done_matching.png"></span>
-			<span id="status" th:if="${activityDto.status == 3}"><img id="tag" src="/img/ing_activity.png"></span>
-			<span id="status" th:if="${activityDto.status == 4}"><img id="tag" src="/img/done_activity.png"></span>
-			<span id="status" th:if="${activityDto.status == 5}"><img id="tag" src="/img/cancle_activity.png"></span>
+			<div id="status" th:with="condition=${activityDto.status}">
+				<!--매칭 전 -->
+				<span id="status0" th:if="${condition == 0}">
+					<img class="tag" src="/img/before_matching.png">
+				</span>
+				<span id="status0" th:if="${condition != 0 and condition lt 5}">
+					<img th:id="0" class="untag" src="/img/b_matching.png" onclick="changeStatus(event)">
+				</span>
+
+				<!-- 매칭 중 -->
+				<span id="status1" th:if="${condition == 1}"><img class="tag" src="/img/ing_matching.png"></span>
+				<span id="status1" th:if="${condition != 1 and condition lt 5}"><img th:id="1" class="untag" src="/img/matching.png" onclick="changeStatus(event)"></span>
+
+				<!-- 매칭 완료 -->
+				<span id="status2" th:if="${condition == 2}"><img class="tag" src="/img/done_matching.png"></span>
+				<span id="status2" th:if="${condition != 2 and condition lt 5}"><img th:id="2" class="untag" src="/img/a_matching.png" onclick="changeStatus(event)"></span>
+
+				<!-- 활동 중 -->
+				<span id="status3" th:if="${condition == 3}"><img class="tag" src="/img/ing_activity.png"></span>
+				<span id="status3" th:if="${condition != 3 and condition lt 5}"><img th:id="3" class="untag" src="/img/activiting.png" onclick="changeStatus(event)"></span>
+
+				<!-- 활동 완료 -->
+				<span id="status4" th:if="${condition == 4}"><img class="tag" src="/img/done_activity.png"></span>
+				<span id="status4" th:if="${condition != 4 and condition lt 5}"><img th:id="4" class="untag" src="/img/a_activiting.png" onclick="changeStatus(event)"></span>
+
+				<!-- 취소된 활동 -->
+				<span id="status5" th:if="${condition == 5}"><img class="tag" src="/img/cancle_activity.png"></span>
+
+				<!-- 물건 거절 -->
+				<span id="status6" th:if="${condition == 6}"><img class="tag" src="/img/tag_thing.png"></span>
+
+			</div>
+
+
+<!--			<span id="status" th:if="${activityDto.status == 0}"><img id="tag" src="/img/before_matching.png"></span>-->
+<!--			<span id="status" th:if="${activityDto.status == 1}"><img id="tag" src="/img/ing_matching.png"></span>-->
+<!--			<span id="status" th:if="${activityDto.status == 2}"><img id="tag" src="/img/done_matching.png"></span>-->
+<!--			<span id="status" th:if="${activityDto.status == 3}"><img id="tag" src="/img/ing_activity.png"></span>-->
+<!--			<span id="status" th:if="${activityDto.status == 4}"><img id="tag" src="/img/done_activity.png"></span>-->
+<!--			<span id="status" th:if="${activityDto.status == 5}"><img id="tag" src="/img/cancle_activity.png"></span>-->
 
 			<select id="editStatus" style="display: none;">
 				<option th:value="0" th:selected="${activityDto.status} == 0">매칭 전</option>
@@ -167,6 +201,7 @@
 				<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
 				<option th:if="${activityDto.interestCategory?.name?.contains('물건')}" th:value="6" th:selected="${activityDto.status} == 6">물건 거절</option>
 			</select>
+
 			<button id="editTitleGroupBtn" class="inlinebox edit" style="padding-top: 6px">편집</button>
 			<button id="cancelTitleGroupBtn" class="inlinebox edit" style="display: none;padding-top: 6px">취소</button>
 		</div>
@@ -248,7 +283,7 @@
 											기본 정보
 										</div>
 										<div>
-											<div class="user_left" style="width: 100%">
+											<div class="user_left" style="width: 100%;">
 												<div class="inlinebox">
 													<div class="v_menuname" style="float: left;">
 														이름
@@ -275,14 +310,7 @@
 														관심사
 													</div>
 													<span th:each="interest : ${activityUser.userInterestList}">
-														<input type="checkbox"
-															   th:id="interest+${interest.id}"
-															   name="userInterestList"
-															   th:value="${interest.name}" hidden/>
-														<div th:id="${interest.id}" class="button">
-															<span th:text="${interest.name}"></span>
-															<img src="/img/deactive.png">
-														</div>
+														<input type="text" th:id="interest+${interest.id}" class="v_menuval" name="interests" th:value="${interest.name}" disabled>
 													</span>
 												</div>
 											</div>
@@ -637,6 +665,17 @@
 			$('#message').hide();
 		}
 
+		function changeStatus(event) {
+			var newValue = event.target.id;
+
+			$.post("/activitydata/setTitleAndStatus", {
+				id: $('#activityId').val(),
+				title: $('#editTitleField').val(),
+				status: newValue
+			}, function (data) {
+				window.location.reload();
+			});
+		}
 
 		var expandedUsers = false;
 		var expandedVolunteers = false;
@@ -769,6 +808,7 @@
 
 				} else {
 					$('#editTitleGroupBtn').html('편집');
+					console.log(statusValue);
 					$.post("/activitydata/setTitleAndStatus", {
 						id: $('#activityId').val(),
 						title: $('#editTitleField').val(),
@@ -832,7 +872,7 @@
 						setTimeout(function () {
 							hideMessage();
 						}, 2000);
-
+						window.location.reload();
 					});
 				}
 
@@ -1379,15 +1419,13 @@
 						if(data.users.length > 0){
 							$('#userList').removeClass("members user");
 							data.users.forEach(function(item){
-								
 								innerUsersHtml += "<div class='members user'><input type='hidden' class='userIds' value='"+ item.user.id +"'/><a data-fancybox data-src='#userDetail" + item.user.id +"' href='javascript:;'>"+ item.user.name +"</a><span>"+ item.user.phone +"</span><div style='display: none;' id='userDetail" + item.user.id +"'><img src='/img/v_bar.png'><h3 style='padding-left: 20px'>이용자 정보</h3><div style='padding-left: 20px'><div class='sub_heading'>기본 정보</div><div><div class='user_left' style='width: 100%'><div class='inlinebox'><div class='v_menuname' style='float: left;'>이름</div><input type='text' class='v_menuval' id='v_name' name='v_name' value='"+ item.user.name +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>전화번호</div><input type='text' class='v_menuval' id='v_phone' name='v_phone' value='"+ item.user.phone +"' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>이메일</div><input type='text' class='v_menuval' id='v_phone' name='v_email' value='"+ item.user.socialId +"' style='width: 200px' disabled></div><br><div class='inlinebox'><div class='v_menuname' style='float: left;'>관심사</div>";
-								
+
 								item.userInterestList.forEach(function(interest){
 									innerUsersHtml += "<span><input type='checkbox' id='interest" + interest.id +"' name='userInterestList' value='"+ interest.name +"' hidden/><div id='"+ interest.id +"' class='button'><span>"+ interest.name +"</span><img src='/img/deactive.png'></div></span>";
 								});
-								
+
 								innerUsersHtml += "</div></div></div></div></div></div>";
-								
 							})
 						}
 						else{

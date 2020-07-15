@@ -53,8 +53,9 @@ h4{
 }
 
 .not-yet {
-    background-color: #f1f1f1;
-    border-radius: 0 15px 15px 0;
+    text-decoration: none;
+    font-size: 16px;
+    color: #f1f1f1;
 }
 
 @media (max-width:1411px){

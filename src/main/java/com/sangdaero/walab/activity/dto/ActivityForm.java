@@ -50,7 +50,7 @@ public class ActivityForm {
     String endTime;
 
     String place;
-    
+
     String placeDetail;
 
     @NotNull
