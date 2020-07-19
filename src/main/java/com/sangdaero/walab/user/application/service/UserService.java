@@ -135,9 +135,13 @@ public class UserService extends OidcUserService {
         return simpleUserPage;
     }
 
+    public Page<User> getAllUserRankingPageList(Pageable pageable) {
+
+        return mUserRepository.findAllByOrderByVolunteerTimeDesc(pageable);
+    }
+
     public List<SimpleUser> getSimpleUserList() {
-        List<SimpleUser> simpleUserList = mUserRepository.findAllByUserTypeNotOrderByName((byte) 2);
-        return simpleUserList;
+        return mUserRepository.findAllByUserTypeNotOrderByName((byte) 2);
     }
     
     public List<SimpleUser> getSimpleUserList(String type){
@@ -213,6 +217,23 @@ public class UserService extends OidcUserService {
 
         return result;
     }
+//
+//    public List<VolunteerRanking> getAllRankingList() {
+//	    List<User> userList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
+//
+//	    List<VolunteerRanking> result = new ArrayList<>();
+//
+//	    for(User u : userList) {
+//	        VolunteerRanking build = VolunteerRanking.builder()
+//                    .id(u.getId())
+//                    .name(u.getName())
+//                    .volunteerTime(u.getVolunteerTime())
+//                    .build();
+//	        result.add(build);
+//        }
+//
+//	    return result;
+//    }
 
 //    public List<SimpleUser> getUserRankingList() {
 //        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();

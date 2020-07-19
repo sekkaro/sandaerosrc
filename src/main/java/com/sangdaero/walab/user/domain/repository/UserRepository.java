@@ -45,4 +45,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByNameContaining(String keyword);
 
     List<SimpleUser> findAllByOrderByName();
+
+    Page<User> findAllByOrderByVolunteerTimeDesc(Pageable pageable);
 }

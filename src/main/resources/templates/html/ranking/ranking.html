@@ -1,7 +1,111 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+  <link rel="stylesheet" href="/css/listAct.css">
   <th:block th:replace="common/head.html"/>
+
+  <style>
+    .upper, .actList, .down {
+      width: 80%;
+      margin: 0px auto;
+    }
+    #Paging {
+      width: 80%;
+      margin: 0px auto;
+      margin-top: 20px;
+    }
+    #rank {
+      color: #494949;
+    }
+
+    .real_time {
+      color: #00c063;
+      font-weight: 600;
+    }
+    .text_time {
+      color: #000000;
+      opacity: 0.5;
+      font-weight: 600;
+    }
+    #user_name {
+      text-align: left;
+    }
+
+    #rank01 > #user_name span {
+      font-size: 30px;
+      color: #00c063;
+      font-weight: 600;
+    }
+    #rank01 .real_time {
+      font-size: 25px;
+    }
+
+    #rank01 img {
+      width: 50px;
+    }
+
+    .top_rank {
+      vertical-align: middle;
+      width: 30px;
+    }
+
+    .content:not(#content01) {
+      background-color: white;
+      margin-top: 40px;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    #content01 {
+      margin-top: 40px;
+      padding: 10px;
+    }
+
+    #rank01 {
+      background-image: url("/img/rank1_background.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-position: center;
+      line-height: 170px;
+    }
+
+    #rank01 > .user_name .real_time {
+      font-size: 30px;
+      color: #00c063;
+      font-weight: 600;
+    }
+
+    .user_list {
+      text-align: left;
+      border-radius: 15px;
+    }
+
+    .ranking {
+      display: inline-block;
+      width: 10%;
+      text-align: center;
+      margin-left: 5%;
+    }
+    .name {
+      display: inline-block;
+      width: 60%;
+      text-align: left;
+      margin-left: 10%;
+    }
+    .volunteer_time {
+      display: inline-block;
+      width: 10%;
+      text-align: center;
+    }
+    #rank01 .name span {
+      color: #00c063;
+      font-weight: 600;
+      font-size: 30px;
+    }
+    .low_rank {
+      color: #444444;
+    }
+  </style>
 </head>
 <body>
   <header th:replace="common/menu :: header"></header>
@@ -9,51 +113,51 @@
   <div lang="en" th:replace="common/menu :: menu"></div>
 
   <div id="main">
-    <h4>랭킹</h4>
+    <div class="upper">
+      <h4>랭킹</h4>
+    </div>
 
-    <div id="basicBody">
-
-      <!-- TODO 월간, 주간 구현해야 함 -->
-      <div class="row" style="margin-left: 15%">
-        <li>
-          <a th:href="'?scope=1'">전체</a>
-        </li>
-        <li>
-          <a th:href="'?scope=2'">월간</a>
-        </li>
-        <li>
-          <a th:href="'?scope=3'">주간</a>
-        </li>
+    <div class="actList">
+      <div th:each="userInfo : ${userRanking}" th:id="rank + 10*${userRanking.number}+${userInfoStat.count}" class="user_list">
+        <div th:with="rank=10*${userRanking.number}+${userInfoStat.count}" class="content user_name" th:id="content+ 10*${userRanking.number}+${userInfoStat.count}">
+          <div class="ranking">
+            <img th:if="${rank} &lt; 4" th:src="|/img/ranking${rank}.png|" class="top_rank">
+            <span th:if="${rank} &gt; 3" th:text="10*${userRanking.number}+${userInfoStat.count}" class="low_rank"></span>
+          </div>
+          <div class="name">
+            <a th:href="@{'/user/detail/' + ${userInfo.id}}">
+              <span th:text="${userInfo.name}"></span>
+            </a>
+          </div>
+          <div class="volunteer_time">
+            <span class="real_time" th:text="${userInfo.volunteerTime}"></span>
+            <span class="text_time">시간</span>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <div style="margin-left: 15%">
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col">등수</th>
-            <th scope="col">유저 이름</th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr th:each="userInfo : ${userRanking}">
-            <th scope="row">
-              <span th:text="${userInfoStat.index}+1"></span>
-            </th>
-            <td>
-              <a th:href="@{'/user/detail/' + ${userInfo.id}}">
-                <span th:text="${userInfo.name}"></span>
-              </a>
-              <span th:text="'(' + ${userInfo.volunteerTime} + ' 시간)'"></span>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+    <div class="down">
+      <div id="Paging">
+          <span th:if="${!userRanking.first}">
+            <button id="prev" name="button">
+              <a th:href="'?page='+${userRanking.number-1}"> < </a>
+            </button>
+          </span>
+        <button th:each="pageNo : *{#numbers.sequence(((userRanking.number)/5)*5+1, ((totalNum)/10)+1>5 ? ((userRanking.number)/5)*5+5 : ((totalNum)%10)>0 ? (((totalNum)/10)+1) : ((totalNum)/10)  )}"
+                th:class="${pageNo} == ${userRanking.number+1} ? one : plist">
+          <a th:href="'?page='+${pageNo-1}">
+            <span th:text="${pageNo}"></span>
+          </a>
+        </button>
+        <span th:if="${!userRanking.last}">
+            <button id="next" name="button">
+              <a th:href="'?page='+${userRanking.number+1}"> > </a>
+            </button>
+          </span>
       </div>
     </div>
   </div>
-
-
 
   <div lang="en" th:replace="common/footer :: footer"></div>
 

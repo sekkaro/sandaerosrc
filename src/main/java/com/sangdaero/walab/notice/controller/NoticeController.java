@@ -82,8 +82,19 @@ public class NoticeController extends CategoryController {
         
         model.addAttribute("noticeDto", noticeDto);
         model.addAttribute("category", category);
-        
+
         return "html/notice/detail.html";
+    }
+
+    @GetMapping("/mobile/detail/{no}")
+    public String mobile_detail(@PathVariable("no") Long id, Model model) {
+        NoticeDto noticeDto = mNoticeService.getPost(id);
+        String category = super.mCategoryService.getCategoryMemo(noticeDto.getCategoryId());
+
+        model.addAttribute("noticeDto", noticeDto);
+        model.addAttribute("category", category);
+
+        return "html/notice/mobile_detail";
     }
 
     // Edit page which through detail
