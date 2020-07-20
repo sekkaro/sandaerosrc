@@ -47,9 +47,10 @@ public class RequestRestController {
 			consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public String newProduct(@RequestParam("name") String name, @RequestParam("email") String email,
 							 @RequestParam("image") MultipartFile image, @RequestParam("id") Long id,
-							 @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) {
+							 @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime,
+							 @RequestParam("title") String title, @RequestParam("memo") String memo) {
 		UserDto userDto = mUserService.createUser(email, name);
-		mRequestService.createRequest(null, id, userDto, image, (byte) 1, startTime, endTime, null, null);
+		mRequestService.createRequest(null, id, userDto, image, (byte) 1, startTime, endTime, title, memo);
 		return "success";
 	}
 	

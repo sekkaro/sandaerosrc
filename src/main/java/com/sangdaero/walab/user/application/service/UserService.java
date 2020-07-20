@@ -59,8 +59,8 @@ public class UserService extends OidcUserService {
         User user = mUserRepository.findBySocialId(userDto.getSocialId());
         if(user == null) {
         	userDto.setNickname("닉네임");
-            userDto.setPhone("010-9291-2788");
-            userDto.setUserType((byte) 0); // TODO 나중에 0(이용자)로 바꿔야 함
+            userDto.setPhone("010-0000-0000");
+            userDto.setUserType((byte) 0);
             userDto.setStatus((byte) 1);
             userDto.setIsDummy((byte) 0);
             user = userDto.toEntity(); 
@@ -135,9 +135,13 @@ public class UserService extends OidcUserService {
         return simpleUserPage;
     }
 
+    public Page<User> getAllUserRankingPageList(Pageable pageable) {
+
+        return mUserRepository.findAllByOrderByVolunteerTimeDesc(pageable);
+    }
+
     public List<SimpleUser> getSimpleUserList() {
-        List<SimpleUser> simpleUserList = mUserRepository.findAllByUserTypeNotOrderByName((byte) 2);
-        return simpleUserList;
+        return mUserRepository.findAllByUserTypeNotOrderByName((byte) 2);
     }
     
     public List<SimpleUser> getSimpleUserList(String type){
@@ -213,6 +217,23 @@ public class UserService extends OidcUserService {
 
         return result;
     }
+//
+//    public List<VolunteerRanking> getAllRankingList() {
+//	    List<User> userList = mUserRepository.findAllByOrderByVolunteerTimeDesc();
+//
+//	    List<VolunteerRanking> result = new ArrayList<>();
+//
+//	    for(User u : userList) {
+//	        VolunteerRanking build = VolunteerRanking.builder()
+//                    .id(u.getId())
+//                    .name(u.getName())
+//                    .volunteerTime(u.getVolunteerTime())
+//                    .build();
+//	        result.add(build);
+//        }
+//
+//	    return result;
+//    }
 
 //    public List<SimpleUser> getUserRankingList() {
 //        List<SimpleUser> userRankingList = mUserRepository.findTop5ByOrderByVolunteerTimeDesc();
@@ -402,21 +423,21 @@ public class UserService extends OidcUserService {
     }
 
     public void setPhoneAgree(Long id, Boolean phoneAgree) {
-		User user = mUserRepository.findById(id).orElse(null);
-		
-		if(user!=null) {
-			user.setPhoneAgree((byte) ((phoneAgree)?1:0));
-			mUserRepository.save(user);
-			
-			List<UserEventMapper> userEventList = mUserEventMapperRepository.findAllByUserIdOrderByRegDateDesc(user.getId());
-			
-			for(UserEventMapper userEvent : userEventList) {
-				userEvent.setPhoneAgree(user.getPhoneAgree());
-				mUserEventMapperRepository.save(userEvent);
-			}
-		}
-		
-	}
+        User user = mUserRepository.findById(id).orElse(null);
+
+        if(user!=null) {
+            user.setPhoneAgree((byte) ((phoneAgree)?1:0));
+            mUserRepository.save(user);
+
+            List<UserEventMapper> userEventList = mUserEventMapperRepository.findAllByUserIdOrderByRegDateDesc(user.getId());
+
+            for(UserEventMapper userEvent : userEventList) {
+                userEvent.setPhoneAgree(user.getPhoneAgree());
+                mUserEventMapperRepository.save(userEvent);
+            }
+        }
+
+    }
 
     public void setBasicInfo(Long id, String phone, String nickname, Boolean phoneAgree) {
         User user = mUserRepository.findById(id).orElse(null);

@@ -41,8 +41,13 @@ not * {
   margin-left: -12%;
 }
 
-.condition{
+.list-condition{
   width: 80px;
+  /*margin-top:10px*/
+}
+
+.condition{
+  width: 60px;
   /*margin-top:10px*/
 }
 
@@ -149,7 +154,7 @@ tr:last-child > td{
 .one{
   border: 1px solid #019783 !important;
   border-radius: 50%;
-  color: #019783 !important;
+  colorcolor: #019783 !important;
 }
 
 a {

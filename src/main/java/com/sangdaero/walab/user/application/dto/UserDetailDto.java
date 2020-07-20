@@ -32,7 +32,7 @@ public class UserDetailDto {
     private Set<InterestCategory> interests = new HashSet<>();
     private Byte isDummy;
     private Byte phoneAgree;
-    
+
     public User toEntity() {
         User user = User.builder()
                 .id(id)

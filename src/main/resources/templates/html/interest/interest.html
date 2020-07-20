@@ -112,10 +112,10 @@
                             <form th:id="'active-form'+${interest.id}" name="deactive" th:action="@{'/interest/' + ${interest.id}}" method="post">
                                 <input type="hidden" name="_method" value="put"/>
                                 <button class="active" name="button" th:if="${interest.on_off==0}">
-                                    <img class="condition" src="/img/activation.png">
+                                    <img class="condition" src="/img/interest_off.png">
                                 </button>
                                 <a class="active" name="button" th:if="${interest.on_off==1}" th:onclick="'changeStatus(' + ${interest.id} + ',' + ${interest.count} +')'">
-                                    <img class="condition" src="/img/deactivation.png">
+                                    <img class="condition" src="/img/interest_on.png">
                                 </a>
                             </form>
                         </td>

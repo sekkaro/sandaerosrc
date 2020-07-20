@@ -185,13 +185,12 @@ public class UserRestController {
 		mUserService.removeInterest(userDto.getId(), interest);
 	}
 
-	@PostMapping("/eachUserInterest")
-	public Set<eachUserInterest> eachUserInterest(@RequestBody AppRequest userForm) {
+	@GetMapping("/eachUserInterest")
+	public Set<eachUserInterest> eachUserInterest(@RequestParam("name") String name, @RequestParam("email") String email) {
 
-		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+		UserDto userDto = mUserService.createUser(email, name);
 
 		List<UserInterest> byUser_id = mUserInterestRepository.findByUser_Id(userDto.getId());
-
 
 		Set<eachUserInterest> interests = new HashSet<>();
 
@@ -205,11 +204,11 @@ public class UserRestController {
 
 		return interests;
 	}
-	
+
 	@PostMapping("/unregisterUser")
 	public void unregisterUser(@RequestBody AppRequest userForm) {
 		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
-		
+
 		mUserService.changeUserType(userDto.getId(), (byte) 2);
 	}
 }

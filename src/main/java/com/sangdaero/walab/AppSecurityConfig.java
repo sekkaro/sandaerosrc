@@ -29,7 +29,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
         .authorizeRequests(a -> a
-				.antMatchers("/error","/test/**", "/interestdata/**", "/requestdata/**", "/activitydata/**","/noticedata/**", "/notification/**", "/notificationdata/**", "/userdata/**", "/downloadFile/**", "/user/interest/**").permitAll()
+				.antMatchers("/error","/test/**", "/interestdata/**", "/requestdata/**", "/activitydata/**","/noticedata/**", "/notification/**", "/notificationdata/**", "/userdata/**", "/downloadFile/**", "/user/interest/**", "/notice/mobile/detail/**").permitAll()
         		.anyRequest().authenticated()
         )
         .logout(l -> l

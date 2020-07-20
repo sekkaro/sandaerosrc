@@ -87,12 +87,13 @@
 								</a>
 							</td>
 							<td class="status">
-								<img th:if="${activity.status == 0}" class="condition" src="/img/b_matching.png">
-								<span th:if="${activity.status == 1}"><img class="condition" src="/img/matching.png"></span>
-								<span th:if="${activity.status == 2}"><img class="condition" src="/img/a_matching.png"></span>
-								<span th:if="${activity.status == 3}"><img class="condition" src="/img/activiting.png"></span>
-								<span th:if="${activity.status == 4}"><img class="condition" src="/img/a_activiting.png"></span>
-								<span th:if="${activity.status == 5}"><img class="condition" src="/img/activity_cancle.png"></span>
+								<img th:if="${activity.status == 0}" class="list-condition" src="/img/b_matching.png">
+								<span th:if="${activity.status == 1}"><img class="list-condition" src="/img/matching.png"></span>
+								<span th:if="${activity.status == 2}"><img class="list-condition" src="/img/a_matching.png"></span>
+								<span th:if="${activity.status == 3}"><img class="list-condition" src="/img/activiting.png"></span>
+								<span th:if="${activity.status == 4}"><img class="list-condition" src="/img/a_activiting.png"></span>
+								<span th:if="${activity.status == 5}"><img class="list-condition" src="/img/activity_cancle.png"></span>
+								<span th:if="${activity.status == 6}"><img class="list-condition" src="/img/tag_thing.png"></span>
 							</td>
 							<td id="actdate">
 								<span th:text="${#temporals.format(activity.regDate, 'yyyy-MM-dd HH:mm')}"></span>

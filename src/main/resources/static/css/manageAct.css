@@ -102,18 +102,26 @@ input[type=textarea] {
 }
 
 .heading{
-  font-size: 20px;
+  font-size: 17px;
   font-weight: normal;
   float: left;
   color: black;
   line-height: 2;
 }
-#tag{
-  width: 100px;
+.tag{
+  width: 8%;
   height: auto;
   float: left;
   margin-top: 5px;
-  margin-left: 40px;
+  margin-left: 10px;
+}
+.untag {
+  width: 8%;
+  height: auto;
+  float: left;
+  margin-top: 5px;
+  margin-left: 10px;
+  opacity: 0.5;
 }
 
 .row1{

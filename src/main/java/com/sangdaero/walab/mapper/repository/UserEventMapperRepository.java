@@ -33,4 +33,7 @@ public interface UserEventMapperRepository extends JpaRepository<UserEventMapper
 
 	List<UserEventMapper> findTop5ByUserIdOrderByRegDateDesc(Long id);
 
+	List<UserEventMapper> findTop5ByUserIdAndStatusOrderByRegDateDesc(Long id, byte status);
+
+	List<UserEventMapper>  findByEventId(Long id);
 }

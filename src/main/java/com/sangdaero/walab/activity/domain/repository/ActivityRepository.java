@@ -50,15 +50,15 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(int eventCategory,
-			InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
-	
+																														  InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
+
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndInterestCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(int eventCategory,
-			InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
-	
+																														   InterestCategory interestCategory, Byte deliveryFlag, Byte status1, Byte status2);
+
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineAsc(int eventCategory, Byte deliveryFlag, Byte status1, Byte status2);
-	
+
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
 	List<EventEntity> findAllByEventCategoryAndDeliveryFlagAndStatusBetweenOrderByStatusAscDeadlineDesc(int eventCategory, Byte deliveryFlag, Byte status1, Byte status2);
 

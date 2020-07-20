@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/insertAct.css">
+    <th:block th:replace="common/head.html"/>
+    <link rel="stylesheet" href="/css/boardType.css">
+    <style>
+        #notice_content {
+            color: #494949;
+            width: 80%;
+            height: 300px;
+            border: 1px solid #a5a5a5;
+            float: left;
+            padding: 10px;
+        }
+        body {
+            width: 100%;
+            padding-top: 10px;
+        }
+        #main {
+            float: left;
+            width: 95%;
+            margin-top: 0px;
+            padding-left: 2%;
+        }
+        .key {
+            width: 100px;
+            margin-top: 10px;
+        }
+        .content {
+            margin-top: 5px;
+        }
+        .section1 > div {
+            width: 100%;
+        }
+        input {
+            text-align: center;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="main">
+    <h4>공지 상세</h4>
+
+    <div id="actInfo" style="height: 580px;padding-left: 35px">
+        <input type="hidden" id="noticeId" th:value="${noticeDto.id}">
+        <br>
+        <div class="section1">
+            <div style="float: left;">
+                <div class="key">
+                    제목
+                </div>
+                <div class="content" style="width: 55%">
+                    <input type="text" name="title" th:value="${noticeDto.title}" style="width: 100%" disabled >
+                </div>
+            </div>
+            <div style="float: left;">
+                <div class="key">
+                    조회수
+                </div>
+                <div class="content" style="width: 55%">
+                    <input type="text" name="view" th:value="${noticeDto.view}" style="width: 100%" disabled>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="section1">
+            <div style="float: left;">
+                <div class="key">
+                    작성자
+                </div>
+                <div class="content" style="width: 55%">
+                    <input type="text" name="writer" th:value="${noticeDto.writer}" style="width: 100%" disabled>
+                </div>
+            </div>
+            <div style="float: left;">
+                <div class="key">
+                    작성일
+                </div>
+                <div class="content" style="width: 55%">
+                    <input type="text" name="date" th:value="${#temporals.format(noticeDto.modDate, 'yyyy-MM-dd HH:mm')}" style="width: 100%" disabled>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="section1">
+            <div>
+                <div class="key">
+                    카테고리
+                </div>
+                <div class="content" style="width: 55%">
+                    <input type="text" value="공지사항" name="topCategory" style="width: 100%" disabled>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="editor_wrap">
+            <div class="key">내용</div>
+            <div id="notice_content"></div>
+            <input id="content_value" type="hidden" th:value="${noticeDto.content}">
+
+        </div>
+    </div>
+</div>
+
+<div lang="en" th:replace="common/footer :: footer"></div>
+<script>
+    var content = document.getElementById('notice_content');
+    var notice = document.getElementById('content_value').value;
+    content.innerHTML= notice;
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-	List<SimpleUser> findAllByUserTypeNotOrderByName(Byte userType);
+    List<SimpleUser> findAllByUserTypeNotOrderByName(Byte userType);
 
 //    List<SimpleUser> findTop5ByOrderByVolunteerTimeDesc();
 
@@ -22,13 +22,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<SimpleUser> findAllByUserTypeOrderByName(byte userType);
 
 	User findBySocialId(String socialId);
-	
-	Page<User> findAllByNameContainingAndUserTypeNot(String name, Byte userType, Pageable pageable);
+
+    Page<User> findAllByNameContainingAndUserTypeNot(String name, Byte userType, Pageable pageable);
 
     Page<User> findAllByNicknameContainingAndUserTypeNot(String nickname, Byte userType, Pageable pageable);
-    
+
     Page<User> findAllByUserTypeNot(Byte userType, Pageable pageable);
-    
+
     List<User> findAllByNameContainingAndUserTypeNot(String keyword, Byte userType);
     
     @EntityGraph(attributePaths = { "userInterestList", "fundraising" })
@@ -42,7 +42,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByNickname(String nickname);
 
-	List<User> findAllByNameContaining(String keyword);
+    List<User> findAllByNameContaining(String keyword);
 
-	List<SimpleUser> findAllByOrderByName();
+    List<SimpleUser> findAllByOrderByName();
+
+    Page<User> findAllByOrderByVolunteerTimeDesc(Pageable pageable);
 }
