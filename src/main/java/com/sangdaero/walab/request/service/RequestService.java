@@ -124,21 +124,26 @@ public class RequestService {
 	public RequestDto setStatus(Long id, Byte status) {
 		
     	Request request = mRequestRepository.findById(id).orElse(null);
-		Notification notification = new Notification();
-    	
     	request.setStatus(status);
+    	
+    	Notification notification;
 
-		notification.setUser(request.getClient());
-
-		if(status == 0) {
-			notification.setMessage(request.getTitle() + "이 거절 취소되었습니다");
+		if(status == 0) {			
+			notification = mNotificationRepository.findByRequestAndMessageContaining(request, "거절");
+			
+			mNotificationRepository.deleteById(notification.getId());
 		}
 		else if(status == 2) {
+			notification = new Notification();
+
+			notification.setUser(request.getClient());
+			notification.setRequest(request);
 			notification.setMessage(request.getTitle() + "이 거절되었습니다");
+			mNotificationRepository.save(notification);
+
 		}
 
 		mRequestRepository.save(request);
-		mNotificationRepository.save(notification);
 
 		return convertRequestToDto(request);
 	}
@@ -163,6 +168,7 @@ public class RequestService {
     	request.setStatus((byte) 1);
 
 		notification.setUser(request.getClient());
+		notification.setRequest(request);
 		notification.setMessage(request.getTitle() + "이 승인되었습니다");
     	
     	mRequestRepository.save(request);
@@ -269,27 +275,41 @@ public class RequestService {
 		ActivityForm activityForm = new ActivityForm();
 		List<Long> userId = new ArrayList<>();
 		List<Byte> userStatus = new ArrayList<>();
+		
+		String interestName = requestDto.getInterestCategory().getName();
 
 		activityForm.setTitle(requestDto.getTitle());
-		activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
 		activityForm.setContent(requestDto.getContent());
-		activityForm.setStartDate((requestDto.getStartTime()!=null)?requestDto.getStartTime().toLocalDate().toString():null);
-		activityForm.setStartTime((requestDto.getStartTime()!=null)?requestDto.getStartTime().toLocalTime().toString():null);
-		activityForm.setEndDate((requestDto.getEndTime()!=null)?requestDto.getEndTime().toLocalDate().toString():null);
-		activityForm.setEndTime((requestDto.getEndTime()!=null)?requestDto.getEndTime().toLocalTime().toString():null);
+		activityForm.setStartDate((requestDto.getStartTime()!=null && !interestName.contains("나눔"))?requestDto.getStartTime().toLocalDate().toString():null);
+		activityForm.setStartTime((requestDto.getStartTime()!=null && !interestName.contains("나눔"))?requestDto.getStartTime().toLocalTime().toString():null);
+		activityForm.setEndDate((requestDto.getEndTime()!=null && !interestName.contains("나눔"))?requestDto.getEndTime().toLocalDate().toString():null);
+		activityForm.setEndTime((requestDto.getEndTime()!=null && !interestName.contains("나눔"))?requestDto.getEndTime().toLocalTime().toString():null);
 		activityForm.setRequestId(requestDto.getId());
 		activityForm.setFile(requestDto.getProductImage());
 
 		userId.add(requestDto.getClient().getId());
 		userStatus.add((byte) 1);
 
-		if(requestDto.getUserType() == 1) {
-			activityForm.setVolunteerId(userId);
-			activityForm.setVolunteerStatus(userStatus);
+		if(!interestName.contains("나눔")) {
+			if(requestDto.getUserType() == 1) {
+				activityForm.setVolunteerId(userId);
+				activityForm.setVolunteerStatus(userStatus);
+			}
+			else {
+				activityForm.setUserId(userId);
+			}
 		}
 		else {
-			activityForm.setUserId(userId);
+			InterestCategory interestCategory = mInterestRepository.findByNameContaining("전달");
+			if(interestCategory!=null) {
+				activityForm.setInterestCategoryId(interestCategory.getId());
+			}
+			else {
+				activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
+
+			}
 		}
+		
 
 		return activityForm;
 	}

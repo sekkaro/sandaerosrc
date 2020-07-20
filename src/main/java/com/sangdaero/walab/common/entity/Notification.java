@@ -22,7 +22,11 @@ public class Notification extends TimeEntity {
 
     @Column(length = 255)
     private String message;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "request_id", nullable=true)
+    private Request request;
+    
     @Builder
     public Notification(Long id, User user, String message) {
         this.id = id;

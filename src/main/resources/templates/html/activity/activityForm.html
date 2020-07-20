@@ -131,7 +131,7 @@
 							<div class="subsub2" style="float: left;margin-left: 93px;width:290px">
 								<input id="titletext" type="text" th:field="*{title}" placeholder="제목을 입력하세요.">
 								<div>
-									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('title')}">2자 이상 입력해주세요</small>
+									<small style="font-size: 10px;color: red" th:if="${#fields.hasErrors('title')}">2~22 글자의 제목을 입력해주세요</small>
 								</div>
 							</div>
 						</div>
@@ -683,8 +683,10 @@
 				$('.deliveryGroup').hide();
 				$('#lasthr').hide();
 			}
-
+			
 		});
+		
+		
 
 		if($('select[name="interestCategoryId"] option:selected').html().toString().includes("물건")){
 			$('.deliveryGroup').show();

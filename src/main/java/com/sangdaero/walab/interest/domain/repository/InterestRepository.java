@@ -21,4 +21,6 @@ public interface InterestRepository extends JpaRepository<InterestCategory, Long
     InterestCategory findByName(String interestName);
 
     boolean existsByName(String name);
+
+	InterestCategory findByNameContaining(String name);
 }

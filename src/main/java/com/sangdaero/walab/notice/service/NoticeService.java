@@ -23,7 +23,6 @@ import java.util.Optional;
 public class NoticeService extends CategoryService {
 
     private NoticeRepository mNoticeRepository;
-    private static final int BLOCK_PAGE_NUMCOUNT = 6; // 블럭에 존재하는 페이지 수
     private static final int PAGE_POSTCOUNT = 8;  // 한 페이지에 존재하는 게시글 수
     private static final Byte topCategory = 1;
 
@@ -134,33 +133,6 @@ public class NoticeService extends CategoryService {
         return noticeDtoList;
     }
     
-    
-    // getPageList -> getNoticeCount
-    public Integer[] getPageList(Integer curPageNum, Long categoryId, String keyword, Integer searchType) {
-        Integer[] pageList = new Integer[BLOCK_PAGE_NUMCOUNT];
-
-        // 총 게시글 수
-        Double postsTotalCount = Double.valueOf(this.getNoticeCount(categoryId, keyword, searchType));
-
-        // 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
-        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
-
-        // 현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
-        Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUMCOUNT)
-                ? curPageNum + BLOCK_PAGE_NUMCOUNT
-                : totalLastPageNum;
-
-        // 페이지 시작 번호 조정
-        curPageNum = (curPageNum<=3) ? 1 : curPageNum-2;
-
-        // 페이지 번호 할당
-        for(int val=curPageNum, i=0;val<=blockLastPageNum;val++, i++) {
-            pageList[i] = val;
-        }
-
-        return pageList;
-    }
-    
 
     public Long getNoticeCount(Long categoryId, String keyword, Integer searchType) {
     	Byte deleted = 0;
@@ -200,6 +172,25 @@ public class NoticeService extends CategoryService {
 	    	}
     	}
     }
+    
+    public int getFirstPage(Integer curPageNum, Long categoryId, String keyword, Integer searchType) {
+		// 총 게시글 수
+		Double postsTotalCount = Double.valueOf(this.getNoticeCount(categoryId, keyword, searchType));
+
+		// 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
+		Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
+
+		if(curPageNum < 3) {
+			return 1;
+		}
+		else if(curPageNum + 1 > totalLastPageNum) {
+			return curPageNum-2;
+		}
+		else {
+			return curPageNum-1;
+		}
+
+	}
     
     // Detail of id's notice
     public NoticeDto getPost(Long id) {

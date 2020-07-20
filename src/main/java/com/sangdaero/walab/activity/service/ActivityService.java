@@ -77,22 +77,22 @@ public class ActivityService {
     	
     	if(status == 0) {
     		if(interestType == 0) {
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAscStartTimeAsc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAscModDateDesc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscStartTimeAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscModDateDesc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     	}
     	else {
     		if(interestType == 0) {
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatusOrderByStartTimeAsc(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatusOrderByModDateDesc(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByStartTimeAsc(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByModDateDesc(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
     		}
     	}
     	
@@ -239,9 +239,11 @@ public class ActivityService {
     	activityDto.setDeadline((deadlineDate.isEmpty()||deadlineTime.isEmpty())?null:LocalDateTime.parse(deadlineDate + deadlineTime, formatter));
     	activityDto.setContent(content);
 		activityDto.setType((requestId!=null)?0:1);
-    	
+		
     	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
     	User manager = mUserRepository.findById(managerId).orElse(null);
+    	
+    	activityDto.setStatus((byte) ((interestCategory.getName().contains("물건"))?3:0));
     	
     	EventEntity event = activityDto.toEntity();
     	
@@ -345,6 +347,7 @@ public class ActivityService {
         	request.setStatus((byte) 1);
 
 			notification.setUser(request.getClient());
+			notification.setRequest(request);
 			notification.setMessage(request.getTitle() + "이 등록되었습니다");
         	
         	mRequestRepository.save(request);

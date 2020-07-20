@@ -205,6 +205,8 @@ public class ActivityRestController {
 
 		UserDto userDto = mUserService.createUser(email, name);
 		mUserService.setStartImage(id, userDto, fileDownloadUri);
+		
+		mActivityService.setStatus(id, (byte) 3);
 	}
 
 	@RequestMapping(path = "/uploadEndImg", method = RequestMethod.POST,
@@ -221,6 +223,8 @@ public class ActivityRestController {
 
 		UserDto userDto = mUserService.createUser(email, name);
 		mUserService.setEndImage(id, userDto, fileDownloadUri);
+		
+		mActivityService.setStatus(id, (byte) 4);
 	}
 
 	@GetMapping("/downloadFile/{fileName:.+}")

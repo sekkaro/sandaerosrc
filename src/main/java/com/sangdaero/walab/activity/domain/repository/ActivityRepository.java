@@ -15,18 +15,18 @@ import com.sangdaero.walab.common.entity.InterestCategory;
 public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingOrderByStatusAscStartTimeAsc(int eventCategory, String keyword, Pageable page);
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingOrderByStatusAscModDateDesc(int eventCategory, String keyword, Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscStartTimeAsc(int eventCategory, String keyword, InterestCategory interestCategory,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscModDateDesc(int eventCategory, String keyword, InterestCategory interestCategory,
 			Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndStatusOrderByStartTimeAsc(int eventCategory, String keyword, Byte status,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndStatusOrderByModDateDesc(int eventCategory, String keyword, Byte status,
 			Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })
-	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByStartTimeAsc(int eventCategory, String keyword,
+	Page<EventEntity> findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByModDateDesc(int eventCategory, String keyword,
 			InterestCategory interestCategory, Byte status, Pageable page);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "manager" })

@@ -19,7 +19,7 @@ public class ActivityForm {
     Long requestId;
 
     @NotNull
-    @Size(min=2, max=255)
+    @Size(min=2, max=22)
     String title;
 
     @Min(1)
