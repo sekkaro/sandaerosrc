@@ -16,19 +16,19 @@
 
 <div id="sidebar" th:fragment="menu">
     <ul class="authenticated" style="display:none">
-        <li class="firstMenu menu"><span>���� 愿�由�</span> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu menu"><span>활동 관리</span> <img src = "/img/arrow.png"></li>
         <ul class = "submenu">
-            <li class="secondMenu"><a th:href="@{/activity}">- ����紐⑸�</a><br><a th:href="@{/request}">- �ㅼ�댁�� ��泥�</a></li>
+            <li class="secondMenu"><a th:href="@{/activity}">- 활동목록</a><br><a th:href="@{/request}">- 들어온 요청</a></li>
         </ul>
-        <li class="firstMenu"><a th:href="@{/user}">���� 愿�由�</a> <img src = "/img/arrow.png"></li>
-        <li class="firstMenu"><a th:href="@{/interest}">愿��ъ�� 愿�由�</a> <img src = "/img/arrow.png"></li>
-        <li class="firstMenu"><a th:href="@{/notice}">怨듭�</a> <img src = "/img/arrow.png"></li>
-        <li class="firstMenu"><a th:href="@{/ranking}">���� 愿�由�</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/user}">회원 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/interest}">관심사 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/notice}">공지</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu"><a th:href="@{/ranking}">랭킹 관리</a> <img src = "/img/arrow.png"></li>
 
-        <!-- 援ы���댁�쇳���� 湲곕�� -->
-        <li class="firstMenu not-yet"><a th:href="@{/payment}" style="color: #b3b3b3">���� 寃곗��</a> <img src = "/img/arrow.png"></li>
-        <li class="firstMenu not-yet"><a th:href="@{/community}" style="color: #b3b3b3">而ㅻ�ㅻ���� 愿�由�</a> <img src = "/img/arrow.png"></li>
-        <li class="firstMenu not-yet"><a th:href="@{/ask}" style="color: #b3b3b3">臾몄��</a> <img src = "/img/arrow.png"></li>
+        <!-- 구현해야하는 기능 -->
+        <li class="firstMenu not-yet"><a th:href="@{/payment}" style="color: #b3b3b3">소액 결제</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu not-yet"><a th:href="@{/community}" style="color: #b3b3b3">커뮤니티 관리</a> <img src = "/img/arrow.png"></li>
+        <li class="firstMenu not-yet"><a th:href="@{/ask}" style="color: #b3b3b3">문의</a> <img src = "/img/arrow.png"></li>
         </li>
     </ul>
     <script>
@@ -36,9 +36,9 @@
 
         function getStatus(){
             $.get("/userdata/getBasicInfo", function(data){
-            	if(data.userType==1){
-            		$(".authenticated").show();
-            		var innerHtml = "";
+                if(data.userType==1){
+                    $(".authenticated").show();
+                    var innerHtml = "";
                     if(data.status == 1){
                         innerHtml = "<img id='onoff' style='pointer-events: auto' src='/img/on.png' alt='on'>";
                     }
@@ -47,10 +47,10 @@
                     }
                     $('#userStatus').html(innerHtml);
                     addClickListener();
-            	}
-            	else if(location.pathname!="/"){
-            		location.replace("/");
-            	}
+                }
+                else if(location.pathname!="/"){
+                    location.replace("/");
+                }
             });
         }
 
@@ -66,7 +66,6 @@
                 });
             });
         }
-        
     </script>
 </div>
 </html>

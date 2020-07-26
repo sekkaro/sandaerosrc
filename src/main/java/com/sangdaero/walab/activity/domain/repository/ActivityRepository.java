@@ -64,4 +64,6 @@ public interface ActivityRepository extends JpaRepository<EventEntity, Long> {
 
 	Long countByEventCategory(int eventCategory);
 
+	List<EventEntity> findAllByOrderByStatusAscModDateDesc();
+
 }

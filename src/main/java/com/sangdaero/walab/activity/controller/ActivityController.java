@@ -1,6 +1,7 @@
 package com.sangdaero.walab.activity.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -108,6 +109,16 @@ public class ActivityController {
 
         return "html/activity/activityForm.html";
     }
+
+    @GetMapping(value = "/downloadExcel", produces = "application/vnd.ms-excel")
+	public String downloadExcel(Map<String,Object> modelMap) {
+
+		List<ActivityDto> allActivities = mActivityService.getAllActivities();
+
+		modelMap.put("activities", allActivities);
+
+		return "activityExcel";
+	}
 
 	@GetMapping("/activityForm/edit/{no}")
 	public String editActivity(@PathVariable("no") Long id, Model model) {

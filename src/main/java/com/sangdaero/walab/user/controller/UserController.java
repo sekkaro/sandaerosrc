@@ -2,6 +2,9 @@ package com.sangdaero.walab.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sangdaero.walab.activity.dto.ActivityDto;
+import com.sangdaero.walab.activity.dto.EachUserActivity;
+import com.sangdaero.walab.activity.service.ActivityService;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.User;
 import com.sangdaero.walab.interest.application.dto.InterestDto;
@@ -42,6 +45,7 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final InterestRepository mInterestRepository;
 	private final ObjectMapper objectMapper;
+	private final ActivityService mActivityService;
 
 	@GetMapping("")
 	public String userPage(Model model,
@@ -93,7 +97,11 @@ public class UserController {
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable Long id, Model model) throws JsonProcessingException {
 		UserDetailDto userDetailDTO = mUserService.getUser(id);
+
+		List<EachUserActivity> activities = mActivityService.getEachUserActivityList(id);
+
 		model.addAttribute("userInfo", userDetailDTO);
+		model.addAttribute("activities", activities);
 
 		List<String> all = mInterestRepository.findAllByOn_offEquals((byte)1)
 				.stream().map(InterestCategory::getName).collect(Collectors.toList());

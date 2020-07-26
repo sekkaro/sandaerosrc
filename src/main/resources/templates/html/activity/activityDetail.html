@@ -348,11 +348,13 @@
 								봉사자 없음
 							</div>
 							<div id="volunteerList" th:if="${activityDto.activityVolunteers.size()} > 0">
-								<div class="members worker" th:each="activityVolunteer : ${activityDto.activityVolunteers}">
+								<div class="members" style="width: 100%" th:each="activityVolunteer : ${activityDto.activityVolunteers}">
 									<input type="hidden" class="volunteerIds" th:value="${activityVolunteer.user?.id}"/>
-									<div>
-										<a th:text="${activityVolunteer.user?.name}" data-fancybox th:data-src="${'#volunteerDetail' + activityVolunteer.user?.id}" href="javascript:;"></a>
-										<span th:text="${activityVolunteer.user?.phone}"></span>
+									<div class="members worker">
+										<div>
+											<a th:text="${activityVolunteer.user?.name}" data-fancybox th:data-src="${'#volunteerDetail' + activityVolunteer.user?.id}" href="javascript:;"></a>
+											<span th:text="${activityVolunteer.user?.phone}"></span>
+										</div>
 										<div style="display: none;" th:id="${'volunteerDetail' + activityVolunteer.user?.id}">
 											<img src="/img/v_bar.png">
 											<h3 style="padding-left: 20px">봉사자 정보</h3>
@@ -454,7 +456,22 @@
 										</div>
 
 									</div>
+									<div style="float:left;width:100%">
+										<div style="float: left; margin-right: 80px;margin-bottom: 20px;">
+											<span style="display: block">시작 사진</span>
+											<img th:src="@{${activityVolunteer.startImage}}" th:if="${activityVolunteer.startImage != null}" style="width: 150px;display: block">
+											<span style="display: block" th:if="${activityVolunteer.startImage == null}">없음</span>
+											<span style="display: block" th:text="${#temporals.format(activityVolunteer.startImgDate, 'yyyy-MM-dd HH:mm')}"></span>
+										</div>
+										<div style="float: left;margin-bottom: 20px;">
+											<span style="display: block">끝 사진</span>
+											<img th:src="@{${activityVolunteer.endImage}}" th:if="${activityVolunteer.endImage != null}" style="width: 150px;display: block">
+											<span style="display: block" th:if="${activityVolunteer.endImage == null}">없음</span>
+											<span style="display: block" th:text="${#temporals.format(activityVolunteer.endImgDate, 'yyyy-MM-dd HH:mm')}"></span>
+										</div>
+									</div>
 								</div>
+
 							</div>
 							<div id="editVolunteers" style="display: none;">
 								<div class="multiselect">

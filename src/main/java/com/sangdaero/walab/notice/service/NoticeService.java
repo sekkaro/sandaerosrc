@@ -132,7 +132,6 @@ public class NoticeService extends CategoryService {
         
         return noticeDtoList;
     }
-    
 
     public Long getNoticeCount(Long categoryId, String keyword, Integer searchType) {
     	Byte deleted = 0;
@@ -172,8 +171,8 @@ public class NoticeService extends CategoryService {
 	    	}
     	}
     }
-    
-    public int getFirstPage(Integer curPageNum, Long categoryId, String keyword, Integer searchType) {
+
+	public int getFirstPage(Integer curPageNum, Long categoryId, String keyword, Integer searchType) {
 		// 총 게시글 수
 		Double postsTotalCount = Double.valueOf(this.getNoticeCount(categoryId, keyword, searchType));
 
@@ -191,8 +190,9 @@ public class NoticeService extends CategoryService {
 		}
 
 	}
-    
-    // Detail of id's notice
+
+
+	// Detail of id's notice
     public NoticeDto getPost(Long id) {
         Optional<Board> NoticeWrapper = mNoticeRepository.findById(id);
         Board notice = NoticeWrapper.get();

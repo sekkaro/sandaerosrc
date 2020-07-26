@@ -38,7 +38,7 @@
 							<select class="back" onchange="this.form.submit()" name="status">
 								<option value="0">상태 선택</option>
 								<option th:selected="${status==1}" value="1">매칭 전</option>
-								<option th:selected="${status==2}" value="2">매칭중</option>
+								<option th:selected="${status==2}" value="2">매칭 중</option>
 								<option th:selected="${status==3}" value="3">매칭 완료</option>
 								<option th:selected="${status==4}" value="4">활동 진행 중</option>
 								<option th:selected="${status==5}" value="5">활동 완료</option>
@@ -121,7 +121,14 @@
 					</button>
 				</div>
 				<button id="list" type="button" name="button">
-					<a th:href="@{/activity/activityForm}"><img id="addBtn" src="/img/18.png"></a>
+					<a th:href="@{/activity/activityForm}">
+						<img id="addBtn" src="/img/18.png">
+					</a>
+				</button>
+				<button id="list" type="button" name="button">
+					<a th:href="@{/activity/downloadExcel}">
+						<img style="margin-top: 6px;" src="/img/excel.png">
+					</a>
 				</button>
 			</div>
 		</form>

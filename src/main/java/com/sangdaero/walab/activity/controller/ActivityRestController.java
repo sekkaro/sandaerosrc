@@ -205,7 +205,7 @@ public class ActivityRestController {
 
 		UserDto userDto = mUserService.createUser(email, name);
 		mUserService.setStartImage(id, userDto, fileDownloadUri);
-		
+
 		mActivityService.setStatus(id, (byte) 3);
 	}
 
@@ -223,7 +223,7 @@ public class ActivityRestController {
 
 		UserDto userDto = mUserService.createUser(email, name);
 		mUserService.setEndImage(id, userDto, fileDownloadUri);
-		
+
 		mActivityService.setStatus(id, (byte) 4);
 	}
 
