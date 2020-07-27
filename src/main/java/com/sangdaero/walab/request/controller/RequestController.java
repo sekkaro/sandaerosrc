@@ -39,22 +39,26 @@ public class RequestController {
 			@RequestParam(value = "page", defaultValue = "1") Integer pageNum,
 			@RequestParam(value = "keyword", defaultValue = "") String keyword,
 			@RequestParam(value = "interestType", defaultValue = "0") Integer interestType,
+			@RequestParam(value = "status", defaultValue = "0") Integer status,
 			@RequestParam(value = "sort", defaultValue = "1") Integer sortType) {
 		
-		List<RequestDto> requestDtoList = mRequestService.getRequestlist(pageNum, keyword, interestType, sortType);
+		List<RequestDto> requestDtoList = mRequestService.getRequestlist(pageNum, keyword, interestType, status, sortType);
         List<InterestDto> interestList = mInterestService.getInterestList(2);
-		Integer firstPage = mRequestService.getFirstPage(pageNum, keyword, interestType);
-		Long totalNum = mRequestService.getRequestCount(keyword, interestType);
+		Integer firstPage = mRequestService.getFirstPage(pageNum, keyword, status, interestType);
+		Long totalNum = mRequestService.getRequestCount(keyword, status, interestType);
+		Long waitingNum = mRequestService.getWaitingRequestCount();
 
         model.addAttribute("requestList", requestDtoList);
         model.addAttribute("keyword", keyword);
         model.addAttribute("interestType", interestType);
+        model.addAttribute("status", status);
         model.addAttribute("sort", sortType);
         model.addAttribute("interests", interestList);
 
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("firstPage", firstPage);
 		model.addAttribute("totalNum", totalNum);
+		model.addAttribute("waitingNum", waitingNum);
 
         return "html/request/request.html";
 	}

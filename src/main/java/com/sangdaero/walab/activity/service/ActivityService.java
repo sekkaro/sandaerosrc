@@ -74,22 +74,22 @@ public class ActivityService {
     	
     	if(status == 0) {
     		if(interestType == 0) {
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAscModDateDesc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingOrderByStatusAsc(0, keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAscModDateDesc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
     		}
     	}
     	else {
     		if(interestType == 0) {
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatusOrderByModDateDesc(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndStatus(0, keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
     		}
     		else {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatusOrderByModDateDesc(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryAndStatus(0, keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
     		}
     	}
     	
@@ -665,7 +665,7 @@ public class ActivityService {
 		activity.setTitle(title);
 		activity.setStatus(status);
 
-		if(status == 6) {
+		if(status == 5) {
 //			Request request = mRequestRepository.findByEventAndInterestCategory(activity, activity.getInterestCategory());
 
 			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
@@ -673,7 +673,7 @@ public class ActivityService {
 			for(UserEventMapper user : byEventId) {
 				Notification notification = new Notification();
 				notification.setUser(user.getUser());
-				notification.setMessage(activity.getTitle() + "이 물건 거절 되었습니다");
+				notification.setMessage(activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다");
 
 				mNotificationRepository.save(notification);
 			}

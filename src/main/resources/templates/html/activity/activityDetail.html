@@ -199,7 +199,6 @@
 				<option th:value="3" th:selected="${activityDto.status} == 3">활동 진행 중</option>
 				<option th:value="4" th:selected="${activityDto.status} == 4">활동 완료</option>
 				<option th:value="5" th:selected="${activityDto.status} == 5">취소된 활동</option>
-				<option th:if="${activityDto.interestCategory?.name?.contains('물건')}" th:value="6" th:selected="${activityDto.status} == 6">물건 거절</option>
 			</select>
 
 			<button id="editTitleGroupBtn" class="inlinebox edit" style="padding-top: 6px">편집</button>

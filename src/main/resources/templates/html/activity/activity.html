@@ -43,13 +43,13 @@
 								<option th:selected="${status==4}" value="4">활동 진행 중</option>
 								<option th:selected="${status==5}" value="5">활동 완료</option>
 								<option th:selected="${status==6}" value="6">취소된 활동</option>
-								<option th:selected="${status==7}" value="7">물건 거절</option>
 							</select>
 						</div>
 						<div class="selectm">
 							<select class="back" onchange="this.form.submit()" name="sort">
-								<option th:selected="${sort==1}" value="1">최신순</option>
-								<option th:selected="${sort==2}" value="2">오래된순</option>
+								<option th:selected="${sort==1}" value="1">최신변경순</option>
+								<option th:selected="${sort==2}" value="2">최신등록순</option>
+								<option th:selected="${sort==3}" value="3">오래된순</option>
 							</select>
 						</div>
 					</div>

@@ -58,18 +58,29 @@ public class RequestService {
 	}
 	
 	// getRequestlist -> convertEntitytoDto
-    public List<RequestDto> getRequestlist(Integer pageNum, String keyword, Integer interestType, Integer sortType) {
+    public List<RequestDto> getRequestlist(Integer pageNum, String keyword, Integer interestType, Integer status, Integer sortType) {
     	Page<Request> page;
     	
-    	if(interestType == 0) {
-			page = mRequestRepository.findAllByTitleContainingOrderByStatusAsc(keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    	if(status == 0) {
+    		if(interestType == 0) {
+    			page = mRequestRepository.findAllByTitleContaining(keyword, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
+        	}
+        	else {
+        		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
+
+    			page = mRequestRepository.findAllByTitleContainingAndInterestCategory(keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
+        	}
     	}
     	else {
-    		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
+    		if(interestType == 0) {
+    			page = mRequestRepository.findAllByTitleContainingAndStatus(keyword, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
+        	}
+        	else {
+        		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
-			page = mRequestRepository.findAllByTitleContainingAndInterestCategoryOrderByStatusAsc(keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType==1)?Sort.Direction.DESC:Sort.Direction.ASC, "regDate")));
+    			page = mRequestRepository.findAllByTitleContainingAndInterestCategoryAndStatus(keyword, interestCategory, (--status).byteValue(), PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
+        	}
     	}
-    	
     	
         List<Request> requests = page.getContent();
         List<RequestDto> requestDtoList = new ArrayList<>();
@@ -81,21 +92,32 @@ public class RequestService {
         return requestDtoList;
     }
 
-	public Long getRequestCount(String keyword, Integer interestType) {
-    	if(interestType == 0) {
-    		return mRequestRepository.countByTitleContaining(keyword);
-    	}
-    	else {
-    		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
-    			
-    		return mRequestRepository.countByTitleContainingAndInterestCategory(keyword, interestCategory);
-    	}
-    	
+	public Long getRequestCount(String keyword, Integer status, Integer interestType) {
+		if(status == 0) {
+			if(interestType == 0) {
+	    		return mRequestRepository.countByTitleContaining(keyword);
+	    	}
+	    	else {
+	    		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
+	    			
+	    		return mRequestRepository.countByTitleContainingAndInterestCategory(keyword, interestCategory);
+	    	}
+		}
+		else {
+			if(interestType == 0) {
+	    		return mRequestRepository.countByTitleContainingAndStatus(keyword, (--status).byteValue());
+	    	}
+	    	else {
+	    		InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
+	    			
+	    		return mRequestRepository.countByTitleContainingAndInterestCategoryAndStatus(keyword, interestCategory, (--status).byteValue());
+	    	}
+		}
     }
 
-	public int getFirstPage(Integer curPageNum, String keyword, Integer interestType) {
+	public int getFirstPage(Integer curPageNum, String keyword, Integer status, Integer interestType) {
 		// 총 게시글 수
-		Double postsTotalCount = Double.valueOf(this.getRequestCount(keyword, interestType));
+		Double postsTotalCount = Double.valueOf(this.getRequestCount(keyword, status, interestType));
 
 		// 총 게시글 수를 기준으로 계산한 마지막 페이지 번호 계산
 		Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POSTCOUNT)));
@@ -310,5 +332,9 @@ public class RequestService {
 		}
 
 		return activityForm;
+	}
+	
+	public Long getWaitingRequestCount() {
+		return mRequestRepository.countByStatus((byte) 0);
 	}
 }

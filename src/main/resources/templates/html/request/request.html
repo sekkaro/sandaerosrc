@@ -7,9 +7,6 @@
 		img {
 			width: 45px;
 		}
-		.menus {
-			width: 470px;
-		}
 		.activeBtn {
 			padding-left: 0px;
 			padding-right: 0px;
@@ -38,9 +35,9 @@
 	<div lang="en" th:replace="common/menu :: menu"></div>
 
 	<div id="main">
-		<form action="/request" method="GET">
+		<form id="infoForm" name="manage" action="/request" method="GET">
 			<div class="upper">
-				<h4 class="header">앱에서 들어온 요청</h4>
+				<h4 class="header">앱에서 들어온 요청 [대기 요청 수: [[${waitingNum}]]]</h4>
 				<div class="menus">
 					<div class="selectmenu">
 						<div class="selectm">
@@ -53,8 +50,17 @@
 						</div>
 						<div class="selectm">
 							<select class="back" onchange="this.form.submit()" name="sort">
-								<option th:selected="${sort==1}" value="1">최신순</option>
-								<option th:selected="${sort==2}" value="2">오래된순</option>
+								<option th:selected="${sort==1}" value="1">최신변경순</option>
+								<option th:selected="${sort==2}" value="2">최신등록순</option>
+								<option th:selected="${sort==3}" value="3">오래된순</option>
+							</select>
+						</div>
+						<div class="selectm">
+							<select class="back" onchange="this.form.submit()" name="status">
+								<option value="0">상태 선택</option>
+								<option th:selected="${status==1}" value="1">대기</option>
+								<option th:selected="${status==2}" value="2">등록</option>
+								<option th:selected="${status==3}" value="3">거절</option>
 							</select>
 						</div>
 					</div>
@@ -63,12 +69,7 @@
 					</div>
 				</div>
 			</div>
-			</form>
-
-			<!-- payment list  -->
-			<form action="/request" method="GET">
-				<!-- update checked record's 'paymentCheck' status. -->
-
+			
 				<div id="actList">
 					<table style="width: 100%;" cellpadding="0" cellspacing="0">
 						<thead>
@@ -149,28 +150,27 @@
 					</table>
 				</div>
 
-			</form>
-
 			<!--  paging -->
 			<div class="down">
 				<div id="Paging">
 					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}"><</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}"><</a>
 					</button>
 					<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage}]]</a>
 					</button>
 					<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage+1}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+1}]]</a>
 					</button>
 					<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">[[${firstPage+2}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+2}]]</a>
 					</button>
 					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType}}">></a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">></a>
 					</button>
 				</div>
 			</div>
+			</form>
 			<!-- paging end -->
 			
 			<script th:inline="javascript">
