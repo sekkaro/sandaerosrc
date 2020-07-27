@@ -125,7 +125,7 @@
             <span th:if="${rank} &gt; 3" th:text="10*${userRanking.number}+${userInfoStat.count}" class="low_rank"></span>
           </div>
           <div class="name">
-            <a th:href="@{'/user/detail/' + ${userInfo.id}}">
+            <a th:href="@{'/user/edit/' + ${userInfo.id}}">
               <span th:text="${userInfo.name}"></span>
             </a>
           </div>

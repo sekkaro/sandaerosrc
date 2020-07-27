@@ -29,9 +29,13 @@ public class ActivityUserDto {
 	
 	private LocalDateTime regDate;
 	private LocalDateTime modDate;
+
+	private LocalDateTime startImgDate;
+	private LocalDateTime endImgDate;
 	
 	public ActivityUserDto(User user, Byte status, Byte phoneAgree, Byte locationAgree, String startImage, String endImage,
-						   Integer volunteerTime, String memo, Set<InterestCategory> userInterestList, LocalDateTime regDate, LocalDateTime modDate) {
+						   Integer volunteerTime, String memo, Set<InterestCategory> userInterestList, LocalDateTime regDate, LocalDateTime modDate,
+						   LocalDateTime startImgDate, LocalDateTime endImgDate) {
 		this.user = user;
 		this.status = status;
 		this.phoneAgree = phoneAgree;
@@ -43,6 +47,8 @@ public class ActivityUserDto {
 		this.userInterestList = userInterestList;
 		this.regDate = regDate;
 		this.modDate = modDate;
+		this.startImgDate = startImgDate;
+		this.endImgDate = endImgDate;
 	}
 
 }

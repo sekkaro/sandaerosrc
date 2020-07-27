@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -62,5 +64,9 @@ public class UserEventMapper extends TimeEntity {
 
 	@Column(name="memo", nullable = true)
 	private String memo;
+
+	private LocalDateTime startImgDate;
+
+	private LocalDateTime endImgDate;
 	
 }

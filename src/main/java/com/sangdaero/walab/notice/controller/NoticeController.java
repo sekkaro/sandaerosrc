@@ -38,20 +38,17 @@ public class NoticeController extends CategoryController {
 			@RequestParam(value = "type", defaultValue = "0") Integer searchType) {
 		
         List<NoticeDto> noticeDtoList = mNoticeService.getNoticelist(pageNum, category, keyword, searchType);
-        
         List<CategoryDto> categoryDtoList = mNoticeService.getCategory((byte)1, "", 0);
-		Integer firstPage = mNoticeService.getFirstPage(pageNum, category, keyword, searchType);
-		
-		Long totalNum = mNoticeService.getNoticeCount(category, keyword, searchType);
+        Integer firstPage = mNoticeService.getFirstPage(pageNum, category, keyword, searchType);
+        Long totalNum = mNoticeService.getNoticeCount(category, keyword, searchType);
 
         model.addAttribute("categoryList", categoryDtoList);
         model.addAttribute("noticeList", noticeDtoList);
         model.addAttribute("category", category);
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", searchType);
-
         model.addAttribute("currentPage", pageNum);
-		model.addAttribute("firstPage", firstPage);
+        model.addAttribute("firstPage", firstPage);
         model.addAttribute("totalNum", totalNum);
 
         return "html/notice/list.html";

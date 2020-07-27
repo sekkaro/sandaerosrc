@@ -116,8 +116,8 @@
 				<tbody>
 					<tr th:each="notice : ${noticeList}">
 						<td id="no">
-								<span th:text="${totalNum}-8*(${currentPage}-1)-${noticeStat.count}+1"></span>
-							</td>
+							<span th:text="${totalNum}-8*(${currentPage}-1)-${noticeStat.count}+1"></span>
+						</td>
 						<td>
 							<a th:href="@{'/notice/post/' + ${notice.id}}">
 								<span th:text="${notice.title}"></span>
@@ -138,22 +138,22 @@
 				<a th:href="@{/notice/post}"><img id="addBtn" src="/img/write_big.png"></a>
 			</button>
 			<div id="Paging">
-					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${currentPage-1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}"><</a>
-					</button>
-					<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage}]]</a>
-					</button>
-					<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage+1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage+1}]]</a>
-					</button>
-					<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage+2} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage+2}]]</a>
-					</button>
-					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${currentPage+1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">></a>
-					</button>
-				</div>
+				<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
+					<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${currentPage-1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}"><</a>
+				</button>
+				<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
+					<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage}]]</a>
+				</button>
+				<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
+					<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage+1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage+1}]]</a>
+				</button>
+				<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
+					<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${firstPage+2} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">[[${firstPage+2}]]</a>
+				</button>
+				<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
+					<a style="text-decoration: none;" th:href="@{'/notice?page=' + ${currentPage+1} + '&category=' + ${category} + '&keyword=' + ${keyword} + '&type=' + ${type}}">></a>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div lang="en" th:replace="common/footer :: footer"></div>

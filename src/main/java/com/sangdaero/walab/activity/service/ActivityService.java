@@ -17,6 +17,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import com.sangdaero.walab.activity.dto.*;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.common.notification.repository.NotificationRepository;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
@@ -28,10 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
-import com.sangdaero.walab.activity.dto.ActivityDto;
-import com.sangdaero.walab.activity.dto.ActivityPeopleDto;
-import com.sangdaero.walab.activity.dto.ActivityUserDto;
-import com.sangdaero.walab.activity.dto.UserStatusDto;
 import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
@@ -204,6 +201,8 @@ public class ActivityService {
 				activityVolunteer.setMemo(userEvent.getMemo());
         		activityVolunteer.setRegDate(userEvent.getRegDate());
         		activityVolunteer.setModDate(userEvent.getModDate());
+        		activityVolunteer.setStartImgDate(userEvent.getStartImgDate());
+				activityVolunteer.setEndImgDate(userEvent.getEndImgDate());
         		
         		activityVolunteers.add(activityVolunteer);
         		volunteerIds.add(userEvent.getUser().getId());
@@ -239,12 +238,12 @@ public class ActivityService {
     	activityDto.setDeadline((deadlineDate.isEmpty()||deadlineTime.isEmpty())?null:LocalDateTime.parse(deadlineDate + deadlineTime, formatter));
     	activityDto.setContent(content);
 		activityDto.setType((requestId!=null)?0:1);
-		
+    	
     	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
     	User manager = mUserRepository.findById(managerId).orElse(null);
-    	
-    	activityDto.setStatus((byte) ((interestCategory.getName().contains("물건"))?3:0));
-    	
+
+		activityDto.setStatus((byte) ((interestCategory.getName().contains("물건"))?3:0));
+
     	EventEntity event = activityDto.toEntity();
     	
     	event.setInterestCategory(interestCategory);
@@ -940,4 +939,39 @@ public class ActivityService {
 		}
 
 
+	public List<EachUserActivity> getEachUserActivityList(Long id) {
+		List<UserEventMapper> mapper = mUserEventMapperRepository.findAllByUserIdOrderByModDate(id);
+		List<EachUserActivity> activities = new ArrayList<>();
+
+		for(UserEventMapper m : mapper) {
+			EventEntity event = m.getEvent();
+
+			if(event.getStatus()!=4) continue;
+
+			EachUserActivity activity = new EachUserActivity();
+
+			activity.setId(event.getId());
+			activity.setEventCategory(event.getEventCategory());
+			activity.setTitle(event.getTitle());
+			activity.setInterestCategory(event.getInterestCategory());
+			activity.setCompleteTime(event.getEndTime());
+			activity.setVolunteerTime(m.getVolunteerTime());
+
+			activities.add(activity);
+		}
+
+		return activities;
+	}
+
+	public List<ActivityDto> getAllActivities() {
+
+    	List<EventEntity> lists = mActivityRepository.findAllByOrderByStatusAscModDateDesc();
+		List<ActivityDto> ret = new ArrayList<>();
+
+		for(EventEntity activity : lists) {
+			ret.add(this.convertEventEntityToActivityDto(activity));
+		}
+
+		return ret;
+	}
 }

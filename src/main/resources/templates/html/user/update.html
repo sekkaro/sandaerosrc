@@ -38,6 +38,31 @@
         .volunteerBtn > img {
             padding-top: 5px;
         }
+        table {
+            text-align: center;
+        }
+        th:first-child, td:first-child {
+            width: 100px;
+        }
+        th:nth-child(2), td:nth-child(2) {
+            width: 270px;
+        }
+        th:nth-child(3), td:nth-child(3) {
+            width: 100px;
+        }
+        th:last-child, td:last-child {
+            width: 170px;
+        }
+        thead {
+            background-color: rgb(0, 194, 100);
+            color: #494949;
+        }
+        th {
+            font-weight: 400;
+        }
+        tr:nth-child(even) {
+            background-color: rgba(0, 194, 100, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -168,7 +193,40 @@
                 <button class="volunteerBtn" type="button" name="action" value="plus" onclick="plus()">
                     <img src="/img/user_plus.png">
                 </button>
-
+                <button class="edit" id="activityListBtn" th:onclick="|javascript:showActivity()|">
+                    내역 확인
+                </button>
+            </div>
+            <div id="activityList" class="row1" style="display:none; max-height: 200px; overflow: auto">
+                <div class="title"></div>
+                <table style="display: inline;">
+                    <thead>
+                        <tr>
+                            <th>카테고리</th>
+                            <th>제목</th>
+                            <th>봉사 시간</th>
+                            <th>완료 날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="activity : ${activities}">
+                            <td>
+                                <span th:text="${activity.interestCategory.name}"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/activity/' + ${activity.id}}" style="text-decoration: none; color: #019783;">
+                                    <span th:text="${activity.title}"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <span th:text="${activity.volunteerTime} + ' 시간'"></span>
+                            </td>
+                            <td>
+                                <span th:text="${#temporals.format(activity.completeTime, 'yyyy-MM-dd HH:mm')}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <hr class="line">
             <div class="row1" style="margin-bottom: 50px">
@@ -494,6 +552,19 @@
 
         function hideMessage() {
             $('#message').hide();
+        }
+
+        function showActivity() {
+            let activityList = document.getElementById('activityList');
+            let activityListBtn = document.getElementById('activityListBtn');
+
+            if(activityList.style.display == 'none') {
+                activityList.style.display = 'block';
+                activityListBtn.innerHTML = '접기';
+            } else {
+                activityList.style.display = 'none';
+                activityListBtn.innerHTML = '내역 확인';
+            }
         }
     </script>
 </body>

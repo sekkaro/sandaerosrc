@@ -124,13 +124,14 @@ public class RequestService {
 	public RequestDto setStatus(Long id, Byte status) {
 		
     	Request request = mRequestRepository.findById(id).orElse(null);
-    	request.setStatus(status);
     	
-    	Notification notification;
+    	request.setStatus(status);
 
-		if(status == 0) {			
+		Notification notification;
+
+		if(status == 0) {
 			notification = mNotificationRepository.findByRequestAndMessageContaining(request, "거절");
-			
+
 			mNotificationRepository.deleteById(notification.getId());
 		}
 		else if(status == 2) {
@@ -140,7 +141,6 @@ public class RequestService {
 			notification.setRequest(request);
 			notification.setMessage(request.getTitle() + "이 거절되었습니다");
 			mNotificationRepository.save(notification);
-
 		}
 
 		mRequestRepository.save(request);
@@ -275,7 +275,6 @@ public class RequestService {
 		ActivityForm activityForm = new ActivityForm();
 		List<Long> userId = new ArrayList<>();
 		List<Byte> userStatus = new ArrayList<>();
-		
 		String interestName = requestDto.getInterestCategory().getName();
 
 		activityForm.setTitle(requestDto.getTitle());
@@ -309,7 +308,6 @@ public class RequestService {
 
 			}
 		}
-		
 
 		return activityForm;
 	}

@@ -401,11 +401,13 @@ public class UserService extends OidcUserService {
     public void setStartImage(Long id, UserDto userDto, String fileDownloadUri) {
         UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
         list.setStartImage(fileDownloadUri);
+        list.setStartImgDate(LocalDateTime.now());
     }
 
     public void setEndImage(Long id, UserDto userDto, String fileDownloadUri) {
         UserEventMapper list = mUserEventMapperRepository.findByEventIdAndUserId(id, userDto.getId());
         list.setEndImage(fileDownloadUri);
+        list.setEndImgDate(LocalDateTime.now());
     }
 
     public Boolean checkNewUser(String email, String name) {

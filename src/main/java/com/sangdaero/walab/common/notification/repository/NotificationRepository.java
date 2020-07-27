@@ -12,6 +12,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @EntityGraph(attributePaths = { "user" })
     List<Notification> findAllByUserOrderByRegDateDesc(User entity);
 
-	Notification findByRequestAndMessageContaining(Request request, String message);
-
+    Notification findByRequestAndMessageContaining(Request request, String message);
 }
