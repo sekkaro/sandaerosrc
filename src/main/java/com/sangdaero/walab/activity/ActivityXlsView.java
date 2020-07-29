@@ -32,18 +32,30 @@ public class ActivityXlsView extends AbstractXlsView {
         List<ActivityDto> list = (List<ActivityDto>) map.get("activities");
 
         Row head = sheet.createRow(0);
+
         Cell no = head.createCell(0);
         no.setCellValue("No.");
+
         Cell category = head.createCell(1);
         category.setCellValue("카테고리");
+
+        sheet.setColumnWidth(2, 10000);
         Cell title = head.createCell(2);
         title.setCellValue("제목");
+
+        sheet.setColumnWidth(3, 3000);
         Cell status = head.createCell(3);
         status.setCellValue("상태");
+
+        sheet.setColumnWidth(4, 10000);
         Cell memo = head.createCell(4);
         memo.setCellValue("메모");
+
+        sheet.setColumnWidth(5, 5000);
         Cell registerDate = head.createCell(5);
         registerDate.setCellValue("등록 날짜");
+
+        sheet.setColumnWidth(6, 5000);
         Cell modDate = head.createCell(6);
         modDate.setCellValue("수정 날짜");
 

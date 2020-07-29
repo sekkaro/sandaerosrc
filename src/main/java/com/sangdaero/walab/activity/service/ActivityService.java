@@ -80,7 +80,7 @@ public class ActivityService {
     			InterestCategory interestCategory = mInterestRepository.findById(interestType.longValue()).orElse(null);
 
 				page = mActivityRepository.findAllByEventCategoryAndTitleContainingAndInterestCategoryOrderByStatusAsc(0, keyword, interestCategory, PageRequest.of(pageNum-1, PAGE_POSTCOUNT, Sort.by((sortType!=3)?Sort.Direction.DESC:Sort.Direction.ASC, (sortType!=1)?"regDate":"modDate")));
-    		}
+			}
     	}
     	else {
     		if(interestType == 0) {

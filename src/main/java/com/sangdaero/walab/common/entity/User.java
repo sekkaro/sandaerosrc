@@ -66,6 +66,9 @@ public class User extends TimeEntity {
     private Byte isDelete;
 
     private Byte isDummy;
+
+    @OneToMany
+    private List<Device> devices;
 	
     @Builder
     public User(Long id, String name, String nickname, String profile, String socialId,
@@ -93,6 +96,4 @@ public class User extends TimeEntity {
         this.isDelete=0;
         this.isDummy=isDummy;
     }
-	
-	
 }
