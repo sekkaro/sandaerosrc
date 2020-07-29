@@ -7,6 +7,8 @@ import com.sangdaero.walab.activity.dto.EachUserActivity;
 import com.sangdaero.walab.activity.service.ActivityService;
 import com.sangdaero.walab.common.entity.InterestCategory;
 import com.sangdaero.walab.common.entity.User;
+import com.sangdaero.walab.common.push.MakeJSON;
+import com.sangdaero.walab.common.push.Push;
 import com.sangdaero.walab.interest.application.dto.InterestDto;
 import com.sangdaero.walab.interest.application.dto.InterestForm;
 import com.sangdaero.walab.interest.application.service.InterestService;
@@ -58,6 +60,7 @@ public class UserController {
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("condition",condition);
 		model.addAttribute("totalNum", totalNum);
+
 //		List<SimpleUser> simpleUsers = mUserService.getSimpleUserList();
 //		model.addAttribute("simpleUserList", simpleUsers);
 		return "html/user/user";

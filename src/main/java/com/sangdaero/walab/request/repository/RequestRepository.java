@@ -19,23 +19,23 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 	@EntityGraph(attributePaths = { "interestCategory", "client", "event" })
 	Page<Request> findAllByTitleContainingAndInterestCategory(String keyword, InterestCategory interestCategory,
 			Pageable page);
-	
+
 	@EntityGraph(attributePaths = { "interestCategory", "client", "event" })
 	Page<Request> findAllByTitleContainingAndStatus(String keyword, Byte status, Pageable page);
 
 	@EntityGraph(attributePaths = { "interestCategory", "client", "event" })
 	Page<Request> findAllByTitleContainingAndInterestCategoryAndStatus(String keyword,
-			InterestCategory interestCategory, Byte status, Pageable page);
+																	   InterestCategory interestCategory, Byte status, Pageable page);
 
 	Long countByTitleContaining(String keyword);
 
 	Long countByTitleContainingAndInterestCategory(String keyword, InterestCategory interestCategory);
-	
+
 	Long countByTitleContainingAndStatus(String keyword, Byte status);
 
 	Long countByTitleContainingAndInterestCategoryAndStatus(String keyword, InterestCategory interestCategory,
-			Byte status);
-	
+															Byte status);
+
 	Long countByStatus(Byte status);
 	
 	@EntityGraph(attributePaths = { "interestCategory", "client" })
