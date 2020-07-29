@@ -16,6 +16,9 @@ import com.sangdaero.walab.activity.dto.ActivityForm;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.common.file.repository.FileRepository;
 import com.sangdaero.walab.common.notification.repository.NotificationRepository;
+import com.sangdaero.walab.common.push.MakeJSON;
+import com.sangdaero.walab.common.push.Push;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -165,6 +168,19 @@ public class RequestService {
 			notification.setRequest(request);
 			notification.setMessage(request.getTitle() + "이 거절되었습니다");
 			mNotificationRepository.save(notification);
+			
+			MakeJSON makeJson = new MakeJSON();
+			Push push = new Push();
+			String pushJson = "";
+			List<Device> devices = request.getClient().getDevices();
+			
+			if(devices!=null) {
+				for(Device device: devices) {
+					pushJson = makeJson.makePush(device.getDeviceToken(), "요청 거절 알림", request.getTitle() + "이 거절되었습니다"); 
+					push.sendPush(pushJson);
+				}
+			}
+			
 		}
 
 		mRequestRepository.save(request);
@@ -197,6 +213,18 @@ public class RequestService {
     	
     	mRequestRepository.save(request);
 		mNotificationRepository.save(notification);
+		
+		MakeJSON makeJson = new MakeJSON();
+		Push push = new Push();
+		String pushJson = "";
+		List<Device> devices = request.getClient().getDevices();
+		
+		if(devices!=null) {
+			for(Device device: devices) {
+				pushJson = makeJson.makePush(device.getDeviceToken(), "요청 승인 알림", request.getTitle() + "이 승인되었습니다"); 
+				push.sendPush(pushJson);
+			}
+		}
     	
 		return request.getEvent().getId();
 	}

@@ -20,6 +20,8 @@ import javax.transaction.Transactional;
 import com.sangdaero.walab.activity.dto.*;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.common.notification.repository.NotificationRepository;
+import com.sangdaero.walab.common.push.MakeJSON;
+import com.sangdaero.walab.common.push.Push;
 import com.sangdaero.walab.mapper.repository.UserInterestRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -351,6 +353,18 @@ public class ActivityService {
         	
         	mRequestRepository.save(request);
 			mNotificationRepository.save(notification);
+			
+			MakeJSON makeJson = new MakeJSON();
+			Push push = new Push();
+			String pushJson = "";
+			List<Device> devices = request.getClient().getDevices();
+			
+			if(devices!=null) {
+				for(Device device: devices) {
+					pushJson = makeJson.makePush(device.getDeviceToken(), "활동 등록 알림", request.getTitle() + "이 등록되었습니다"); 
+					push.sendPush(pushJson);
+				}
+			}
         	
         }
     	
@@ -676,6 +690,18 @@ public class ActivityService {
 				notification.setMessage(activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다");
 
 				mNotificationRepository.save(notification);
+				
+				MakeJSON makeJson = new MakeJSON();
+				Push push = new Push();
+				String pushJson = "";
+				List<Device> devices = user.getUser().getDevices();
+				
+				if(devices!=null) {
+					for(Device device: devices) {
+						pushJson = makeJson.makePush(device.getDeviceToken(), "활동 취소 알림", activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다"); 
+						push.sendPush(pushJson);
+					}
+				}
 			}
 		}
 		

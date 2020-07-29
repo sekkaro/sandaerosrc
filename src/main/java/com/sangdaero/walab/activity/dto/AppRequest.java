@@ -30,5 +30,7 @@ public class AppRequest {
     private String phone;
 
     private Long interestId;
+    
+    private String token;
 
 }

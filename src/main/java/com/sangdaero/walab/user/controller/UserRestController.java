@@ -211,4 +211,11 @@ public class UserRestController {
 
 		mUserService.changeUserType(userDto.getId(), (byte) 2);
 	}
+	
+	@PostMapping("/addToken")
+	public void addToken(@RequestBody AppRequest userForm) {
+		UserDto userDto = mUserService.createUser(userForm.getEmail(), userForm.getName());
+
+		mUserService.addToken(userDto.getId(), userForm.getToken());
+	}
 }

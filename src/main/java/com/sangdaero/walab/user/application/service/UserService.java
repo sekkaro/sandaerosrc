@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
+import com.sangdaero.walab.common.device.repository.DeviceRepository;
 import com.sangdaero.walab.common.entity.*;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
@@ -41,6 +42,7 @@ public class UserService extends OidcUserService {
     private final UserInterestRepository mUserInterestRepository;
     private final ActivityRepository mActivityRepository;
     private final UserEventMapperRepository mUserEventMapperRepository;
+    private final DeviceRepository mDeviceRepository;
 	
 	@Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
@@ -451,6 +453,22 @@ public class UserService extends OidcUserService {
             mUserRepository.save(user);
         }
     }
+
+	public void addToken(Long id, String token) {
+		User user = mUserRepository.findById(id).orElse(null);
+		
+		if(user!=null) {
+			List<Device> devices = user.getDevices();
+			
+			if(!devices.stream().anyMatch(o -> o.getDeviceToken().equals(token))) {
+				Device device = new Device();
+				device.setDeviceToken(token);
+				mDeviceRepository.save(device);
+				
+				devices.add(device);
+			}
+		}
+	}
 
 
 }
