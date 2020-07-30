@@ -1,5 +1,9 @@
 package com.sangdaero.walab.user.application.dto;
 
+import java.util.List;
+
+import com.sangdaero.walab.common.entity.Device;
+
 public interface SimpleUser {
 
     Long getId();
@@ -13,5 +17,7 @@ public interface SimpleUser {
     String getPhone();
 
     Integer getVolunteerTime();
+    
+    List<Device> getDevices();
 
 }

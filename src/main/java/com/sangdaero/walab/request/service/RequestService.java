@@ -29,6 +29,7 @@ import com.sangdaero.walab.request.dto.RequestDto;
 import com.sangdaero.walab.activity.domain.repository.ActivityRepository;
 import com.sangdaero.walab.interest.domain.repository.InterestRepository;
 import com.sangdaero.walab.mapper.repository.UserEventMapperRepository;
+import com.sangdaero.walab.user.application.dto.SimpleUser;
 import com.sangdaero.walab.user.application.dto.UserDto;
 import com.sangdaero.walab.user.domain.repository.UserRepository;
 import org.springframework.web.multipart.MultipartFile;
@@ -349,6 +350,7 @@ public class RequestService {
 			else {
 				activityForm.setUserId(userId);
 			}
+			activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
 		}
 		else {
 			InterestCategory interestCategory = mInterestRepository.findByNameContaining("전달");
@@ -357,7 +359,6 @@ public class RequestService {
 			}
 			else {
 				activityForm.setInterestCategoryId(requestDto.getInterestCategory().getId());
-
 			}
 		}
 
@@ -366,5 +367,32 @@ public class RequestService {
 
 	public Long getWaitingRequestCount() {
 		return mRequestRepository.countByStatus((byte) 0);
+	}
+	
+	public void sendAlarmtoManagers(List<SimpleUser> managerList) {
+		if(managerList!=null) {
+			for(SimpleUser manager: managerList) {
+				Notification notification = new Notification();
+				notification.setUser(convertSimpleUserToUser(manager));
+				notification.setMessage("새로운 요청이 등록되었습니다 [대기 요청 수: "+ getWaitingRequestCount() +"]");
+				mNotificationRepository.save(notification);
+				
+				MakeJSON makeJson = new MakeJSON();
+				Push push = new Push();
+				String pushJson = "";
+				List<Device> devices = manager.getDevices();
+				
+				if(devices!=null) {
+					for(Device device: devices) {
+						pushJson = makeJson.makePush(device.getDeviceToken(), "새로운 요청 알림", "새로운 요청이 등록되었습니다 [대기 요청 수: "+ getWaitingRequestCount() +"]"); 
+						push.sendPush(pushJson);
+					}
+				}
+			}
+		}
+	}
+	
+	public User convertSimpleUserToUser(SimpleUser simpleUser) {
+		return mUserRepository.findById(simpleUser.getId()).orElse(null);
 	}
 }

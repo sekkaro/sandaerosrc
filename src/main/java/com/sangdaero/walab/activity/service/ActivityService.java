@@ -243,8 +243,16 @@ public class ActivityService {
     	
     	InterestCategory interestCategory = mInterestRepository.findById(interestCategoryId).orElse(null);
     	User manager = mUserRepository.findById(managerId).orElse(null);
-
-		activityDto.setStatus((byte) ((interestCategory.getName().contains("물건"))?3:0));
+    	
+    	if(interestCategory.getName().contains("물건")) {
+    		activityDto.setStatus((byte) 3);
+    		if(manager!=null) {
+    			sendAlarmToUser(manager, "활동 시작 알림", title + " 활동이 시작되었습니다", null);
+    		}
+    	}
+    	else {
+    		activityDto.setStatus((byte) 0);
+    	}
 
     	EventEntity event = activityDto.toEntity();
     	
@@ -342,29 +350,13 @@ public class ActivityService {
         if(requestId!=null) {
         	
         	Request request = mRequestRepository.findById(requestId).orElse(null);
-			Notification notification = new Notification();
         	
         	request.setEvent(event);
         	request.setStatus((byte) 1);
-
-			notification.setUser(request.getClient());
-			notification.setRequest(request);
-			notification.setMessage(request.getTitle() + "이 등록되었습니다");
         	
         	mRequestRepository.save(request);
-			mNotificationRepository.save(notification);
 			
-			MakeJSON makeJson = new MakeJSON();
-			Push push = new Push();
-			String pushJson = "";
-			List<Device> devices = request.getClient().getDevices();
-			
-			if(devices!=null) {
-				for(Device device: devices) {
-					pushJson = makeJson.makePush(device.getDeviceToken(), "활동 등록 알림", request.getTitle() + "이 등록되었습니다"); 
-					push.sendPush(pushJson);
-				}
-			}
+			sendAlarmToUser(request.getClient(), "활동 등록 알림", request.getTitle() + "이 등록되었습니다", request);
         	
         }
     	
@@ -461,9 +453,19 @@ public class ActivityService {
     public void setStatus(Long id, Byte status) {
     	EventEntity activity = mActivityRepository.findById(id).orElse(null);
     	
-    	activity.setStatus(status);
+    	if(status != activity.getStatus()) {
+    		if(status == 3 && activity.getManager()!=null) {
+    			sendAlarmToUser(activity.getManager(), "활동 시작 알림", activity.getTitle() + " 활동이 시작되었습니다", null);
+    		}
+    		else if(status == 4 && activity.getManager()!=null) {
+    			sendAlarmToUser(activity.getManager(), "활동 종료 알림", activity.getTitle() + " 활동이 종료되었습니다", null);
+    		}
+    		
+    		activity.setStatus(status);
+        	
+        	mActivityRepository.save(activity);
+    	}
     	
-    	mActivityRepository.save(activity);
 	}
     
     public List<ActivityUserDto> setUsers(Long id, List<Long> userIdList, List<Byte> userStatusList, byte userType) {
@@ -678,31 +680,24 @@ public class ActivityService {
 		
 		activity.setTitle(title);
 		activity.setStatus(status);
-
-		if(status == 5) {
+		
+		if(status == 3 && activity.getManager()!=null) {
+			sendAlarmToUser(activity.getManager(), "활동 시작 알림", activity.getTitle() + " 활동이 시작되었습니다", null);
+		}
+		else if(status == 4 && activity.getManager()!=null) {
+			sendAlarmToUser(activity.getManager(), "활동 종료 알림", activity.getTitle() + " 활동이 종료되었습니다", null);
+		}
+		else if(status == 5) {
 //			Request request = mRequestRepository.findByEventAndInterestCategory(activity, activity.getInterestCategory());
 
 			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
 
-			for(UserEventMapper user : byEventId) {
-				Notification notification = new Notification();
-				notification.setUser(user.getUser());
-				notification.setMessage(activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다");
-
-				mNotificationRepository.save(notification);
-				
-				MakeJSON makeJson = new MakeJSON();
-				Push push = new Push();
-				String pushJson = "";
-				List<Device> devices = user.getUser().getDevices();
-				
-				if(devices!=null) {
-					for(Device device: devices) {
-						pushJson = makeJson.makePush(device.getDeviceToken(), "활동 취소 알림", activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다"); 
-						push.sendPush(pushJson);
-					}
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 취소 알림", activity.getTitle() + "이 관제사에 의해서 활동 취소되었습니다", null);
 				}
 			}
+			
 		}
 		
 		mActivityRepository.save(activity);
@@ -999,5 +994,29 @@ public class ActivityService {
 		}
 
 		return ret;
+	}
+	
+	public void sendAlarmToUser(User user, String title, String content, Request request) {
+		Notification notification = new Notification();
+		notification.setUser(user);
+		notification.setMessage(title);
+		
+		if(request!=null) {
+			notification.setRequest(request);
+		}
+
+		mNotificationRepository.save(notification);
+		
+		MakeJSON makeJson = new MakeJSON();
+		Push push = new Push();
+		String pushJson = "";
+		List<Device> devices = user.getDevices();
+		
+		if(devices!=null) {
+			for(Device device: devices) {
+				pushJson = makeJson.makePush(device.getDeviceToken(), title, content); 
+				push.sendPush(pushJson);
+			}
+		}
 	}
 }
