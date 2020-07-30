@@ -155,19 +155,19 @@
 			<div class="down">
 				<div id="Paging">
 					<button id="prev" th:if="${currentPage > 1}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}"><</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage-1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status} + '&sort=' + ${sort}}"><</a>
 					</button>
 					<button id="one" th:class="${(currentPage == firstPage)?'one':''}" th:if="${totalNum > 0}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status} + '&sort=' + ${sort}}">[[${firstPage}]]</a>
 					</button>
 					<button id="two" th:class="${(currentPage == firstPage+1)?'one':''}" th:if="${totalNum > 8*firstPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+1}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status} + '&sort=' + ${sort}}">[[${firstPage+1}]]</a>
 					</button>
 					<button id="three" th:class="${(currentPage == firstPage+2)?'one':''}" th:if="${totalNum > 8*(firstPage+1)}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">[[${firstPage+2}]]</a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${firstPage+2} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status} + '&sort=' + ${sort}}">[[${firstPage+2}]]</a>
 					</button>
 					<button id="next" th:if="${totalNum > 8*currentPage}" type="button" name="button">
-						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status}}">></a>
+						<a style="text-decoration: none;" th:href="@{'/request?page=' + ${currentPage+1} + '&keyword=' + ${keyword} + '&interestType=' + ${interestType} + '&status=' + ${status} + '&sort=' + ${sort}}">></a>
 					</button>
 				</div>
 			</div>
