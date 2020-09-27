@@ -282,6 +282,8 @@ public class ActivityService {
         		
         		mUserEventMapperRepository.save(userEventMapper);
         		
+        		sendAlarmToUser(user, "활동 등록 알림", title + "이 등록되었습니다", null);
+        		
         		index++;
         	}
     		
@@ -304,6 +306,8 @@ public class ActivityService {
 				userEventMapper.setVolunteerTime(0);
         		
         		mUserEventMapperRepository.save(userEventMapper);
+        		
+        		sendAlarmToUser(volunteer, "활동 등록 알림", title + "이 등록되었습니다", null);
         		
         		index++;
         	}
