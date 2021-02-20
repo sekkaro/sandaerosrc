@@ -685,11 +685,73 @@ public class ActivityService {
 		activity.setTitle(title);
 		activity.setStatus(status);
 		
-		if(status == 3 && activity.getManager()!=null) {
-			sendAlarmToUser(activity.getManager(), "활동 시작 알림", activity.getTitle() + " 활동이 시작되었습니다", null);
+		if(status == 0) {
+			if(activity.getManager()!=null) {
+				sendAlarmToUser(activity.getManager(), "활동 매칭 전 알림", activity.getTitle() + " 활동이 매칭 전 상태입니다", null);
+			} 
+
+			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
+
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 매칭 전 알림", activity.getTitle() + " 활동이 매칭 전 상태입니다", null);
+				}
+			}
+			
 		}
-		else if(status == 4 && activity.getManager()!=null) {
-			sendAlarmToUser(activity.getManager(), "활동 종료 알림", activity.getTitle() + " 활동이 종료되었습니다", null);
+		else if(status == 1) {
+			if(activity.getManager()!=null){
+				sendAlarmToUser(activity.getManager(), "활동 매칭 중 알림", activity.getTitle() + " 활동이 매칭 중 상태입니다", null);
+			}
+
+			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
+
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 매칭 중 알림", activity.getTitle() + " 활동이 매칭 중 상태입니다", null);
+				}
+			}
+			
+		}
+		else if(status == 2) {
+			if(activity.getManager()!=null){
+				sendAlarmToUser(activity.getManager(), "활동 매칭 완료 알림", activity.getTitle() + " 활동이 매칭 완료 상태입니다", null);
+			}
+
+			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
+
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 매칭 완료 알림", activity.getTitle() + " 활동이 매칭 완료 상태입니다", null);
+				}
+			}
+			
+		}
+		else if(status == 3) {
+			if(activity.getManager()!=null){
+				sendAlarmToUser(activity.getManager(), "활동 시작 알림", activity.getTitle() + " 활동이 시작되었습니다", null);
+			}
+
+			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
+
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 시작 알림", activity.getTitle() + " 활동이 시작되었습니다", null);
+				}
+			}
+		}
+		else if(status == 4) {
+			if(activity.getManager()!=null){
+				sendAlarmToUser(activity.getManager(), "활동 종료 알림", activity.getTitle() + " 활동이 종료되었습니다", null);
+			}
+
+			List<UserEventMapper> byEventId = mUserEventMapperRepository.findByEventId(activity.getId());
+
+			if(byEventId!=null) {
+				for(UserEventMapper user : byEventId) {
+					sendAlarmToUser(user.getUser(), "활동 종료 알림", activity.getTitle() + " 활동이 종료되었습니다", null);
+				}
+			}
 		}
 		else if(status == 5) {
 //			Request request = mRequestRepository.findByEventAndInterestCategory(activity, activity.getInterestCategory());
